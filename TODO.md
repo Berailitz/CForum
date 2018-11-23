@@ -35,22 +35,25 @@ Model
 ----
 
 1. `CForum`类
-    - 论坛主类
-    - `unordered_map<int, Board>* boards`
-    - `unordered_map<int, User>* users`
-    - `set<int>* admins`
+    - 论坛主类，继承自`Object`
+    - `list<Board*>* boards = nullptr`: 与`ForumView`中的`BoardListView`绑定
+    - `vector<User>* users = nullptr`
+    - `set<int>* admins = nullptr`
+    - `void load(string filename)`
 
 用户
 -----
 
 1. `User`类
-   - 用户基类
-   - `int id`
-   - `string userName`
-   - `string password`
+   - 用户基类，继承自`Object`
+   - `int id`: primary_kay, ai, positive integer
+   - `string userName`: `[A-Za-z0-9_]+`
+   - `string password`: `[A-Za-z0-9_]+`
    - `string getName() const`
    - `int getID() const`
    - `bool checkPassword(string test_password) const`
+   - `string dump() const`: `{name} {password}`
+   - `bool load(const string text)`
 1. `NormalUser`类
    - 继承自`User`类
 1. `Moderator`类
@@ -58,32 +61,31 @@ Model
 1. `Admin`类
    - 继承自`User`类
 
-模型
+内容
 ----
 
 1. `Board`类
-   - 版面类
-   - `int id`
-   - `string name`
-   - `list<Thread>* threads`
-   - `set<int>& moderators`
+   - 版面类，继承自`Object`
+   - `int id`: primary_kay, 从`1`开始
+   - `string name`: unique
+   - `list<Thread*>* threads`
+   - `int moderators`
    - `bool post(Thread &newThread)`
-   - `list<Thread>& getThread()`
    - `bool delete(int threadID)`
-   - `bool isModerators(int userID)`
+   - `bool isModerator(int userID)`
 1. `Comment`类
-   - 回复帖类
-   - `int ID = -1`
+   - 回复帖类，继承自`Object`
+   - `int ID = -1`: primary_kay in a thread, 从`1`开始
    - `string content`
    - `Datetime time`
    - `int owner`
 1. `Thread`类
    - 主题帖类，继承自`Comment`类
+   - `int id`: primary_kay in a thread, 从`1`开始
    - `string title`
    - `int owner`
-   - `list<Comment>* comments`
+   - `list<Comment*>* comments`
    - `bool post(Comment &newComment)`
-   - `list<Comment>& getComments()`
    - `bool deleteComment(const int commentID)`
 
 辅助模型
@@ -95,24 +97,26 @@ Model
 
 Controller
 =====
-  
-1. `CForumController`
-   - `list<Board>::iterator getBoardIterator()`
-   - `User* register(const string userName, const string password)`
-   - `User* login(const string userName, const string password)`
-   - `bool deleteUser(const int userID)`
-   - `Board* addBoard(const int userID, const string name)`
-   - `Board* deleteBoard(const int userID, const string name)`
-   - `bool addModerator(const int userID, const int boardID)`
-   - `bool deleteModerator(const int userID, const int boardID)`
-1. `BoardController`
-   - `list<Thread>::iterator getThreadIterator()`
-   - `Thread* post(const int owner, const int boardID, const string title, const string content)`
-   - `bool delete(const int owner, const int threadID)`
-1. `ThreadController`
-   - `list<Comment>::iterator getCommentIterator()`
-   - `Comment* post(const int owner, const int threadID, const string title, const string content)`
-   - `bool delete(const int owner, const int threadID)`
+
+1. `ForumController`
+    - `public`
+        - `CForum cforum* = nullptr`
+        - `string username`
+        - `string boardName`
+        - `string threadTitle`
+        - `string thread_content`
+        - `bool register(const string userName, const string password)`
+        - `bool login(const string userName, const string password)`
+        - `bool setModerator(const int userID, const int boardID)`
+        - `bool removeModerator(const int userID, const int boardID)`
+        - `bool postThread(const string title, const string content)`
+        - `bool deleteThread(const int threadID)`
+        - `bool postComment(const string content)`
+        - `bool deleteComment(const int commentID)`
+    - `private`
+        - `int _userID = 0`
+        - `int _boardID`
+        - `int _threadID`
 
 视图
 =====
@@ -125,20 +129,24 @@ Controller
 2. `ForumView`
     - 个人信息
         - 用户名
-    - 板块列表
+    - 板块列表: `BoardListView`
         - 板块名
+        - 进入按钮
+            - `BoardController.load_board(boardID)`
         - 版主管理按钮
-            - 版主列表
+            - 版主（列表，计划）
                 - 版主用户名
                 - 撤销版主按钮
             - 任命版主按钮
-2. `BoardView`
+2. `BoardView`: `ThreadListView`
     - 板块名
     - 主题帖列表
         - 标题
         - 发帖人
+        - 阅读按钮
+            - `ThreadController.loadThread(threadID)`
     - 发帖按钮
-    - 发帖窗口
+    - 发帖窗口: `NewThreadPopup`
         - 标题框
         - 正文框
         - 发布按钮
@@ -146,13 +154,35 @@ Controller
     - 主题帖标题
     - 主题帖发帖人
     - 主题帖正文
-    - 回复帖列表
+    - 回复帖列表: `CommentListView`
         - 回复正文
         - 回复人用户名
         - 回复时间
-    - 回复窗口
+    - 回复窗口: `NewCommentPopup`
         - 回复正文
         - 回复按钮
-2. `ProfileView`
+2. `ProfileView`（计划）
     - 个人信息表单
         - 提交按钮
+
+离线数据格式
+====
+
+- 用户表
+    - 存储至一个文本文件: `/user.cfdata`
+    - 每个用户存储至一行文本: `{name} {password}`
+- 内容表
+    - 存储至一个文件夹: `/content`
+    - 每个板块存储至一个子文件夹: `{boardName}`
+    - 每个主题帖存储至一个二级子文件夹: `{threadID}`
+    - 每个回复贴存储至一个文本文件: `{threadID}`
+- 元数据
+    - 存储至一个文件夹: `/matedata`
+    - 管理员数据存储至一个文本文件`admin.cfdata`，每个管理员存储至一行: `{userID}`
+    - 版主数据存储至一个文本文件`moderator.cfdata`，每个版面-版主关系存储至一行: `{boardID} {userID}`
+
+备注
+====
+
+1. 用户不能被删除，用户表`id`连续且自增
+2. 要手动刷新列表
