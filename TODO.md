@@ -45,21 +45,30 @@ Model
 -----
 
 1. `User`类
-   - 用户基类，继承自`Object`
+   - 用户基类，抽象类，继承自`Object`
    - `int id`: primary_kay, ai, positive integer
    - `string userName`: `[A-Za-z0-9_]+`
    - `string password`: `[A-Za-z0-9_]+`
    - `string getName() const`
    - `int getID() const`
-   - `bool checkPassword(string test_password) const`
+   - `virtual bool checkPassword(string test_password)`
    - `string dump() const`: `{name} {password}`
    - `bool load(const string text)`
+   - `virtual hello() const`
+   - `virtual string getBoardNames() const`
 1. `NormalUser`类
    - 继承自`User`类
+   - `bool checkPassword(string test_password)`
+   - `hello() const`
 1. `Moderator`类
    - 继承自`NormalUser`类
+   - `bool checkPassword(string test_password)`
+   - `hello() const`
+   - `string getBoardNames() const`
 1. `Admin`类
    - 继承自`User`类
+   - `hello() const`
+   - `bool checkPassword(string test_password)`
 
 内容
 ----
@@ -86,7 +95,7 @@ Model
    - `int owner`
    - `list<Comment*>* comments`
    - `bool post(Comment &newComment)`
-   - `bool deleteComment(const int commentID)`
+   - `bool delete(const int commentID)`
 
 辅助模型
 -----
