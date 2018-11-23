@@ -58,7 +58,7 @@ Model
 1. `Admin`类
    - 继承自`User`类
 
-内容
+模型
 ----
 
 1. `Board`类
@@ -86,7 +86,7 @@ Model
    - `list<Comment>& getComments()`
    - `bool deleteComment(const int commentID)`
 
-辅助
+辅助模型
 -----
 
 1. `Datetime`类
@@ -95,7 +95,7 @@ Model
 
 Controller
 =====
-
+  
 1. `CForumController`
    - `list<Board>::iterator getBoardIterator()`
    - `User* register(const string userName, const string password)`
@@ -113,3 +113,46 @@ Controller
    - `list<Comment>::iterator getCommentIterator()`
    - `Comment* post(const int owner, const int threadID, const string title, const string content)`
    - `bool delete(const int owner, const int threadID)`
+
+视图
+=====
+
+1. `Homepage`
+   - 用户名框
+   - 密码框
+   - 注册按钮
+   - 登陆按钮
+2. `ForumView`
+    - 个人信息
+        - 用户名
+    - 板块列表
+        - 板块名
+        - 版主管理按钮
+            - 版主列表
+                - 版主用户名
+                - 撤销版主按钮
+            - 任命版主按钮
+2. `BoardView`
+    - 板块名
+    - 主题帖列表
+        - 标题
+        - 发帖人
+    - 发帖按钮
+    - 发帖窗口
+        - 标题框
+        - 正文框
+        - 发布按钮
+2. `ThreadView`
+    - 主题帖标题
+    - 主题帖发帖人
+    - 主题帖正文
+    - 回复帖列表
+        - 回复正文
+        - 回复人用户名
+        - 回复时间
+    - 回复窗口
+        - 回复正文
+        - 回复按钮
+2. `ProfileView`
+    - 个人信息表单
+        - 提交按钮
