@@ -10,7 +10,7 @@
 
 using BoardList = list<cforum::Board*>;
 using UserList = vector<cforum::User>;
-using AdminSet = unordered_set<int>;
+using UserSet = unordered_set<int>;
 
 namespace cforum
 {
@@ -18,11 +18,14 @@ namespace cforum
 	{
 	public:
 		CForum();
+		CForum(const fs::path path);
 		~CForum();
 		BoardList* boards;
 		UserList* users;
-		AdminSet* admins;
-//		bool load(const string path);
+		UserSet* admins;
+		Board *getBoardByID(const int BoardID);
+		bool load(const fs::path path);
+		bool save(const fs::path path) const;
 	};
 }
 

@@ -9,7 +9,7 @@
                 "${file}",
                 "-o",
                 "${fileDirname}\\${fileBasenameNoExtension}.exe",
-                "-std:c++14",
+                "-std:c++17",
                 "/EHa"
             ],
         },
@@ -21,7 +21,7 @@
                 "*.cpp",
                 "-o",
                 "${fileDirname}\\main.exe",
-                "-std:c++14",
+                "-std:c++17",
                 "/EHa"
             ],
         },
@@ -33,7 +33,7 @@
                 "${file}",
                 "-o",
                 "${fileDirname}\\${fileBasenameNoExtension}-static.exe",
-                "-std:c++14",
+                "-std:c++17",
                 "/EHa",
                 "/MT"
             ],
@@ -46,7 +46,7 @@
                 "${file}",
                 "-o",
                 "${fileDirname}\\${fileBasenameNoExtension}.exe",
-                "-std=c++14"
+                "-std=c++17"
             ],
         }
     ]

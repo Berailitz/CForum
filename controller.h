@@ -17,10 +17,13 @@ namespace cforum
 		bool registerUser(const string userName, const string password);
 		bool login(const string userName, const string password);
 		bool setModerator(const string userName);
+		bool addBoard(const string boardName);
 		bool postThread(const string title, const string content);
 		bool deleteThread(const int threadID);
 		bool postComment(const string content);
 		bool deleteComment(const int commentID);
+		bool load(const string path);
+		bool save(const string path) const;
 	private:
 		User *findUser(const string userName);
 	};

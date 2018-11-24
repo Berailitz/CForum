@@ -19,7 +19,7 @@ namespace cforum
 		string getName() const;
 		int getID() const;
 		bool isPasswordCorrect(const string testPassword);
-		//string dump() const;
+		string dump() const;
         bool load(const string text);
 	};
 

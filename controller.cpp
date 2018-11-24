@@ -13,7 +13,8 @@ namespace cforum
 
 	bool Controller::registerUser(const string newUserName, const string newPassword)
     {
-        cforum->users->push_back(User(cforum->users->size() + 1, newUserName, newPassword));
+		user = new User(cforum->users->size() + 1, newUserName, newPassword);
+        cforum->users->push_back(*user);
 		return true;
 	}
 
@@ -42,6 +43,13 @@ namespace cforum
 		}
 	}
 
+	bool Controller::addBoard(const string boardName)
+	{
+		board = new Board(cforum->boards->size() + 1, boardName);
+		cforum->boards->push_back(board);
+		return true;
+	}
+
 	bool Controller::postThread(const string title, const string content)
 	{
 		thread = new Thread(board->threads->size() + 1, content, user->id, title);
@@ -62,7 +70,7 @@ namespace cforum
 
 	bool Controller::postComment(const string content)
 	{
-		return thread->post(new Comment(board->threads->size() + 1, content));
+		return thread->post(new Comment(thread->comments->size() + 1, content));
 	}
 
 	bool Controller::deleteComment(const int commentID)
@@ -75,6 +83,16 @@ namespace cforum
 		{
 			return false;
 		}
+	}
+
+	bool Controller::load(const string path)
+	{
+		return cforum->load(path);
+	}
+
+	bool Controller::save(const string path) const
+	{
+		return cforum->save(path);
 	}
 
 	User * Controller::findUser(const string userName)

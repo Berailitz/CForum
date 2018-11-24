@@ -26,6 +26,11 @@ namespace cforum
 		return password == testPassword;
 	}
 
+	string User::dump() const
+	{
+		return to_string(id) + " " + userName + " " + password;
+	}
+
 	bool User::load(const string text)
 	{
 		istringstream iss(text);
