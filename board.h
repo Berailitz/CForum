@@ -17,7 +17,7 @@ namespace cforum
 		string content;
 		chrono::system_clock::time_point time;
 		int owner;
-		bool load(const string path);
+//		bool load(const string path);
 		//bool save(const string path) const;
 	};
 
@@ -35,7 +35,7 @@ namespace cforum
 		CommentList* comments;
         bool post(Comment *newComment); // newComment is in heap
 		bool remove(const int commentID); // commentID < comments->size()
-		virtual bool load(const string path);
+//		virtual bool load(const string path);
 		//virtual bool save(const string path) const;
 		void initialize(const Thread *old_thread);
 	};
@@ -57,7 +57,7 @@ namespace cforum
 		bool isModerator(const int userID) const;
 		bool setModerator(const int userID);
 		bool removeModerator();
-		bool load(const string path);
+//		bool load(const string path);
 		//bool save(const string path) const;
 	};
 }

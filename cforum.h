@@ -22,7 +22,7 @@ namespace cforum
 		BoardList* boards;
 		UserList* users;
 		AdminSet* admins;
-		bool load(const string path);
+//		bool load(const string path);
 	};
 }
 

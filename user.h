@@ -20,7 +20,7 @@ namespace cforum
 		int getID() const;
 		bool isPasswordCorrect(const string testPassword);
 		//string dump() const;
-		bool load(const string text);
+        bool load(const string text);
 	};
 
 	class NormalUser : public User
