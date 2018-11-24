@@ -1,5 +1,5 @@
-#ifndef CFORUM_BOARD
-#define CFORUM_BOARD
+#ifndef CFORUM_BOARD_H
+#define CFORUM_BOARD_H
 
 #include <chrono>
 #include <list>
@@ -62,4 +62,4 @@ namespace cforum
 	};
 }
 
-#endif // !CFORUM_BOARD
+#endif // !CFORUM_BOARD_H

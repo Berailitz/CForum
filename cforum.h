@@ -1,5 +1,5 @@
-#ifndef CFORUM_CFORUM
-#define CFORUM_CFORUM
+#ifndef CFORUM_CFORUM_H
+#define CFORUM_CFORUM_H
 
 #include <list>
 #include <string>
@@ -26,4 +26,4 @@ namespace cforum
 	};
 }
 
-#endif // !CFORUM_CFORUM
+#endif // !CFORUM_CFORUM_H

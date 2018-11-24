@@ -1,5 +1,5 @@
-#ifndef CFORUM_CONTROLLER
-#define CFORUM_CONTROLLER
+#ifndef CFORUM_CONTROLLER_H
+#define CFORUM_CONTROLLER_H
 
 #include "cforum.h"
 
@@ -26,4 +26,4 @@ namespace cforum
 	};
 }
 
-#endif // !CFORUM_CONTROLLER
+#endif // !CFORUM_CONTROLLER_H

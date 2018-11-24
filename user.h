@@ -1,5 +1,5 @@
-#ifndef CFORUM_USER
-#define CFORUM_USER
+#ifndef CFORUM_USER_H
+#define CFORUM_USER_H
 
 #include <sstream>
 #include <string>
@@ -36,4 +36,4 @@ namespace cforum
 	};
 }
 
-#endif // !CFORUM_USER
+#endif // !CFORUM_USER_H
