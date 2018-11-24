@@ -2,6 +2,9 @@
 *.ilk
 *.pdb
 
+.qmake.*
+*.pro.user
+
 # Prerequisites
 *.d
 
