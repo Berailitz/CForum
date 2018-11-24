@@ -1,0 +1,53 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "clang-cl-current",
+            "command": "clang-cl",
+            "args": [
+                "-Z7",
+                "${file}",
+                "-o",
+                "${fileDirname}\\${fileBasenameNoExtension}.exe",
+                "-std:c++14",
+                "/EHa"
+            ],
+        },
+        {
+            "label": "clang-cl-project",
+            "command": "clang-cl",
+            "args": [
+                "-Z7",
+                "*.cpp",
+                "-o",
+                "${fileDirname}\\main.exe",
+                "-std:c++14",
+                "/EHa"
+            ],
+        },
+        {
+            "label": "clang-cl-static",
+            "command": "clang-cl",
+            "args": [
+                "-Z7",
+                "${file}",
+                "-o",
+                "${fileDirname}\\${fileBasenameNoExtension}-static.exe",
+                "-std:c++14",
+                "/EHa",
+                "/MT"
+            ],
+        },
+        {
+            "label": "g++",
+            "command": "g++",
+            "args": [
+                "-g",
+                "${file}",
+                "-o",
+                "${fileDirname}\\${fileBasenameNoExtension}.exe",
+                "-std=c++14"
+            ],
+        }
+    ]
+}
