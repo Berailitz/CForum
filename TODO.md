@@ -35,11 +35,12 @@ Model
 ----
 
 1. `CForum`类
-    - 论坛主类，继承自`Object`
+    - 论坛主类
     - `list<Board*>* boards = nullptr`: 与`ForumView`中的`BoardListView`绑定
     - `vector<User>* users = nullptr`
-    - `set<int>* admins = nullptr`
-    - `void load(string filename)`
+    - `unordered_set<int>* admins = nullptr`
+    - `bool load(const string filename)`
+    - `void save(const string filename) const`
 
 用户
 -----
@@ -78,31 +79,30 @@ Model
    - `int id`: primary_kay, 从`1`开始
    - `string name`: unique
    - `list<Thread*>* threads`
-   - `int moderators`
-   - `bool post(Thread &newThread)`
-   - `bool delete(int threadID)`
-   - `bool isModerator(int userID)`
+   - `int moderator`
+   - `bool post(const Thread &newThread)`
+   - `bool remove(const int threadID)`
+   - `bool isModerator(const int userID) const`
+   - `bool setModerator(const int userID) const`
+   - `bool removeModerator(const int userID) const`
+   - `bool load(const string path)`
+   - `bool save(const string path) const`
 1. `Comment`类
    - 回复帖类，继承自`Object`
-   - `int ID = -1`: primary_kay in a thread, 从`1`开始
+   - `int id`: primary_kay in a thread, 从`1`开始
    - `string content`
-   - `Datetime time`
+   - `chrono::system_clock::time_point time`
    - `int owner`
+   - `virtual bool load(const string path)`
+   - `virtual bool save(const string path) const`
 1. `Thread`类
    - 主题帖类，继承自`Comment`类
-   - `int id`: primary_kay in a thread, 从`1`开始
-   - `string title`
-   - `int owner`
+   - `string title`: 不含换行符
    - `list<Comment*>* comments`
-   - `bool post(Comment &newComment)`
-   - `bool delete(const int commentID)`
-
-辅助模型
------
-
-1. `Datetime`类
-   - 表示日期和时间
-   - `string toString() const`
+   - `bool post(const Comment &newComment)`
+   - `bool remove(const int commentID)`
+   - `bool load(const string path)`
+   - `bool save(const string path) const`
 
 Controller
 =====
@@ -113,8 +113,8 @@ Controller
         - `string username`
         - `string boardName`
         - `string threadTitle`
-        - `string thread_content`
-        - `bool register(const string userName, const string password)`
+        - `string threadContent`
+        - `bool registerUser(const string userName, const string password)`
         - `bool login(const string userName, const string password)`
         - `bool setModerator(const int userID, const int boardID)`
         - `bool removeModerator(const int userID, const int boardID)`
@@ -158,7 +158,7 @@ Controller
     - 发帖窗口: `NewThreadPopup`
         - 标题框
         - 正文框
-        - 发布按钮
+        - 发布按钮，发布后进入该主题帖
 2. `ThreadView`
     - 主题帖标题
     - 主题帖发帖人
@@ -179,12 +179,12 @@ Controller
 
 - 用户表
     - 存储至一个文本文件: `/user.cfdata`
-    - 每个用户存储至一行文本: `{name} {password}`
+    - 每个用户存储至一行文本: `{id} {name} {password}`
 - 内容表
     - 存储至一个文件夹: `/content`
     - 每个板块存储至一个子文件夹: `{boardName}`
-    - 每个主题帖存储至一个二级子文件夹: `{threadID}`
-    - 每个回复贴存储至一个文本文件: `{threadID}`
+    - 每个主题帖存储至一个二级子文件夹`{threadID}`，及其下的一个文本文件`0.cfdata`: `{title}\n{ownerID}\n{time}\n{content}`
+    - 每个回复贴存储至一个文本文件`{threadID}.cfdata`: `{ownerID}\n{time}\n{content}`
 - 元数据
     - 存储至一个文件夹: `/matedata`
     - 管理员数据存储至一个文本文件`admin.cfdata`，每个管理员存储至一行: `{userID}`
@@ -193,5 +193,8 @@ Controller
 备注
 ====
 
-1. 用户不能被删除，用户表`id`连续且自增
+1. 用户不能被删除，用户表`id`从1开始，连续且自增
+1. 版面表`id`从1开始，连续且自增
+1. 主题帖表`id`从1开始，连续且自增
+1. 回复帖表`id`从1开始，连续且自增
 2. 要手动刷新列表
