@@ -5,29 +5,18 @@ ApplicationWindow {
     visible: true
     width: 640
     height: 480
-    title: qsTr("Tabs")
 
-    SwipeView {
-        id: swipeView
-        anchors.fill: parent
-        currentIndex: tabBar.currentIndex
+    ListView {
+        width: 100
+        height: 100
 
-        Page1Form {
-        }
-
-        Page2Form {
-        }
-    }
-
-    footer: TabBar {
-        id: tabBar
-        currentIndex: swipeView.currentIndex
-
-        TabButton {
-            text: qsTr("Page 1")
-        }
-        TabButton {
-            text: qsTr("Page 2")
+        model: boardListModel
+        delegate: Rectangle {
+            height: 25
+            width: 100
+            Text {
+                text: name
+            }
         }
     }
 }

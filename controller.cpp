@@ -2,7 +2,7 @@
 
 namespace cforum
 {
-	Controller::Controller() : cforum(new CForum)
+    Controller::Controller() : QObject(), cforum(new CForum)
 	{
 	}
 
@@ -43,7 +43,7 @@ namespace cforum
 		}
 	}
 
-	bool Controller::addBoard(const string boardName)
+    bool Controller::addBoard(const QString boardName)
 	{
 		board = new Board(cforum->boards->size() + 1, boardName);
 		cforum->boards->push_back(board);

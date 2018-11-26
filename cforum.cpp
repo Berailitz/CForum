@@ -3,11 +3,11 @@
 
 namespace cforum
 {
-	CForum::CForum() : boards(new BoardList), users(new UserList), admins(new UserSet)
+    CForum::CForum() : QObject(), boards(new BoardList), users(new UserList), admins(new UserSet)
 	{
 	}
 
-	CForum::CForum(const fs::path path)
+    CForum::CForum(const fs::path path) : QObject()
 	{
 		load(path);
 	}
@@ -15,7 +15,7 @@ namespace cforum
 
 	CForum::~CForum()
 	{
-		for (Board *&board : *boards)
+        for (QObject *&board : *boards)
 		{
 			delete board;
 		}
@@ -28,7 +28,7 @@ namespace cforum
 	{
 		BoardList::iterator it = boards->begin();
 		advance(it, BoardID - 1);
-		return *it;
+        return static_cast<Board*>(*it);
 	}
 
 	bool CForum::load(const fs::path path)
@@ -110,8 +110,9 @@ namespace cforum
 			fs::create_directory(path / "matedata");
 			stream.open(path / "matedata" / "moderator.cfdata");
 			fs::create_directory(path / "content");
-			for (Board *&it: *boards)
-			{
+            for (QObject *&qit: *boards)
+            {
+                Board *it = static_cast<Board*>(qit);
 				it->save(path / "content" / to_string(it->id));
 				if (stream.is_open() && it->moderatorID != -1)
 				{

@@ -5,8 +5,9 @@
 
 namespace cforum
 {
-	class Controller
-	{
+    class Controller : public QObject
+    {
+        Q_OBJECT
 	public:
 		Controller();
 		~Controller();
@@ -17,7 +18,7 @@ namespace cforum
 		bool registerUser(const string userName, const string password);
 		bool login(const string userName, const string password);
 		bool setModerator(const string userName);
-		bool addBoard(const string boardName);
+        bool addBoard(const QString boardName);
 		bool postThread(const string title, const string content);
 		bool deleteThread(const int threadID);
 		bool postComment(const string content);

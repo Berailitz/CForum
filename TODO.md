@@ -1,3 +1,9 @@
+Note
+====
+
+1. `QML`中`ListView`对应的容器类型必须为`QList<QObject*>`，元素为`QObject`的子类，使用`Q_OBJECT`标记，并使用`Q_PROPERTY`注册读写函数和信号，无需注册为`QML`类型
+2. `QQmlApplicationEngine`加载的`QML`文件需包含`ApplicationWindow`
+
 需求分析
 =====
 

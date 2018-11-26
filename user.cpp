@@ -2,14 +2,24 @@
 
 namespace cforum
 {
-	User::User(const int id, const string userName, const string password) : id(id), userName(userName), password(password)
+    User::User(const int id, const string userName, const string password) : QObject(), id(id), userName(userName), password(password)
 	{
 	}
 
-	User::User(const string text)
+    User::User(const string text) : QObject()
 	{
 		load(text);
 	}
+
+    User::User(const User *oldUser) : QObject()
+    {
+        initialize(oldUser);
+    }
+
+    User::User(const User &oldUser) : QObject()
+    {
+        initialize(&oldUser);
+    }
 
 	string User::getName() const
 	{
@@ -38,5 +48,11 @@ namespace cforum
 		iss >> userName;
 		iss >> password;
 		return true;
+	}
+	void User::initialize(const User * oldUser)
+	{
+		id = oldUser->id;
+		userName = oldUser->userName;
+		password = oldUser->password;
 	}
 }
