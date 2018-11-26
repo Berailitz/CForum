@@ -10,6 +10,7 @@ ApplicationWindow {
 
     SwipeView {
         id: swipeView
+        spacing: -1
         anchors.fill: parent
 
         HomePage {
@@ -22,6 +23,12 @@ ApplicationWindow {
         }
 
         ThreadView {
+        }
+
+        Connections {
+            target: forumController
+            onLogined: swipeView.incrementCurrentIndex()
+            onBoardOpened: swipeView.incrementCurrentIndex()
         }
     }
 }

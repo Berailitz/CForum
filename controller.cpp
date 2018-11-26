@@ -11,88 +11,105 @@ namespace cforum
 	{
 	}
 
-	bool Controller::registerUser(const QString newUserName, const QString newPassword)
+    QString Controller::getGreeting() const
+    {
+        QString greeting = "Welcome ";
+        if (user == nullptr)
+        {
+            greeting += "Guest";
+        }
+        else
+        {
+            greeting += user->userName;
+        }
+        greeting += "!";
+        return greeting;
+    }
+
+    void Controller::registerUser(const QString newUserName, const QString newPassword)
     {
 		user = new User(cforum->users->size() + 1, newUserName, newPassword);
         cforum->users->push_back(*user);
-		return true;
 	}
 
-	bool Controller::login(const QString userName, const QString password)
+    void Controller::login(const QString userName, const QString password)
 	{
 		User *user = findUser(userName);
 		if (user->isPasswordCorrect(password))
 		{
-			Controller::user = user;
-			return true;
+            qDebug() << "Login success:" << userName;
+            Controller::user = user;
+            emit logined();
 		}
-		return false;
+        else
+        {
+            qDebug() << "Login failed:" << userName;
+        }
 	}
 
-	bool Controller::setModerator(const QString userName)
+    void Controller::setModerator(const QString userName)
 	{
 		const User *user = findUser(userName);
 		if (user == nullptr)
 		{
-			return board->removeModerator();
+            board->removeModerator();
 		}
 		else
 		{
-			board->setModerator(user->id);
-			return true;
+            board->setModerator(user->id);
 		}
 	}
 
-    bool Controller::addBoard(const QString boardName)
+    void Controller::addBoard(const QString boardName)
 	{
 		board = new Board(cforum->boards->size() + 1, boardName);
-		cforum->boards->push_back(board);
-		return true;
+        cforum->boards->push_back(board);
 	}
 
-	bool Controller::postThread(const QString title, const QString content)
+    void Controller::viewBoard(const int boardID)
+    {
+        board = cforum->getBoardByID(boardID);
+        if (board)
+        {
+            emit boardOpened();
+        }
+    }
+
+    void Controller::postThread(const QString title, const QString content)
 	{
 		thread = new Thread(board->threads->size() + 1, content, user->id, title);
-		return board->post(thread);
+        board->post(thread);
 	}
 
-	bool Controller::deleteThread(const int threadID)
+    void Controller::deleteThread(const int threadID)
 	{
 		if (threadID <= board->threads->size())
 		{
-			return board->remove(threadID);
-		}
-		else
-		{
-			return false;
-		}
+            board->remove(threadID);
+        }
 	}
 
-	bool Controller::postComment(const QString content)
+    void Controller::postComment(const QString content)
 	{
-		return thread->post(new Comment(thread->comments->size() + 1, content));
+        thread->post(new Comment(thread->comments->size() + 1, content));
 	}
 
-	bool Controller::deleteComment(const int commentID)
+    void Controller::deleteComment(const int commentID)
 	{
 		if (commentID <= thread->comments->size())
 		{
-			return thread->remove(commentID);
-		}
-		else
-		{
-			return false;
-		}
+            thread->remove(commentID);
+        }
 	}
 
-	bool Controller::load(const QString path)
+    void Controller::load(const QString path)
 	{
-		return cforum->load(path.toStdString());
+        cforum->load(path.toStdString());
 	}
 
-	bool Controller::save(const QString path) const
+    void Controller::save(const QString path) const
 	{
-		return cforum->save(path.toStdString());
+        cforum->save(path.toStdString());
 	}
 
 	User * Controller::findUser(const QString userName)

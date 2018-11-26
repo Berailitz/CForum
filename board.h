@@ -6,6 +6,7 @@
 #include <fstream>
 #include <iomanip>
 #include <list>
+#include <QDebug>
 #include <QObject>
 #include <QList>
 #include <string>
