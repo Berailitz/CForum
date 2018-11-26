@@ -11,6 +11,8 @@ int main()
 	c.addBoard("TestBoard");
 	c.postThread("Test thread", "This is content.");
 	c.postComment("Comment 1");
+	c.setModerator("admin");
+	// c.load("data");
 	c.save("data");
 	cout << "Exit.";
     cin.get();

@@ -79,7 +79,7 @@ namespace cforum
 	bool Board::save(const fs::path path) const
 	{
 		fs::create_directory(path);
-		ofstream stream(path / "thread.cfdata");
+		ofstream stream(path / "board.cfdata");
 		if (stream.is_open())
 		{
 			stream << id << endl;
@@ -150,14 +150,16 @@ namespace cforum
 			int commentCounter;
 			stream >> id;
 			stream >> commentCounter;
-			stream >> title;
+			stream.get();
+			getline(stream, title);
 			stream >> authorID;
-			stream >> get_time(&time, "%Y%m%d%H%M%S");
+			stream >> get_time(&time, "%Y-%m-%d@%H:%M:%S");
+			stream.get();
 			content = string((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
 			stream.close();
 			for (int i = 1; i <= commentCounter; i++)
 			{
-				comments->push_back(new Comment(path / to_string(i) / ".cfdata"));
+				comments->push_back(new Comment(path / (to_string(i) + ".cfdata")));
 			}
 			return true;
 		}
@@ -177,7 +179,7 @@ namespace cforum
 			stream << comments->size() << endl;
 			stream << title << endl;
 			stream << authorID << endl;
-			stream << put_time(&time, "%Y%m%d%H%M%S") << endl;
+			stream << put_time(&time, "%Y-%m-%d@%H:%M:%S") << endl;
 			stream << content;
 			stream.close();
 			for (Comment *&it : *comments)
@@ -220,7 +222,8 @@ namespace cforum
 		{
 			stream >> id;
 			stream >> authorID;
-			stream >> get_time(&time, "%Y%m%d%H%M%S");
+			stream >> get_time(&time, "%Y-%m-%d@%H:%M:%S");
+			stream.get();
 			content = string((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
 			stream.close();
 			return true;
@@ -236,7 +239,8 @@ namespace cforum
 		if (stream.is_open())
 		{
 			stream << id << endl;
-			stream << put_time(&time, "%Y%m%d%H%M%S") << endl;
+			stream << authorID << endl;
+			stream << put_time(&time, "%Y-%m-%d@%H:%M:%S") << endl;
 			stream << content;
 			stream.close();
 			return true;
