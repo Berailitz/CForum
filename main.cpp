@@ -22,5 +22,7 @@ int main(int argc, char *argv[])
 	// c.load("data");
 //	c.save("data");
     ctxt->setContextProperty("boardListModel", QVariant::fromValue(*c.cforum->boards));
+    ctxt->setContextProperty("threadListModel", QVariant::fromValue(*c.board->threads));
+    ctxt->setContextProperty("commentListModel", QVariant::fromValue(*c.thread->comments));
     return app.exec();
 }

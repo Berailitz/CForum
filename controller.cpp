@@ -11,14 +11,14 @@ namespace cforum
 	{
 	}
 
-	bool Controller::registerUser(const string newUserName, const string newPassword)
+	bool Controller::registerUser(const QString newUserName, const QString newPassword)
     {
 		user = new User(cforum->users->size() + 1, newUserName, newPassword);
         cforum->users->push_back(*user);
 		return true;
 	}
 
-	bool Controller::login(const string userName, const string password)
+	bool Controller::login(const QString userName, const QString password)
 	{
 		User *user = findUser(userName);
 		if (user->isPasswordCorrect(password))
@@ -29,7 +29,7 @@ namespace cforum
 		return false;
 	}
 
-	bool Controller::setModerator(const string userName)
+	bool Controller::setModerator(const QString userName)
 	{
 		const User *user = findUser(userName);
 		if (user == nullptr)
@@ -50,7 +50,7 @@ namespace cforum
 		return true;
 	}
 
-	bool Controller::postThread(const string title, const string content)
+	bool Controller::postThread(const QString title, const QString content)
 	{
 		thread = new Thread(board->threads->size() + 1, content, user->id, title);
 		return board->post(thread);
@@ -68,7 +68,7 @@ namespace cforum
 		}
 	}
 
-	bool Controller::postComment(const string content)
+	bool Controller::postComment(const QString content)
 	{
 		return thread->post(new Comment(thread->comments->size() + 1, content));
 	}
@@ -85,17 +85,17 @@ namespace cforum
 		}
 	}
 
-	bool Controller::load(const string path)
+	bool Controller::load(const QString path)
 	{
-		return cforum->load(path);
+		return cforum->load(path.toStdString());
 	}
 
-	bool Controller::save(const string path) const
+	bool Controller::save(const QString path) const
 	{
-		return cforum->save(path);
+		return cforum->save(path.toStdString());
 	}
 
-	User * Controller::findUser(const string userName)
+	User * Controller::findUser(const QString userName)
 	{
 		for (User &user : *cforum->users)
 		{

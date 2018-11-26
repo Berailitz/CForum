@@ -7,23 +7,29 @@
 #include <iomanip>
 #include <list>
 #include <QObject>
+#include <QList>
 #include <string>
 
 using namespace std;
 namespace fs = std::experimental::filesystem;
+using CommentList = QList<QObject*>;
+using ThreadList = QList<QObject*>;
 
 namespace cforum
 {
     class Comment : public QObject
     {
         Q_OBJECT
+		Q_PROPERTY(int id MEMBER id)
+		Q_PROPERTY(int authorID MEMBER authorID)
+		Q_PROPERTY(QString content MEMBER content)
     public:
-        Comment(const int id = 0, string content = "", const int authorID = 0);
+        Comment(const int id = 0, QString content = "", const int authorID = 0);
         Comment(const fs::path filename);
         Comment(const Comment *oldComment);
         Comment(const Comment &oldComment);
         int id; // primary_kay in a thread, start from 1
-        string content;
+		QString content;
         tm time;
         int authorID;
         void initialize(const Comment *oldComment);
@@ -31,19 +37,16 @@ namespace cforum
         virtual bool save(const fs::path filename) const;
     };
 
-
-    using CommentList = list<Comment*>;
-
     class Thread : public Comment
     {
         Q_OBJECT
     public:
-        Thread(const int id = 0, string content = "", const int authorID = 0, string title = "");
+        Thread(const int id = 0, QString content = "", const int authorID = 0, QString title = "");
         Thread(const fs::path path);
         Thread(const Thread *old_thread);
         Thread(const Thread &old_thread);
         virtual ~Thread();
-        string title; // without `\n`
+		QString title; // without `\n`
         CommentList* comments;
         bool post(Comment *newComment); // newComment is in heap
         bool remove(const int commentID); // commentID < comments->size()
@@ -52,12 +55,11 @@ namespace cforum
         void initialize(const Thread *old_thread);
     };
 
-
-    using ThreadList = list<Thread*>;
-
     class Board : public QObject
     {
         Q_OBJECT
+        Q_PROPERTY(int id MEMBER id)
+        Q_PROPERTY(int moderatorID MEMBER moderatorID)
         Q_PROPERTY(QString name MEMBER name)
     public:
         Board();

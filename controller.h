@@ -15,18 +15,18 @@ namespace cforum
 		User *user;
 		Board *board;
 		Thread *thread;
-		bool registerUser(const string userName, const string password);
-		bool login(const string userName, const string password);
-		bool setModerator(const string userName);
+		bool registerUser(const QString userName, const QString password);
+		bool login(const QString userName, const QString password);
+		bool setModerator(const QString userName);
         bool addBoard(const QString boardName);
-		bool postThread(const string title, const string content);
+		bool postThread(const QString title, const QString content);
 		bool deleteThread(const int threadID);
-		bool postComment(const string content);
+		bool postComment(const QString content);
 		bool deleteComment(const int commentID);
-		bool load(const string path);
-		bool save(const string path) const;
+		bool load(const QString path);
+		bool save(const QString path) const;
 	private:
-		User *findUser(const string userName);
+		User *findUser(const QString userName);
 	};
 }
 

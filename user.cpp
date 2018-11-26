@@ -2,7 +2,7 @@
 
 namespace cforum
 {
-    User::User(const int id, const string userName, const string password) : QObject(), id(id), userName(userName), password(password)
+    User::User(const int id, const QString userName, const QString password) : QObject(), id(id), userName(userName), password(password)
 	{
 	}
 
@@ -21,7 +21,7 @@ namespace cforum
         initialize(&oldUser);
     }
 
-	string User::getName() const
+	QString User::getName() const
 	{
 		return userName;
 	}
@@ -31,22 +31,25 @@ namespace cforum
 		return id;
 	}
 
-	bool User::isPasswordCorrect(const string testPassword)
+	bool User::isPasswordCorrect(const QString testPassword)
 	{
 		return password == testPassword;
 	}
 
 	string User::dump() const
 	{
-		return to_string(id) + " " + userName + " " + password;
+		return to_string(id) + " " + userName.toStdString() + " " + password.toStdString();
 	}
 
 	bool User::load(const string text)
 	{
+		string tempString;
 		istringstream iss(text);
 		iss >> id;
-		iss >> userName;
-		iss >> password;
+		iss >> tempString;
+		userName = QString::fromStdString(tempString);
+		iss >> tempString;
+		password = QString::fromStdString(tempString);
 		return true;
 	}
 	void User::initialize(const User * oldUser)

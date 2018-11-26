@@ -88,8 +88,9 @@ namespace cforum
             stream << name.toStdString() << endl;
             stream << threads->size() << endl;
             stream.close();
-            for (Thread *&it : *threads)
+            for (QObject *&qit : *threads)
             {
+                Thread *it = static_cast<Thread*>(qit);
                 it->save(path / to_string(it->id));
             }
             return true;
@@ -100,7 +101,7 @@ namespace cforum
         }
     }
 
-    Thread::Thread(const int id, string content, const int authorID, string title) : Comment(id, content, authorID), title(title), comments(new CommentList)
+    Thread::Thread(const int id, QString content, const int authorID, QString title) : Comment(id, content, authorID), title(title), comments(new CommentList)
     {
     }
 
@@ -121,8 +122,9 @@ namespace cforum
 
     Thread::~Thread()
     {
-        for (Comment* &comment : *comments)
+        for (QObject* &qit : *comments)
         {
+            Comment *comment = static_cast<Thread*>(qit);
             delete comment;
         }
         delete comments;
@@ -149,15 +151,17 @@ namespace cforum
         comments = new CommentList;
         if (stream.is_open())
         {
+			string rawString;
             int commentCounter;
             stream >> id;
             stream >> commentCounter;
             stream.get();
-            getline(stream, title);
+            getline(stream, rawString);
+			title = QString::fromStdString(rawString);
             stream >> authorID;
             stream >> get_time(&time, "%Y-%m-%d@%H:%M:%S");
             stream.get();
-            content = string((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
+            content = QString::fromStdString(string((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>()));
             stream.close();
             for (int i = 1; i <= commentCounter; i++)
             {
@@ -179,13 +183,14 @@ namespace cforum
         {
             stream << id << endl;
             stream << comments->size() << endl;
-            stream << title << endl;
+            stream << title.toStdString() << endl;
             stream << authorID << endl;
             stream << put_time(&time, "%Y-%m-%d@%H:%M:%S") << endl;
-            stream << content;
+            stream << content.toStdString();
             stream.close();
-            for (Comment *&it : *comments)
+            for (QObject *&qit : *comments)
             {
+                Comment *it = static_cast<Thread*>(qit);
                 it->save(path / (to_string(it->id) + ".cfdata"));
             }
             return true;
@@ -199,13 +204,14 @@ namespace cforum
     void Thread::initialize(const Thread * old_thread)
     {
         comments = new CommentList;
-        for (Comment* &comment : *old_thread->comments)
+        for (QObject* &qit : *old_thread->comments)
         {
+            Comment *comment = static_cast<Thread*>(qit);
             comments->push_back(comment);
         }
     }
 
-    Comment::Comment(const int id, string content, const int authorID) : QObject(), id(id), content(content), authorID(authorID)
+    Comment::Comment(const int id, QString content, const int authorID) : QObject(), id(id), content(content), authorID(authorID)
     {
         auto now = chrono::system_clock::now();
         auto in_time_t = chrono::system_clock::to_time_t(now);
@@ -244,7 +250,7 @@ namespace cforum
             stream >> authorID;
             stream >> get_time(&time, "%Y-%m-%d@%H:%M:%S");
             stream.get();
-            content = string((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
+            content = QString::fromStdString(string((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>()));
             stream.close();
             return true;
         }
@@ -261,7 +267,7 @@ namespace cforum
             stream << id << endl;
             stream << authorID << endl;
             stream << put_time(&time, "%Y-%m-%d@%H:%M:%S") << endl;
-            stream << content;
+            stream << content.toStdString();
             stream.close();
             return true;
         }

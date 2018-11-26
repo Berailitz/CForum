@@ -13,16 +13,16 @@ namespace cforum
     {
         Q_OBJECT
 	public:
-		User(const int id = -1, const string userName = "", const string password = "");
+		User(const int id = -1, const QString userName = "", const QString password = "");
 		User(const string text);
         User(const User *oldUser);
         User(const User &oldUser);
 		int id; // primary_kay, ai, positive integer for typical user
-		string userName; // [A-Za-z0-9_]+
-		string password; // [A-Za-z0-9_]+
-		string getName() const;
+		QString userName; // [A-Za-z0-9_]+
+		QString password; // [A-Za-z0-9_]+
+		QString getName() const;
 		int getID() const;
-		bool isPasswordCorrect(const string testPassword);
+		bool isPasswordCorrect(const QString testPassword);
 		string dump() const;
         bool load(const string text);
         void initialize(const User *oldUser);

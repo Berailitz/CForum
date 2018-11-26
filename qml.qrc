@@ -1,9 +1,11 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>Page1Form.qml</file>
-        <file>Page2Form.qml</file>
+        <file>ForumView.qml</file>
+        <file>BoardView.qml</file>
         <file>main.qml</file>
         <file>qtquickcontrols2.conf</file>
+        <file>HomePage.qml</file>
+        <file>ThreadView.qml</file>
     </qresource>
 </RCC>
