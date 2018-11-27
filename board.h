@@ -21,14 +21,15 @@ namespace cforum
     class Comment : public QObject
     {
         Q_OBJECT
-		Q_PROPERTY(int id MEMBER id)
-		Q_PROPERTY(int authorID MEMBER authorID)
-		Q_PROPERTY(QString content MEMBER content)
+        Q_PROPERTY(int id MEMBER id CONSTANT)
+        Q_PROPERTY(int authorID MEMBER authorID CONSTANT)
+        Q_PROPERTY(QString content MEMBER content CONSTANT)
     public:
         Comment(const int id = 0, QString content = "", const int authorID = 0);
         Comment(const fs::path filename);
         Comment(const Comment *oldComment);
         Comment(const Comment &oldComment);
+		~Comment();
         int id; // primary_kay in a thread, start from 1
 		QString content;
         tm time;
@@ -41,7 +42,7 @@ namespace cforum
     class Thread : public Comment
     {
         Q_OBJECT
-        Q_PROPERTY(QString title MEMBER title)
+        Q_PROPERTY(QString title MEMBER title CONSTANT)
     public:
         Thread(const int id = 0, QString content = "", const int authorID = 0, QString title = "");
         Thread(const fs::path path);
@@ -60,9 +61,9 @@ namespace cforum
     class Board : public QObject
     {
         Q_OBJECT
-        Q_PROPERTY(int id MEMBER id)
-        Q_PROPERTY(int moderatorID MEMBER moderatorID)
-        Q_PROPERTY(QString name MEMBER name)
+        Q_PROPERTY(int id MEMBER id CONSTANT)
+        Q_PROPERTY(int moderatorID MEMBER moderatorID CONSTANT)
+        Q_PROPERTY(QString name MEMBER name CONSTANT)
     public:
         Board();
         Board(const int id, const QString name);

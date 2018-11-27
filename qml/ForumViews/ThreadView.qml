@@ -34,10 +34,10 @@ Page {
         }
 
         ListView {
-            id: commentListView
             height: contentHeight
             width: contentWidth
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            Layout.alignment: Qt.AlignHCenter
+            Layout.preferredWidth: 1080
             Layout.fillWidth: true
             model: commentListModel
             delegate: CommentItem {}

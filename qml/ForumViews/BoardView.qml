@@ -20,7 +20,7 @@ Page {
             anchors.topMargin: 200
             anchors.horizontalCenter: parent.horizontalCenter
             Text {
-                text: forumController.boardHeader
+                text: forumController.boardTitle
                 font.pointSize: 30
                 font.family: "dengxian"
                 Layout.preferredHeight: 100
@@ -29,6 +29,8 @@ Page {
             }
 
             ListView {
+                height: contentHeight
+                width: contentWidth
                 Layout.alignment: Qt.AlignHCenter
                 Layout.preferredWidth: 1080
                 Layout.fillWidth: true
@@ -53,6 +55,19 @@ Page {
     }
 
     RoundButton {
+        visible: forumController.isModerator
+        anchors.top: parent.top
+        anchors.topMargin: 100
+        anchors.right: parent.right
+        anchors.rightMargin: 300
+        radius: 50
+        text: qsTr("⚙")
+        font.pointSize: 50
+        font.family: "dengxian"
+        onClicked: setModeratorDialog.open()
+    }
+
+    RoundButton {
         anchors.top: parent.top
         anchors.topMargin: 100
         anchors.right: parent.right
@@ -66,5 +81,9 @@ Page {
 
     PostThreadDialog {
         id: newThreadDialog
+    }
+
+    SetModeratorDialog {
+        id: setModeratorDialog
     }
 }

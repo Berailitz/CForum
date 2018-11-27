@@ -55,6 +55,7 @@ Page {
                     font.pointSize: 40
                     focusPolicy: Qt.NoFocus
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    onClicked: forumController.registerUser(usernameTextField.text, passwordTextField.text)
                 }
 
                 Button {
@@ -72,7 +73,3 @@ Page {
     }
 }
 
-/*##^## Designer {
-    D{i:0;autoSize:true;height:720;width:1080}
-}
- ##^##*/

@@ -31,6 +31,40 @@ ApplicationWindow {
             onForumOpened: swipeView.setCurrentIndex(1)
             onBoardOpened: swipeView.setCurrentIndex(2)
             onThreadOpened: swipeView.setCurrentIndex(3)
+            onMessageSent: {
+                console.log(message)
+                messageText.text = message
+                messagePopupAnimation.stop()
+                messagePopup.opacity = 1
+                messagePopup.open()
+            }
+        }
+    }
+
+    Popup {
+        id: messagePopup
+        x: parent.width / 2 - width / 2
+        y: parent.height - height
+        height: contentHeight + 10
+        width: contentWidth + 100
+        Text {
+            id: messageText
+            width: 720
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            font.family: "dengxian"
+            font.pointSize: 30
+        }
+
+        onOpened: PropertyAnimation {
+            id: messagePopupAnimation
+            target: messagePopup
+            property: "opacity"
+            to: 0
+            duration: 1500
+            onStopped: messagePopup.close()
         }
     }
 }

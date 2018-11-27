@@ -13,7 +13,7 @@ RowLayout {
     }
 
     Button {
-        text: "打开版面"
+        text: qsTr("打开版面")
         Layout.preferredWidth: 200
         font.family: "dengxian"
         font.pointSize: 30

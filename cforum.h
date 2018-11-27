@@ -25,9 +25,13 @@ namespace cforum
         BoardList* boards;
         UserList* users;
         UserSet* admins;
+        bool isAdmin(const int userID);
         Board *getBoardByID(const int boardID);
+        User *getUserByID(const int userID);
         bool load(const fs::path path);
         bool save(const fs::path path) const;
+    private:
+        User *guest = new Guest();
     };
 }
 

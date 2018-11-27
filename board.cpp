@@ -19,6 +19,10 @@ namespace cforum
 
     Board::~Board()
     {
+		for (QObject *qit : *threads)
+		{
+			delete static_cast<Thread*>(qit);
+		}
     }
 
 	Thread * Board::getThreadByID(const int threadID)
@@ -44,9 +48,15 @@ namespace cforum
     bool Board::remove(const int threadID)
     {
         ThreadList::iterator it = threads->begin();
-        advance(it, threadID);
-        delete *it;
-        threads->erase(it);
+		Thread *tit;
+        advance(it, threadID - 1);
+		tit = static_cast<Thread*>(*it);
+        delete tit;
+        it = threads->erase(it);
+        while (it != threads->end())
+        {
+			static_cast<Thread*>(*it)->id--;
+        }
         return true;
     }
 
@@ -138,8 +148,9 @@ namespace cforum
     {
         for (QObject* &qit : *comments)
         {
-            Comment *comment = static_cast<Thread*>(qit);
-            delete comment;
+			Comment *cit;
+			cit = static_cast<Comment*>(qit);
+            delete cit;
         }
         delete comments;
     }
@@ -153,9 +164,15 @@ namespace cforum
     bool Thread::remove(const int commentID)
     {
         CommentList::iterator it = comments->begin();
-        advance(it, commentID);
-        delete *it;
-        comments->erase(it);
+		Comment *cit;
+        advance(it, commentID - 1);
+		cit = static_cast<Comment*>(*it);
+		delete cit;
+        it = comments->erase(it);
+        while (it != comments->end())
+        {
+			static_cast<Comment*>(*it)->id--;
+        }
         return true;
     }
 
@@ -246,6 +263,10 @@ namespace cforum
     {
         initialize(&oldComment);
     }
+
+	Comment::~Comment()
+	{
+	}
 
 	void Comment::initialize(const Comment * oldComment)
 	{

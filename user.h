@@ -46,6 +46,8 @@ namespace cforum
     class Guest : public User
     {
         Q_OBJECT
+    public:
+        Guest();
     };
 }
 

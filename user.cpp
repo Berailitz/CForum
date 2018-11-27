@@ -58,4 +58,8 @@ namespace cforum
 		userName = oldUser->userName;
 		password = oldUser->password;
 	}
+
+    Guest::Guest() : User(0, "Guest", "Guest")
+    {
+    }
 }

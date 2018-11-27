@@ -24,6 +24,11 @@ namespace cforum
 		delete admins;
 	}
 
+    bool CForum::isAdmin(const int userID)
+    {
+        return admins->find(userID) != admins->end();
+    }
+
 	Board * CForum::getBoardByID(const int boardID)
 	{
         if (boardID <= boards->size())
@@ -37,6 +42,24 @@ namespace cforum
             return nullptr;
 		}
 	}
+
+    User * CForum::getUserByID(const int userID)
+    {
+        if (userID == 0)
+        {
+            return guest;
+        }
+        else if (userID > 0 && userID <= users->size())
+        {
+            UserList::iterator it = users->begin();
+            advance(it, userID - 1);
+            return &*it;
+        }
+        else
+        {
+            return nullptr;
+        }
+    }
 
 	bool CForum::load(const fs::path path)
 	{
