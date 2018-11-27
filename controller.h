@@ -7,6 +7,14 @@
 
 namespace cforum
 {
+	const QString WELCOME_MESSAGE = QString::fromUtf8("欢迎 ");
+	const QString REGISTER_SUCCESS_MESSAGE = QString::fromUtf8("注册成功");
+	const QString LOGIN_SUCCESS_MESSAGE = QString::fromUtf8("登录成功");
+	const QString LOGIN_FAILED_MESSAGE = QString::fromUtf8("登录失败：用户名或密码错误");
+	const QString POST_SUCCESS_MESSAGE = QString::fromUtf8("发布成功");
+	const QString DELETE_SUCCESS_MESSAGE = QString::fromUtf8("删除成功");
+	const QString DELETE_FAILED_MESSAGE = QString::fromUtf8("删除失败");
+
     class Controller : public QObject
     {
         Q_OBJECT
@@ -14,7 +22,9 @@ namespace cforum
         Q_PROPERTY(QString boardTitle READ getBoardTitle NOTIFY boardOpened)
         Q_PROPERTY(QString threadTitle READ getThreadTitle NOTIFY threadOpened)
         Q_PROPERTY(QString threadContent READ getThreadContent NOTIFY threadOpened)
-        Q_PROPERTY(bool isModerator READ isModerator NOTIFY boardOpened)
+        Q_PROPERTY(bool isAdmin READ isAdmin NOTIFY boardOpened)
+		Q_PROPERTY(bool isModerator READ isModerator NOTIFY boardOpened)
+		Q_PROPERTY(int userID READ getUserID NOTIFY forumOpened)
 	public:
         Controller(QQmlApplicationEngine &engine);
 		~Controller();
@@ -26,7 +36,9 @@ namespace cforum
         QString getBoardTitle() const;
 		QString getThreadTitle() const;
         QString getThreadContent() const;
-        bool isModerator() const;
+		int getUserID() const;
+        bool isAdmin() const;
+		bool isModerator() const;
         void refreshViews();
     Q_SIGNALS:
         void forumOpened();

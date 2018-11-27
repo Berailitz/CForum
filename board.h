@@ -18,12 +18,15 @@ using ThreadList = QList<QObject*>;
 
 namespace cforum
 {
+	const QString DELETED_MESSAGE = QString::fromUtf8("Oops, 它被删除了...");
+
     class Comment : public QObject
     {
         Q_OBJECT
         Q_PROPERTY(int id MEMBER id CONSTANT)
         Q_PROPERTY(int authorID MEMBER authorID CONSTANT)
-        Q_PROPERTY(QString content MEMBER content CONSTANT)
+        Q_PROPERTY(QString content MEMBER content NOTIFY contentChanged)
+		Q_PROPERTY(bool isDeleted MEMBER isDeleted NOTIFY contentChanged)
     public:
         Comment(const int id = 0, QString content = "", const int authorID = 0);
         Comment(const fs::path filename);
@@ -34,9 +37,13 @@ namespace cforum
 		QString content;
         tm time;
         int authorID;
+		bool isDeleted;
+		void deleteContent();
         void initialize(const Comment *oldComment);
         virtual bool load(const fs::path filename);
         virtual bool save(const fs::path filename) const;
+	Q_SIGNALS:
+		void contentChanged();
     };
 
     class Thread : public Comment
@@ -53,6 +60,7 @@ namespace cforum
         CommentList* comments;
         bool post(Comment *newComment); // newComment is in heap
         bool remove(const int commentID); // commentID < comments->size()
+		Comment *getCommentByID(const int commentID);
         bool load(const fs::path path);
         bool save(const fs::path path) const;
         void initialize(const Thread *old_thread);

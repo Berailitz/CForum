@@ -15,8 +15,9 @@ RowLayout {
     }
 
     Button {
-        text: "删除评论"
-        Layout.preferredWidth: 200
+        visible: !forumController.isDeleted && (forumController.isModerator || model.authorID === forumController.userID)
+        text: qsTr("❌")
+        Layout.preferredWidth: 100
         font.family: "dengxian"
         font.pointSize: 30
         Layout.alignment: Qt.AlignRight | Qt.AlignVCenter

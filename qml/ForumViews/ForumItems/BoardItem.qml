@@ -13,8 +13,8 @@ RowLayout {
     }
 
     Button {
-        text: qsTr("打开版面")
-        Layout.preferredWidth: 200
+        text: qsTr("🡲")
+        Layout.preferredWidth: 100
         font.family: "dengxian"
         font.pointSize: 30
         Layout.alignment: Qt.AlignRight | Qt.AlignVCenter

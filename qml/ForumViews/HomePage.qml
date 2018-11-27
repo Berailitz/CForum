@@ -24,7 +24,7 @@ Page {
             font.family: "dengxian"
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             font.pointSize: 45
-            placeholderText: "Username"
+            placeholderText: qsTr("用户名")
         }
 
         TextField {
@@ -33,7 +33,7 @@ Page {
             horizontalAlignment: Text.AlignHCenter
             Layout.fillWidth: true
             font.family: "dengxian"
-            placeholderText: "Password"
+            placeholderText: qsTr("密码")
             font.pointSize: 45
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             echoMode: TextInput.Password
@@ -49,7 +49,7 @@ Page {
 
                 Button {
                     id: registerButton
-                    text: qsTr("Register")
+                    text: qsTr("注册")
                     Layout.preferredWidth: 250
                     font.family: "dengxian"
                     font.pointSize: 40
@@ -60,7 +60,7 @@ Page {
 
                 Button {
                     id: loginButton
-                    text: qsTr("Login")
+                    text: qsTr("登录")
                     Layout.preferredWidth: 250
                     font.family: "dengxian"
                     font.pointSize: 40

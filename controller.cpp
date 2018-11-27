@@ -12,12 +12,12 @@ namespace cforum
 
     QString Controller::getGreeting() const
     {
-        return "欢迎 " + user->userName + " !";
+        return WELCOME_MESSAGE + user->userName + " !";
     }
 
     QString Controller::getBoardTitle() const
 	{
-        return board->name + "(" + QString::fromStdString(to_string(board->threads->size())) + ")";
+        return board->name + "(" + QString::fromStdString(to_string(board->threads->size())) + QString::fromUtf8("篇帖子)");
 	}
 
 	QString Controller::getThreadTitle() const
@@ -30,10 +30,17 @@ namespace cforum
         return thread->content;
     }
 
+	int Controller::getUserID() const
+	{
+		return user->id;
+	}
+
     void Controller::registerUser(const QString newUserName, const QString newPassword)
     {
 		user = new User(cforum->users->size() + 1, newUserName, newPassword);
         cforum->users->push_back(*user);
+		qDebug() << WELCOME_MESSAGE << newUserName << ":" << newPassword;
+		emit messageSent(WELCOME_MESSAGE);
         login(newUserName, newPassword);
 	}
 
@@ -42,15 +49,15 @@ namespace cforum
         User *newUser = findUser(userName);
         if (newUser && newUser->isPasswordCorrect(password))
 		{
-            qDebug() << "Login success:" << userName;
-            emit messageSent("Welcome.");
+            qDebug() << LOGIN_SUCCESS_MESSAGE << userName;
+            emit messageSent(LOGIN_SUCCESS_MESSAGE);
             Controller::user = newUser;
 			openForum();
 		}
         else
         {
-            qDebug() << "Login failed:" << userName;
-            emit messageSent("Login failed.");
+            qDebug() << LOGIN_FAILED_MESSAGE << userName;
+            emit messageSent(LOGIN_FAILED_MESSAGE);
         }
 	}
 
@@ -96,8 +103,8 @@ namespace cforum
 	{
         thread = new Thread(board->threads->size() + 1, content, user->id, title);
         board->post(thread);
-        qDebug() << "New Thread: " << thread->title;
-        emit messageSent("Thread posted.");
+        qDebug() << POST_SUCCESS_MESSAGE << thread->title;
+        emit messageSent(POST_SUCCESS_MESSAGE);
         refreshViews();
         emit threadOpened();
 	}
@@ -109,38 +116,54 @@ namespace cforum
 
     void Controller::deleteThread(const int threadID)
 	{
-		if (threadID > 0 && threadID <= board->threads->size())
+		Thread *target = board->getThreadByID(threadID);
+		if (target && !target->isDeleted && (isModerator() || user->id == target->authorID))
 		{
 			QQmlContext *ctxt = engine.rootContext();
 			ctxt->setContextProperty("threadListModel", QVariant::fromValue(*defaultBoard->threads));
 			ctxt->setContextProperty("commentListModel", QVariant::fromValue(*defaultThread->comments));
             board->remove(threadID);
 			thread = defaultThread;
+			qDebug() << DELETE_SUCCESS_MESSAGE << threadID;
+			emit messageSent(DELETE_SUCCESS_MESSAGE);
             refreshViews();
             emit boardOpened();
         }
+		else
+		{
+			qDebug() << DELETE_FAILED_MESSAGE << threadID;
+			emit messageSent(DELETE_FAILED_MESSAGE);
+		}
 	}
 
     void Controller::postComment(const QString content)
 	{
         Comment *newComment = new Comment(thread->comments->size() + 1, content, user->id);
         thread->post(newComment);
-        qDebug() << "New Comment: " << newComment->content;
-        emit messageSent("Comment posted.");
+        qDebug() << POST_SUCCESS_MESSAGE << newComment->content;
+        emit messageSent(POST_SUCCESS_MESSAGE);
         refreshViews();
         emit threadOpened();
 	}
 
     void Controller::deleteComment(const int commentID)
 	{
-		QQmlContext *ctxt = engine.rootContext();
-		ctxt->setContextProperty("commentListModel", QVariant::fromValue(*defaultThread->comments));
-		if (commentID > 0 && commentID <= thread->comments->size())
+		Comment *target = thread->getCommentByID(commentID);
+		if (target && !target->isDeleted && (isModerator() || user->id == target->authorID))
 		{
-            thread->remove(commentID);
-            refreshViews();
-            emit threadOpened();
-        }
+			QQmlContext *ctxt = engine.rootContext();
+			ctxt->setContextProperty("commentListModel", QVariant::fromValue(*defaultThread->comments));
+			thread->remove(commentID);
+			qDebug() << DELETE_SUCCESS_MESSAGE << commentID;
+			emit messageSent(DELETE_SUCCESS_MESSAGE);
+			refreshViews();
+			emit threadOpened();
+		}
+		else
+		{
+			qDebug() << DELETE_FAILED_MESSAGE << commentID;
+			emit messageSent(DELETE_FAILED_MESSAGE);
+		}
 	}
 
     void Controller::load(const QString path)
@@ -151,6 +174,11 @@ namespace cforum
     void Controller::save(const QString path) const
 	{
         cforum->save(path.toStdString());
+	}
+
+	bool Controller::isAdmin() const
+	{
+		return cforum->isAdmin(user->id);
 	}
 
     bool Controller::isModerator() const

@@ -27,7 +27,7 @@ namespace cforum
 
 	Thread * Board::getThreadByID(const int threadID)
 	{
-        if (threadID <= threads->size())
+        if (threadID > 0 && threadID <= threads->size())
 		{
 			ThreadList::iterator it = threads->begin();
 			advance(it, threadID - 1);
@@ -48,15 +48,8 @@ namespace cforum
     bool Board::remove(const int threadID)
     {
         ThreadList::iterator it = threads->begin();
-		Thread *tit;
         advance(it, threadID - 1);
-		tit = static_cast<Thread*>(*it);
-        delete tit;
-        it = threads->erase(it);
-        while (it != threads->end())
-        {
-			static_cast<Thread*>(*it)->id--;
-        }
+		static_cast<Thread*>(*it)->deleteContent();
         return true;
     }
 
@@ -164,17 +157,24 @@ namespace cforum
     bool Thread::remove(const int commentID)
     {
         CommentList::iterator it = comments->begin();
-		Comment *cit;
         advance(it, commentID - 1);
-		cit = static_cast<Comment*>(*it);
-		delete cit;
-        it = comments->erase(it);
-        while (it != comments->end())
-        {
-			static_cast<Comment*>(*it)->id--;
-        }
+		static_cast<Comment*>(*it)->deleteContent();
         return true;
     }
+
+	Comment * Thread::getCommentByID(const int commentID)
+	{
+		if (commentID > 0 && commentID <= comments->size())
+		{
+			CommentList::iterator it = comments->begin();
+			advance(it, commentID - 1);
+			return static_cast<Comment*>(*it);
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
 
     bool Thread::load(const fs::path path)
     {
@@ -186,6 +186,7 @@ namespace cforum
             int commentCounter;
             stream >> id;
             stream >> commentCounter;
+			stream >> isDeleted;
             stream.get();
             getline(stream, rawString);
 			title = QString::fromStdString(rawString);
@@ -214,6 +215,7 @@ namespace cforum
         {
             stream << id << endl;
             stream << comments->size() << endl;
+			stream << isDeleted << endl;
             stream << title.toStdString() << endl;
             stream << authorID << endl;
             stream << put_time(&time, "%Y-%m-%d@%H:%M:%S") << endl;
@@ -242,7 +244,7 @@ namespace cforum
         }
     }
 
-    Comment::Comment(const int id, QString content, const int authorID) : QObject(), id(id), content(content), authorID(authorID)
+    Comment::Comment(const int id, QString content, const int authorID) : QObject(), id(id), content(content), authorID(authorID), isDeleted(false)
     {
         auto now = chrono::system_clock::now();
         auto in_time_t = chrono::system_clock::to_time_t(now);
@@ -268,12 +270,20 @@ namespace cforum
 	{
 	}
 
+	void Comment::deleteContent()
+	{
+		content = DELETED_MESSAGE;
+		isDeleted = true;
+		emit contentChanged();
+	}
+
 	void Comment::initialize(const Comment * oldComment)
 	{
 		id = oldComment->id;
 		content = oldComment->content;
 		time = oldComment->time;
 		authorID = oldComment->authorID;
+		isDeleted = oldComment->isDeleted;
 	}
 
 	bool Comment::load(const fs::path filename)
@@ -283,6 +293,7 @@ namespace cforum
         {
             stream >> id;
             stream >> authorID;
+			stream >> isDeleted;
             stream >> get_time(&time, "%Y-%m-%d@%H:%M:%S");
             stream.get();
             content = QString::fromStdString(string((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>()));
@@ -301,6 +312,7 @@ namespace cforum
         {
             stream << id << endl;
             stream << authorID << endl;
+			stream << isDeleted << endl;
             stream << put_time(&time, "%Y-%m-%d@%H:%M:%S") << endl;
             stream << content.toStdString();
             stream.close();

@@ -55,7 +55,7 @@ Page {
     }
 
     RoundButton {
-        visible: forumController.isModerator
+        visible: forumController.isAdmin
         anchors.top: parent.top
         anchors.topMargin: 100
         anchors.right: parent.right
