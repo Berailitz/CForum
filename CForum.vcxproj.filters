@@ -57,26 +57,72 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="board.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="cforum.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="controller.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="user.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
     <ClInclude Include="utility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    
+    
+    
+    
+    
+    
     <CustomBuild Include="debug\moc_predefs.h.cbt">
       <Filter>Generated Files</Filter>
     </CustomBuild>
     <CustomBuild Include="release\moc_predefs.h.cbt">
       <Filter>Generated Files</Filter>
     </CustomBuild>
+    
+    
+    
+    
   </ItemGroup>
   <ItemGroup>
-    <None Include="Page1Form.qml">
+    <None Include="qml\ForumViews\ForumItems\BoardItem.qml">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Page2Form.qml">
+    <None Include="qml\ForumViews\BoardView.qml">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="main.qml">
+    <None Include="qml\ForumViews\ForumItems\CommentItem.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\ForumViews\ForumView.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\ForumViews\HomePage.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\ForumViews\ForumDialogs\PostCommentDialog.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\ForumViews\ForumDialogs\PostThreadDialog.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\ForumViews\ForumDialogs\SetModeratorDialog.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\ForumViews\ForumItems\ThreadItem.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\ForumViews\ThreadView.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\main.qml">
       <Filter>Resource Files</Filter>
     </None>
     <QtRcc Include="qml.qrc">
@@ -85,19 +131,5 @@
     <None Include="qtquickcontrols2.conf">
       <Filter>Resource Files</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="board.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="user.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="controller.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="cforum.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
   </ItemGroup>
 </Project>

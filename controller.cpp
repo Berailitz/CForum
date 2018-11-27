@@ -111,6 +111,9 @@ namespace cforum
 	{
 		if (threadID > 0 && threadID <= board->threads->size())
 		{
+			QQmlContext *ctxt = engine.rootContext();
+			ctxt->setContextProperty("threadListModel", QVariant::fromValue(*defaultBoard->threads));
+			ctxt->setContextProperty("commentListModel", QVariant::fromValue(*defaultThread->comments));
             board->remove(threadID);
 			thread = defaultThread;
             refreshViews();
@@ -130,6 +133,8 @@ namespace cforum
 
     void Controller::deleteComment(const int commentID)
 	{
+		QQmlContext *ctxt = engine.rootContext();
+		ctxt->setContextProperty("commentListModel", QVariant::fromValue(*defaultThread->comments));
 		if (commentID > 0 && commentID <= thread->comments->size())
 		{
             thread->remove(commentID);
