@@ -114,6 +114,12 @@
       <Compression>default</Compression>
       <ExecutionDescription>Rcc'ing %(Identity)...</ExecutionDescription>
     </QtRcc>
+    <QtMoc>
+      <OutputFile>.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</OutputFile>
+      <ExecutionDescription>Moc'ing %(Identity)...</ExecutionDescription>
+      <IncludePath>.\GeneratedFiles\$(ConfigurationName)\.;.\GeneratedFiles;.;$(QTDIR)\include;$(QTDIR)\include\QtQuick;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtQml;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtCore;.\release;\include;$(QTDIR)\mkspecs\win32-msvc</IncludePath>
+      <Define>_WINDOWS;UNICODE;_UNICODE;WIN32;WIN64;_ENABLE_EXTENDED_ALIGNED_STORAGE;QT_DEPRECATED_WARNINGS;QT_NO_DEBUG;QT_QUICK_LIB;QT_GUI_LIB;QT_QML_LIB;QT_NETWORK_LIB;QT_CORE_LIB;NDEBUG</Define>
+    </QtMoc>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -164,6 +170,12 @@
       <Compression>default</Compression>
       <ExecutionDescription>Rcc'ing %(Identity)...</ExecutionDescription>
     </QtRcc>
+    <QtMoc>
+      <OutputFile>.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</OutputFile>
+      <ExecutionDescription>Moc'ing %(Identity)...</ExecutionDescription>
+      <IncludePath>.\GeneratedFiles\$(ConfigurationName)\.;.\GeneratedFiles;.;$(QTDIR)\include;$(QTDIR)\include\QtQuick;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtQml;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtCore;.\debug;\include;$(QTDIR)\mkspecs\win32-msvc</IncludePath>
+      <Define>_WINDOWS;UNICODE;_UNICODE;WIN32;WIN64;_ENABLE_EXTENDED_ALIGNED_STORAGE;QT_DEPRECATED_WARNINGS;QT_QUICK_LIB;QT_GUI_LIB;QT_QML_LIB;QT_NETWORK_LIB;QT_CORE_LIB</Define>
+    </QtMoc>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="board.cpp" />
@@ -174,10 +186,10 @@
     <ClCompile Include="utility.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="board.h" />
-    <ClInclude Include="cforum.h" />
-    <ClInclude Include="controller.h" />
-    <ClInclude Include="user.h" />
+    <QtMoc Include="board.h" />
+    <QtMoc Include="cforum.h" />
+    <QtMoc Include="controller.h" />
+    <QtMoc Include="user.h" />
     <ClInclude Include="utility.h" />
   </ItemGroup>
   <ItemGroup>

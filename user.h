@@ -42,6 +42,11 @@ namespace cforum
 	{
         Q_OBJECT
 	};
+
+    class Guest : public User
+    {
+        Q_OBJECT
+    };
 }
 
 #endif // !CFORUM_USER_H

@@ -1,11 +1,15 @@
 <RCC>
     <qresource prefix="/">
-        <file>main.qml</file>
-        <file>ForumView.qml</file>
-        <file>BoardView.qml</file>
-        <file>main.qml</file>
         <file>qtquickcontrols2.conf</file>
-        <file>HomePage.qml</file>
-        <file>ThreadView.qml</file>
+        <file>qml/main.qml</file>
+        <file>qml/ForumViews/BoardView.qml</file>
+        <file>qml/ForumViews/ForumView.qml</file>
+        <file>qml/ForumViews/HomePage.qml</file>
+        <file>qml/ForumViews/ThreadView.qml</file>
+        <file>qml/ForumViews/ForumItems/BoardItem.qml</file>
+        <file>qml/ForumViews/ForumItems/ThreadItem.qml</file>
+        <file>qml/ForumViews/ForumItems/CommentItem.qml</file>
+        <file>qml/ForumViews/ForumDialogs/PostThreadDialog.qml</file>
+        <file>qml/ForumViews/ForumDialogs/PostCommentDialog.qml</file>
     </qresource>
 </RCC>

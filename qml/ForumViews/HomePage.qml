@@ -13,16 +13,15 @@ Page {
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            font.family: "Arial"
+            font.family: "dengxian"
             font.pixelSize: 70
         }
 
         TextField {
             id: usernameTextField
-            text: qsTr("")
             horizontalAlignment: Text.AlignHCenter
             Layout.fillWidth: true
-            font.family: "Arial"
+            font.family: "dengxian"
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             font.pointSize: 45
             placeholderText: "Username"
@@ -31,10 +30,9 @@ Page {
         TextField {
             id: passwordTextField
             width: usernameTextField.width
-            text: qsTr("")
             horizontalAlignment: Text.AlignHCenter
             Layout.fillWidth: true
-            font.family: "Arial"
+            font.family: "dengxian"
             placeholderText: "Password"
             font.pointSize: 45
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -53,7 +51,7 @@ Page {
                     id: registerButton
                     text: qsTr("Register")
                     Layout.preferredWidth: 250
-                    font.family: "Arial"
+                    font.family: "dengxian"
                     font.pointSize: 40
                     focusPolicy: Qt.NoFocus
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -63,7 +61,7 @@ Page {
                     id: loginButton
                     text: qsTr("Login")
                     Layout.preferredWidth: 250
-                    font.family: "Arial"
+                    font.family: "dengxian"
                     font.pointSize: 40
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                     onClicked: forumController.login(usernameTextField.text, passwordTextField.text)

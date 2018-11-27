@@ -57,18 +57,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="board.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cforum.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="controller.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="user.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="utility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -80,8 +68,6 @@
     <CustomBuild Include="release\moc_predefs.h.cbt">
       <Filter>Generated Files</Filter>
     </CustomBuild>
-    
-    
   </ItemGroup>
   <ItemGroup>
     <None Include="Page1Form.qml">
@@ -99,5 +85,19 @@
     <None Include="qtquickcontrols2.conf">
       <Filter>Resource Files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="board.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="user.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="controller.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="cforum.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
 </Project>

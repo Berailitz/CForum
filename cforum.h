@@ -25,7 +25,7 @@ namespace cforum
         BoardList* boards;
         UserList* users;
         UserSet* admins;
-        Board *getBoardByID(const int BoardID);
+        Board *getBoardByID(const int boardID);
         bool load(const fs::path path);
         bool save(const fs::path path) const;
     };

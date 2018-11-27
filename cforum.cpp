@@ -24,11 +24,18 @@ namespace cforum
 		delete admins;
 	}
 
-	Board * CForum::getBoardByID(const int BoardID)
+	Board * CForum::getBoardByID(const int boardID)
 	{
-		BoardList::iterator it = boards->begin();
-		advance(it, BoardID - 1);
-        return static_cast<Board*>(*it);
+        if (boardID <= boards->size())
+		{
+			BoardList::iterator it = boards->begin();
+			advance(it, boardID - 1);
+			return static_cast<Board*>(*it);
+		}
+		else
+		{
+            return nullptr;
+		}
 	}
 
 	bool CForum::load(const fs::path path)

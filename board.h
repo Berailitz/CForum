@@ -41,6 +41,7 @@ namespace cforum
     class Thread : public Comment
     {
         Q_OBJECT
+        Q_PROPERTY(QString title MEMBER title)
     public:
         Thread(const int id = 0, QString content = "", const int authorID = 0, QString title = "");
         Thread(const fs::path path);
@@ -71,6 +72,7 @@ namespace cforum
         QString name;
         ThreadList* threads;
         int moderatorID = -1;
+		Thread *getThreadByID(const int threadID);
         bool post(Thread *newThread); // newThread is in heap
         bool remove(const int threadID); // threadID < threads->size()
         bool isModerator(const int userID) const;

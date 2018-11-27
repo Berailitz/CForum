@@ -21,7 +21,21 @@ namespace cforum
     {
     }
 
-    bool Board::post(Thread * newThread)
+	Thread * Board::getThreadByID(const int threadID)
+	{
+        if (threadID <= threads->size())
+		{
+			ThreadList::iterator it = threads->begin();
+			advance(it, threadID - 1);
+			return static_cast<Thread*>(*it);
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+
+	bool Board::post(Thread * newThread)
     {
         threads->push_back(newThread);
         return true;

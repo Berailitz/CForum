@@ -2,12 +2,11 @@
 
 namespace cforum
 {
-    Controller::Controller() : QObject(), cforum(new CForum)
+    Controller::Controller(QQmlApplicationEngine &engine) : QObject(), engine(engine)
 	{
 	}
 
-
-	Controller::~Controller()
+    Controller::~Controller()
 	{
 	}
 
@@ -26,10 +25,26 @@ namespace cforum
         return greeting;
     }
 
+    QString Controller::getBoardHeader() const
+	{
+        return board->name + "(" + QString::fromStdString(to_string(board->threads->size())) + ")";
+	}
+
+	QString Controller::getThreadTitle() const
+	{
+		return thread->title;
+	}
+
+    QString Controller::getThreadContent() const
+    {
+        return thread->content;
+    }
+
     void Controller::registerUser(const QString newUserName, const QString newPassword)
     {
 		user = new User(cforum->users->size() + 1, newUserName, newPassword);
         cforum->users->push_back(*user);
+        emit forumOpened();
 	}
 
     void Controller::login(const QString userName, const QString password)
@@ -39,7 +54,7 @@ namespace cforum
 		{
             qDebug() << "Login success:" << userName;
             Controller::user = user;
-            emit logined();
+            emit forumOpened();
 		}
         else
         {
@@ -68,17 +83,33 @@ namespace cforum
 
     void Controller::viewBoard(const int boardID)
     {
-        board = cforum->getBoardByID(boardID);
-        if (board)
+        Board *newBoard = cforum->getBoardByID(boardID);
+        if (newBoard != nullptr)
         {
+            board = newBoard;
+            refreshViews();
             emit boardOpened();
         }
     }
 
     void Controller::postThread(const QString title, const QString content)
 	{
-		thread = new Thread(board->threads->size() + 1, content, user->id, title);
+        thread = new Thread(board->threads->size() + 1, content, user->id, title);
         board->post(thread);
+        qDebug() << "New Thread: " << thread->title;
+        refreshViews();
+        emit threadOpened();
+	}
+
+	void Controller::viewThread(const int threadID)
+	{
+        Thread *newThread = board->getThreadByID(threadID);
+        if (newThread)
+		{
+            thread = newThread;
+            refreshViews();
+            emit threadOpened();
+		}
 	}
 
     void Controller::deleteThread(const int threadID)
@@ -91,7 +122,11 @@ namespace cforum
 
     void Controller::postComment(const QString content)
 	{
-        thread->post(new Comment(thread->comments->size() + 1, content));
+        Comment *newComment = new Comment(thread->comments->size() + 1, content);
+        thread->post(newComment);
+        qDebug() << "New Comment: " << newComment->content;
+        refreshViews();
+        emit threadOpened();
 	}
 
     void Controller::deleteComment(const int commentID)
@@ -110,6 +145,17 @@ namespace cforum
     void Controller::save(const QString path) const
 	{
         cforum->save(path.toStdString());
+	}
+
+    void Controller::refreshViews()
+	{
+		QQmlContext *ctxt = engine.rootContext();
+        ctxt->setContextProperty("forumController", QVariant::fromValue(&*this));
+		ctxt->setContextProperty("boardListModel", QVariant::fromValue(*cforum->boards));
+        ctxt->setContextProperty("threadListModel", QVariant::fromValue(*board->threads));
+		ctxt->setContextProperty("commentListModel", QVariant::fromValue(*thread->comments));
+        qDebug() << "Refresh: " << cforum->boards->size() << " Boards " << board->threads->size()
+                 << " Threads " << thread->comments->size() << " Comments.";
 	}
 
 	User * Controller::findUser(const QString userName)
