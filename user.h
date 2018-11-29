@@ -23,7 +23,7 @@ namespace cforum
 		QString getName() const;
 		int getID() const;
 		bool isPasswordCorrect(const QString testPassword);
-		string dump() const;
+		virtual string dump() const = 0;
         bool load(const string text);
         void initialize(const User *oldUser);
 	};
@@ -31,11 +31,17 @@ namespace cforum
 	class NormalUser : public User
 	{
         Q_OBJECT
+	public:
+		NormalUser(const int id = -1, const QString userName = "", const QString password = "");
+		NormalUser(const string text);
+		virtual string dump() const;
 	};
 
 	class Admin : public User
 	{
         Q_OBJECT
+	public:
+		virtual string dump() const;
 	};
 
 	class Moderator : public NormalUser
@@ -48,6 +54,7 @@ namespace cforum
         Q_OBJECT
     public:
         Guest();
+		string dump() const;
     };
 }
 

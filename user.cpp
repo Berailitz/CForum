@@ -36,11 +36,6 @@ namespace cforum
 		return password == testPassword;
 	}
 
-	string User::dump() const
-	{
-		return to_string(id) + " " + userName.toStdString() + " " + password.toStdString();
-	}
-
 	bool User::load(const string text)
 	{
 		string tempString;
@@ -62,4 +57,25 @@ namespace cforum
     Guest::Guest() : User(0, "Guest", "Guest")
     {
     }
+
+	NormalUser::NormalUser(const int id, const QString userName, const QString password) : User(id, userName, password)
+	{
+	}
+
+	NormalUser::NormalUser(const string text) : User(text)
+	{
+	}
+
+	string NormalUser::dump() const
+	{
+		return to_string(id) + " " + userName.toStdString() + " " + password.toStdString();
+	}
+	string Admin::dump() const
+	{
+		return to_string(id) + " " + userName.toStdString() + " " + password.toStdString();
+	}
+	string Guest::dump() const
+	{
+		return to_string(id) + " " + userName.toStdString() + " " + password.toStdString();
+	}
 }

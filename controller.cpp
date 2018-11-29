@@ -37,8 +37,8 @@ namespace cforum
 
     void Controller::registerUser(const QString newUserName, const QString newPassword)
     {
-		user = new User(cforum->users->size() + 1, newUserName, newPassword);
-        cforum->users->push_back(*user);
+		user = new NormalUser(cforum->users->size() + 1, newUserName, newPassword);
+        cforum->users->push_back(user);
 		qDebug() << WELCOME_MESSAGE << newUserName << ":" << newPassword;
 		emit messageSent(WELCOME_MESSAGE);
         login(newUserName, newPassword);
@@ -226,11 +226,11 @@ namespace cforum
 
 	User * Controller::findUser(const QString userName)
 	{
-		for (User &user : *cforum->users)
+		for (User *user : *cforum->users)
 		{
-			if (user.userName == userName)
+			if (user->userName == userName)
 			{
-				return &user;
+				return user;
 			}
 		}
 		return nullptr;

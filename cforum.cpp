@@ -53,7 +53,7 @@ namespace cforum
         {
             UserList::iterator it = users->begin();
             advance(it, userID - 1);
-            return &*it;
+            return *it;
         }
         else
         {
@@ -74,7 +74,7 @@ namespace cforum
 			getline(stream, raw_string);
 			while (raw_string.size() > 1)
 			{
-				users->push_back(User(raw_string));
+				users->push_back(new NormalUser(raw_string));
 				getline(stream, raw_string);
 			}
 			stream.close();
@@ -132,9 +132,9 @@ namespace cforum
 		stream.open(path / "user" / "user.cfdata");
 		if (stream.is_open())
 		{
-			for (const User &it : *users)
+			for (const User *it : *users)
 			{
-				stream << it.dump() << endl;
+				stream << it->dump() << endl;
 			}
 			stream.close();
 			fs::create_directory(path / "matedata");
