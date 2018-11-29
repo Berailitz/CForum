@@ -48,7 +48,6 @@ Page {
                 width: parent.width
 
                 Button {
-                    id: registerButton
                     text: qsTr("注册")
                     Layout.preferredWidth: 250
                     font.family: "dengxian"
@@ -56,21 +55,20 @@ Page {
                     focusPolicy: Qt.NoFocus
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                     onClicked: {
-                        forumController.registerUser(usernameTextField.text, passwordTextField.text)
+                        user = forumController.registerUser(usernameTextField.text, passwordTextField.text)
                         usernameTextField.text = ""
                         passwordTextField.text = ""
                     }
                 }
 
                 Button {
-                    id: loginButton
                     text: qsTr("登录")
                     Layout.preferredWidth: 250
                     font.family: "dengxian"
                     font.pointSize: 40
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                     onClicked: {
-                        forumController.login(usernameTextField.text, passwordTextField.text)
+                        user = forumController.login(usernameTextField.text, passwordTextField.text)
                         usernameTextField.text = ""
                         passwordTextField.text = ""
                     }

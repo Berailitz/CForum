@@ -39,7 +39,7 @@ Dialog {
     }
 
     onAccepted: {
-        forumController.postThread(threadTitleTextField.text, threadContentTextField.text)
+        forumController.postThread(user.id, board.id, threadTitleTextField.text, threadContentTextField.text)
         threadTitleTextField.text = ""
         threadContentTextField.text = ""
     }

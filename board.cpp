@@ -150,6 +150,11 @@ namespace cforum
         return true;
     }
 
+	bool Thread::canDelete() const
+	{
+		return !isDeleted && comments->length() == 0;
+	}
+
     bool Thread::remove(const int commentID)
     {
         CommentList::iterator it = comments->begin();

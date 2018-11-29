@@ -19,7 +19,7 @@ Page {
             anchors.topMargin: 200
             anchors.horizontalCenter: parent.horizontalCenter
             Text {
-                text: forumController.greeting
+                text: user.getGreeting()
                 font.pointSize: 20
                 font.family: "dengxian"
                 Layout.preferredHeight: 100

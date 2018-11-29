@@ -14,7 +14,7 @@ Dialog {
     }
 
     onAccepted: {
-        forumController.setModerator(moderatorUsernameTextField.text)
+        forumController.setModerator(user.id, board.id, moderatorUsernameTextField.text)
         moderatorUsernameTextField.text = ""
     }
 }

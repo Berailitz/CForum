@@ -15,13 +15,13 @@ RowLayout {
     }
 
     Button {
-        visible: !model.isDeleted && (forumController.isModerator || model.authorID === forumController.userID)
+        visible: !model.isDeleted && (board.isModerator(user.id) || model.authorID === user.id)
         text: qsTr("❌")
         Layout.preferredWidth: 100
         font.family: "dengxian"
         font.pointSize: 20
         Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-        onClicked: forumController.deleteThread(model.id)
+        onClicked: forumController.deleteThread(board.id, model.id)
     }
 
     Button {
@@ -30,6 +30,6 @@ RowLayout {
         font.family: "dengxian"
         font.pointSize: 20
         Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-        onClicked: forumController.viewThread(model.id)
+        onClicked: forumController.viewThread(board.id, model.id)
     }
 }

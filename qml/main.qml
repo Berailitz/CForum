@@ -1,6 +1,7 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 
+import CForum 1.0
 import "ForumViews"
 
 ApplicationWindow {
@@ -9,6 +10,11 @@ ApplicationWindow {
     visibility: "Maximized"
     width: 1080
     height: 720
+
+    property CForum cforum
+    property User user
+    property Board board
+    property Thread thread
 
     SwipeView {
         id: swipeView
@@ -29,8 +35,6 @@ ApplicationWindow {
         Connections {
             target: forumController
             onForumOpened: swipeView.setCurrentIndex(1)
-            onBoardOpened: swipeView.setCurrentIndex(2)
-            onThreadOpened: swipeView.setCurrentIndex(3)
             onMessageSent: {
                 console.log(message)
                 messageText.text = message

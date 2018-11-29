@@ -55,7 +55,17 @@ namespace cforum
 		password = oldUser->password;
 	}
 
-    Guest::Guest() : User(0, "Guest", "Guest", GuestType)
+	QString User::getGreeting() const
+	{
+		return WELCOME_MESSAGE_GUEST;
+	}
+
+	bool User::isAdmin() const
+	{
+		return false;
+	}
+
+    Guest::Guest() : User(DEFAULT_USER_ID, "Guest", "Guest", GuestType)
     {
     }
 
@@ -67,7 +77,7 @@ namespace cforum
 	{
 	}
 
-	QString NormalUser::greeting() const
+	QString NormalUser::getGreeting() const
 	{
 		return WELCOME_MESSAGE_NORMAL_USER + userName + " !";
 	}
@@ -76,21 +86,26 @@ namespace cforum
 	{
 	}
 
-	QString Admin::greeting() const
+	QString Admin::getGreeting() const
 	{
 		return WELCOME_MESSAGE_ADMIN + userName + " !";
+	}
+
+	bool Admin::isAdmin() const
+	{
+		return true;
 	}
 
 	Moderator::Moderator(istringstream &iss) : NormalUser(iss, ModeratorType)
 	{
 	}
 
-	QString Moderator::greeting() const
+	QString Moderator::getGreeting() const
 	{
 		return WELCOME_MESSAGE_MODERATOR + userName + " !";
 	}
 
-	QString Guest::greeting() const
+	QString Guest::getGreeting() const
 	{
 		return WELCOME_MESSAGE_GUEST + userName + " !";
 	}

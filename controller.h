@@ -13,56 +13,38 @@ namespace cforum
 	const QString POST_SUCCESS_MESSAGE = QString::fromUtf8("发布成功");
 	const QString DELETE_SUCCESS_MESSAGE = QString::fromUtf8("删除成功");
 	const QString DELETE_FAILED_MESSAGE = QString::fromUtf8("删除失败");
+	const QString NO_USER_MESSAGE = QString::fromUtf8("用户不存在"); 
+	const QString NO_BOARD_MESSAGE = QString::fromUtf8("版面不存在");
+	const QString NO_THREAD_MESSAGE = QString::fromUtf8("主题帖不存在");
 
     class Controller : public QObject
     {
         Q_OBJECT
-        Q_PROPERTY(QString greeting READ getGreeting NOTIFY forumOpened)
-        Q_PROPERTY(QString boardTitle READ getBoardTitle NOTIFY boardOpened)
-        Q_PROPERTY(QString threadTitle READ getThreadTitle NOTIFY threadOpened)
-        Q_PROPERTY(QString threadContent READ getThreadContent NOTIFY threadOpened)
-        Q_PROPERTY(bool isAdmin READ isAdmin NOTIFY boardOpened)
-		Q_PROPERTY(bool isModerator READ isModerator NOTIFY boardOpened)
-		Q_PROPERTY(int userID READ getUserID NOTIFY forumOpened)
 	public:
         Controller(QQmlApplicationEngine &engine);
 		~Controller();
         CForum *cforum;
-        User *user;
-        Board *board;
-        Thread *thread;
-        QString getGreeting() const;
-        QString getBoardTitle() const;
-		QString getThreadTitle() const;
-        QString getThreadContent() const;
-		int getUserID() const;
-        bool isAdmin() const;
-		bool isModerator() const;
-        void refreshViews();
+		void addBoard(const QString boardName);
     Q_SIGNALS:
-        void forumOpened();
-        void boardOpened();
-        void threadOpened();
         void messageSent(QString message);
+		void forumOpened();
     public Q_SLOTS:
-        void registerUser(const QString userName, const QString password);
-        void login(const QString userName, const QString password);
-        void setModerator(const QString userName);
-        QString getUsername(const int userID) const;
-        void addBoard(const QString boardName);
-        void viewBoard(const int boardID);
-        void postThread(const QString title, const QString content);
-		void viewThread(const int threadID);
-        void deleteThread(const int threadID);
-        void postComment(const QString content);
-        void deleteComment(const int commentID);
+		// 此处的函数默认接受可传递的不安全的参数
+		QString getUsername(const int userID) const;
+        User *registerUser(const QString userName, const QString password);
+		User *login(const QString userName, const QString password);
+		void setModerator(const int boardID, const QString userName);
+		Thread *getThread(const int boardID, const int threadID) const;
+        void postThread(const int userID, const int boardID, const QString title, const QString content);
+        void deleteThread(const int userID, const int boardID, const int threadID);
+        void postComment(const int userID, const int boardID, const int threadID, const QString content);
+        void deleteComment(const int userID, const int boardID, const int threadID, const int commentID);
         void load(const QString path);
         void save(const QString path) const;
 	private:
         QQmlApplicationEngine &engine;
-		void openForum();
-        void openBoard(const int boardID);
-        void openThread(const int threadID);
+		bool canDeleteThread(const User *user, const Board *board, const Thread *thread);
+		bool canDeleteComment(const User *user, const Board *board, const Thread *thread, const Comment *comment);
 		User *getUserByName(const QString userName);
         User *defaultUser;
         Board *defaultBoard;

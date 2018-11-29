@@ -20,7 +20,7 @@ Page {
             anchors.topMargin: 200
             anchors.horizontalCenter: parent.horizontalCenter
             Text {
-                text: forumController.boardTitle
+                text: board.name
                 font.pointSize: 20
                 font.family: "dengxian"
                 Layout.preferredHeight: 100
@@ -55,7 +55,7 @@ Page {
     }
 
     RoundButton {
-        visible: forumController.isAdmin
+        visible: user.isAdmin()
         anchors.top: parent.top
         anchors.topMargin: 100
         anchors.right: parent.right

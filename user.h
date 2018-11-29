@@ -18,6 +18,7 @@ namespace cforum
 	};
 	const int UserTypeMin = -1;
 	const int UserTypeMax = 2;
+	const int DEFAULT_USER_ID = 0;
 
 	const QString WELCOME_MESSAGE_ADMIN = QString::fromUtf8("欢迎管理员 ");
 	const QString WELCOME_MESSAGE_GUEST = QString::fromUtf8("欢迎游客 ");
@@ -27,6 +28,7 @@ namespace cforum
     class User : public QObject
     {
         Q_OBJECT
+		Q_PROPERTY(int id MEMBER id CONSTANT)
 	public:
 		User(const int id = -1, const QString userName = "", const QString password = "", UserType type = GuestType);
 		User(istringstream &iss, UserType type);
@@ -39,19 +41,21 @@ namespace cforum
 		QString getName() const;
 		int getID() const;
 		bool isPasswordCorrect(const QString testPassword);
-		virtual QString greeting() const = 0;
 		string dump() const;
         bool load(istringstream &iss);
         void initialize(const User *oldUser);
+	public Q_SLOTS:
+		virtual QString getGreeting() const;
+		virtual bool isAdmin() const;
 	};
 
 	class NormalUser : public User
 	{
         Q_OBJECT
 	public:
-		NormalUser(const int id, const QString userName, const QString password, UserType type = NormalUserType);
+		NormalUser(const int id = -1, const QString userName = "", const QString password = "", UserType type = NormalUserType);
 		NormalUser(istringstream &iss, UserType type);
-		virtual QString greeting() const;
+		virtual QString getGreeting() const;
 	};
 
 	class Admin : public User
@@ -59,7 +63,8 @@ namespace cforum
         Q_OBJECT
 	public:
 		Admin(istringstream &iss);
-		virtual QString greeting() const;
+		virtual QString getGreeting() const;
+		virtual bool isAdmin() const;
 	};
 
 	class Moderator : public NormalUser
@@ -67,7 +72,7 @@ namespace cforum
         Q_OBJECT
 	public:
 		Moderator(istringstream &iss);
-		virtual QString greeting() const;
+		virtual QString getGreeting() const;
 	};
 
     class Guest : public User
@@ -75,7 +80,7 @@ namespace cforum
         Q_OBJECT
     public:
         Guest();
-		QString greeting() const;
+		QString getGreeting() const;
     };
 }
 

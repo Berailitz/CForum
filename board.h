@@ -56,7 +56,7 @@ namespace cforum
         Q_OBJECT
         Q_PROPERTY(QString title MEMBER title CONSTANT)
     public:
-        Thread(const int id, QString content, const int authorID, QString title);
+        Thread(const int id = 0, QString content = "", const int authorID = 0, QString title = "");
         Thread(const fs::path path);
         Thread(const Thread *old_thread);
         Thread(const Thread &old_thread);
@@ -64,6 +64,7 @@ namespace cforum
 		QString title; // without `\n`
         CommentList* comments;
         bool post(Comment *newComment); // newComment is in heap
+		bool canDelete() const;
         bool remove(const int commentID); // commentID < comments->size()
 		Comment *getCommentByID(const int commentID);
         bool load(const fs::path path);
@@ -78,7 +79,7 @@ namespace cforum
         Q_PROPERTY(int moderatorID MEMBER moderatorID CONSTANT)
         Q_PROPERTY(QString name MEMBER name CONSTANT)
     public:
-        Board(const int id, const QString name);
+        Board(const int id = 0, const QString name = "");
         Board(const fs::path path);
         ~Board();
         int id; // primary_kay in a thread, start from 1
@@ -87,12 +88,13 @@ namespace cforum
         int moderatorID = -1;
 		Thread *getThreadByID(const int threadID);
         bool post(Thread *newThread); // newThread is in heap
-        bool remove(const int threadID); // threadID < threads->size()
-        bool isModerator(const int userID) const;
         bool setModerator(const int userID);
         bool removeModerator();
         bool load(const fs::path path);
         bool save(const fs::path path) const;
+	public Q_SLOTS:
+		bool isModerator(const int userID) const;
+		bool remove(const int threadID); // threadID < threads->size()
     };
 }
 
