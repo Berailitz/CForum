@@ -1,8 +1,6 @@
 TODO
 ====
 
-1. `User`类改成抽象类，各类的`greeting()`方法使用纯虚函数实现，`checkPassword()`方法使用虚函数实现
-2. 离线数据格式中加入类型表识以区分`NormalUser`、`Moderator`和`Admin`，注册默认为`NormalUser`
 3. 转数据库
 3. 展示个人信息
 5. 检查用户名、密码、标题等的输入
@@ -195,15 +193,14 @@ Controller
 
 - 用户表
     - 存储至一个文本文件: `/user/user.cfdata`
-    - 每个用户存储至一行文本: `{id} {name} {password}`
+    - 每个用户存储至一行文本: `{type} {id} {name} {password}`
 - 内容表
     - 存储至一个文件夹: `/content`
     - 每个板块存储至一个子文件夹: `{boardID}`，及其下的一个文本文件`board.cfdata`: `{boardID}\n{boardName}\n{threadCounter}`
-    - 每个主题帖存储至一个二级子文件夹`{threadID}`，及其下的一个文本文件`thread.cfdata`: `{threadID}\n{commentCounter}\n{isDeleted}\n{title}\n{authorID}\n{time}\n{content}`
+    - 每个主题帖存储至一个二级子文件夹`{threadID}`，及其下的一个文本文件`thread.cfdata`: `{threadID}\n{commentCounter}\n{isDeleted}\n{authorID}\n{time}\n{title}\n{content}`
     - 每个回复贴存储至一个文本文件`{threadID}.cfdata`: `{commentID}\n{authorID}\n{isDeleted}\n{time}\n{content}`
 - 元数据
     - 存储至一个文件夹: `/matedata`
-    - 管理员数据存储至一个文本文件`admin.cfdata`，每个管理员存储至一行: `{userID}`
     - 版主数据存储至一个文本文件`moderator.cfdata`，每个版面-版主关系存储至一行: `{boardID} {userID}`
 
 备注

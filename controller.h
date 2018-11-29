@@ -7,7 +7,6 @@
 
 namespace cforum
 {
-	const QString WELCOME_MESSAGE = QString::fromUtf8("欢迎 ");
 	const QString REGISTER_SUCCESS_MESSAGE = QString::fromUtf8("注册成功");
 	const QString LOGIN_SUCCESS_MESSAGE = QString::fromUtf8("登录成功");
 	const QString LOGIN_FAILED_MESSAGE = QString::fromUtf8("登录失败：用户名或密码错误");
@@ -28,10 +27,10 @@ namespace cforum
 	public:
         Controller(QQmlApplicationEngine &engine);
 		~Controller();
-        CForum *cforum = new CForum();
-        User *user = defaultUser;
-        Board *board = defaultBoard;
-        Thread *thread = defaultThread;
+        CForum *cforum;
+        User *user;
+        Board *board;
+        Thread *thread;
         QString getGreeting() const;
         QString getBoardTitle() const;
 		QString getThreadTitle() const;
@@ -64,10 +63,10 @@ namespace cforum
 		void openForum();
         void openBoard(const int boardID);
         void openThread(const int threadID);
-		User *findUser(const QString userName);
-        User *defaultUser = new Guest();
-        Board *defaultBoard = new Board();
-        Thread *defaultThread = new Thread();
+		User *getUserByName(const QString userName);
+        User *defaultUser;
+        Board *defaultBoard;
+        Thread *defaultThread;
 	};
 }
 

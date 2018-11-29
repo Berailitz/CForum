@@ -14,12 +14,14 @@
 
 using namespace std;
 namespace fs = std::experimental::filesystem;
-using CommentList = QList<QObject*>;
-using ThreadList = QList<QObject*>;
 
 namespace cforum
 {
+	using CommentList = QList<QObject*>;
+	using ThreadList = QList<QObject*>;
+
 	const QString DELETED_MESSAGE = QString::fromUtf8("Oops, 它被删除了...");
+	const QString DATETIME_FORMAT = QString::fromUtf8("yyyyMMddHHmmss");
 
     class Comment : public QObject
     {
@@ -30,7 +32,7 @@ namespace cforum
 		Q_PROPERTY(QString time READ getTimeString NOTIFY contentChanged)
 		Q_PROPERTY(bool isDeleted MEMBER isDeleted NOTIFY contentChanged)
     public:
-        Comment(const int id = 0, QString content = "", const int authorID = 0);
+        Comment(const int id, QString content, const int authorID);
         Comment(const fs::path filename);
         Comment(const Comment *oldComment);
         Comment(const Comment &oldComment);
@@ -54,7 +56,7 @@ namespace cforum
         Q_OBJECT
         Q_PROPERTY(QString title MEMBER title CONSTANT)
     public:
-        Thread(const int id = 0, QString content = "", const int authorID = 0, QString title = "");
+        Thread(const int id, QString content, const int authorID, QString title);
         Thread(const fs::path path);
         Thread(const Thread *old_thread);
         Thread(const Thread &old_thread);
@@ -76,7 +78,6 @@ namespace cforum
         Q_PROPERTY(int moderatorID MEMBER moderatorID CONSTANT)
         Q_PROPERTY(QString name MEMBER name CONSTANT)
     public:
-        Board();
         Board(const int id, const QString name);
         Board(const fs::path path);
         ~Board();

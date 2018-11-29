@@ -24,10 +24,15 @@ namespace cforum
 		delete admins;
 	}
 
-    bool CForum::isAdmin(const int userID)
+    bool CForum::isAdmin(const int userID) const
     {
         return admins->find(userID) != admins->end();
     }
+
+	void CForum::setAdmin(const int userID)
+	{
+		admins->insert(userID);
+	}
 
 	Board * CForum::getBoardByID(const int boardID)
 	{
@@ -74,7 +79,31 @@ namespace cforum
 			getline(stream, raw_string);
 			while (raw_string.size() > 1)
 			{
-				users->push_back(new NormalUser(raw_string));
+				int typeInt;
+				UserType type;
+				User *newUser;
+				istringstream iss(raw_string);
+				iss >> typeInt;
+				type = static_cast<UserType>(typeInt);
+				switch (type)
+				{
+				case AdminType:
+					newUser = new Admin(iss);
+					users->push_back(newUser);
+					setAdmin(newUser->id);
+					break;
+				case GuestType:
+					// TODO throw exception
+					break;
+				case NormalUserType:
+					users->push_back(new NormalUser(iss, type));
+					break;
+				case ModeratorType:
+					users->push_back(new Moderator(iss));
+					break;
+				default:
+					break;
+				}
 				getline(stream, raw_string);
 			}
 			stream.close();
@@ -82,37 +111,21 @@ namespace cforum
 			{
 				boards->push_back(new Board(p.path()));
 			}
-			stream.open(path / "matedata" / "admin.cfdata");
+			stream.open(path / "matedata" / "moderator.cfdata");
 			if (stream.is_open())
 			{
 				getline(stream, raw_string);
 				while (raw_string.size() > 1)
 				{
-					int adminID = stoi(raw_string);
-					admins->insert(adminID);
+					istringstream iss(raw_string);
+					int boardID, userID;
+					iss >> boardID;
+					iss >> userID;
+					getBoardByID(boardID)->setModerator(userID);
 					getline(stream, raw_string);
 				}
 				stream.close();
-				stream.open(path / "matedata" / "moderator.cfdata");
-				if (stream.is_open())
-				{
-					getline(stream, raw_string);
-					while (raw_string.size() > 1)
-					{
-						istringstream iss(raw_string);
-						int boardID, userID;
-						iss >> boardID;
-						iss >> userID;
-						getBoardByID(boardID)->setModerator(userID);
-						getline(stream, raw_string);
-					}
-					stream.close();
-					return true;
-				}
-				else
-				{
-					return false;
-				}
+				return true;
 			}
 			else
 			{
@@ -151,15 +164,6 @@ namespace cforum
 			}
 			if (stream.is_open())
 			{
-				stream.close();
-			}
-			stream.open(path / "matedata" / "admin.cfdata");
-			if (stream.is_open())
-			{
-				for (const int &it : *admins)
-				{
-					stream << it << endl;
-				}
 				stream.close();
 				return true;
 			}

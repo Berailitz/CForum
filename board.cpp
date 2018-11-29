@@ -3,10 +3,6 @@
 
 namespace cforum
 {
-    Board::Board() : QObject(), threads(new ThreadList)
-    {
-    }
-
     Board::Board(const int id, const QString name) : QObject(), id(id), name(name), threads(new ThreadList)
     {
     }
@@ -80,7 +76,7 @@ namespace cforum
             int threadsCounter;
             stream >> id;
             stream >> nameTemp;
-            name.fromStdString(nameTemp);
+            name = QString::fromStdString(nameTemp);
             stream >> threadsCounter;
             stream.close();
             for (int i = 1; i <= threadsCounter; i++)
@@ -122,7 +118,7 @@ namespace cforum
     {
     }
 
-    Thread::Thread(const fs::path path)
+    Thread::Thread(const fs::path path) : Comment(-1, "", -1)
     {
         load(path);
     }
@@ -187,12 +183,13 @@ namespace cforum
             stream >> id;
             stream >> commentCounter;
 			stream >> isDeleted;
-            stream.get();
+			stream >> authorID;
+			stream.get();
+			getline(stream, rawString);
+			time = QDateTime::fromString(QString::fromStdString(rawString), DATETIME_FORMAT);
+			qDebug() << getTimeString();
             getline(stream, rawString);
 			title = QString::fromStdString(rawString);
-            stream >> authorID;
-			getline(stream, rawString);
-			time = QDateTime::fromString(QString::fromStdString(rawString), "%Y-%m-%d@%H:%M:%S");
             content = QString::fromStdString(string((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>()));
             stream.close();
             for (int i = 1; i <= commentCounter; i++)
@@ -216,9 +213,9 @@ namespace cforum
             stream << id << endl;
             stream << comments->size() << endl;
 			stream << isDeleted << endl;
+			stream << authorID << endl;
+			stream << time.toString(DATETIME_FORMAT).toStdString() << endl;
             stream << title.toStdString() << endl;
-            stream << authorID << endl;
-            stream << time.toString("%Y-%m-%d@%H:%M:%S").toStdString() << endl;
             stream << content.toStdString();
             stream.close();
             for (QObject *&qit : *comments)
@@ -298,9 +295,10 @@ namespace cforum
             stream >> id;
             stream >> authorID;
 			stream >> isDeleted;
+			stream.get();
 			getline(stream, rawString);
-			time = QDateTime::fromString(QString::fromStdString(rawString), "%Y-%m-%d@%H:%M:%S");
-            stream.get();
+			time = QDateTime::fromString(QString::fromStdString(rawString), DATETIME_FORMAT);
+			qDebug() << getTimeString();
             content = QString::fromStdString(string((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>()));
             stream.close();
             return true;
@@ -318,7 +316,7 @@ namespace cforum
             stream << id << endl;
             stream << authorID << endl;
 			stream << isDeleted << endl;
-            stream << time.toString("%Y-%m-%d@%H:%M:%S").toStdString() << endl;
+            stream << time.toString(DATETIME_FORMAT).toStdString() << endl;
             stream << content.toStdString();
             stream.close();
             return true;

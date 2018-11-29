@@ -2,8 +2,16 @@
 
 namespace cforum
 {
-    Controller::Controller(QQmlApplicationEngine &engine) : QObject(), engine(engine)
+    Controller::Controller(QQmlApplicationEngine &engine) : 
+		QObject(), engine(engine),
+		cforum(new CForum()),
+		defaultUser(new Guest()),
+		defaultBoard(new Board(-1, "DefaultBoard")),
+		defaultThread(new Thread(-1, "DefaultThread", -1, "DefaultContent"))
 	{
+		user = defaultUser;
+		board = defaultBoard;
+		thread = defaultThread;
 	}
 
     Controller::~Controller()
@@ -12,7 +20,7 @@ namespace cforum
 
     QString Controller::getGreeting() const
     {
-        return WELCOME_MESSAGE + user->userName + " !";
+        return user->greeting();
     }
 
     QString Controller::getBoardTitle() const
@@ -39,14 +47,14 @@ namespace cforum
     {
 		user = new NormalUser(cforum->users->size() + 1, newUserName, newPassword);
         cforum->users->push_back(user);
-		qDebug() << WELCOME_MESSAGE << newUserName << ":" << newPassword;
-		emit messageSent(WELCOME_MESSAGE);
+		qDebug() << REGISTER_SUCCESS_MESSAGE << newUserName << ":" << newPassword;
+		emit messageSent(REGISTER_SUCCESS_MESSAGE);
         login(newUserName, newPassword);
 	}
 
     void Controller::login(const QString userName, const QString password)
 	{
-        User *newUser = findUser(userName);
+        User *newUser = getUserByName(userName);
         if (newUser && newUser->isPasswordCorrect(password))
 		{
             qDebug() << LOGIN_SUCCESS_MESSAGE << userName;
@@ -63,7 +71,7 @@ namespace cforum
 
     void Controller::setModerator(const QString userName)
 	{
-		const User *user = findUser(userName);
+		const User *user = getUserByName(userName);
 		if (user == nullptr)
 		{
             board->removeModerator();
@@ -224,7 +232,7 @@ namespace cforum
 		}
 	}
 
-	User * Controller::findUser(const QString userName)
+	User * Controller::getUserByName(const QString userName)
 	{
 		for (User *user : *cforum->users)
 		{

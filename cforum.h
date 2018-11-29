@@ -25,7 +25,8 @@ namespace cforum
         BoardList* boards;
         UserList* users;
         UserSet* admins;
-        bool isAdmin(const int userID);
+        bool isAdmin(const int userID) const;
+		void setAdmin(const int userID);
         Board *getBoardByID(const int boardID);
         User *getUserByID(const int userID);
         bool load(const fs::path path);

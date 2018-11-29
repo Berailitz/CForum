@@ -2,13 +2,13 @@
 
 namespace cforum
 {
-    User::User(const int id, const QString userName, const QString password) : QObject(), id(id), userName(userName), password(password)
+    User::User(const int id, const QString userName, const QString password, UserType type) : QObject(), id(id), userName(userName), password(password), type(type)
 	{
 	}
 
-    User::User(const string text) : QObject()
+    User::User(istringstream &iss, UserType type) : QObject(), type(type)
 	{
-		load(text);
+		load(iss);
 	}
 
     User::User(const User *oldUser) : QObject()
@@ -36,10 +36,10 @@ namespace cforum
 		return password == testPassword;
 	}
 
-	bool User::load(const string text)
+	bool User::load(istringstream &iss)
 	{
+		// TODO do NOT load type
 		string tempString;
-		istringstream iss(text);
 		iss >> id;
 		iss >> tempString;
 		userName = QString::fromStdString(tempString);
@@ -50,32 +50,53 @@ namespace cforum
 	void User::initialize(const User * oldUser)
 	{
 		id = oldUser->id;
+		type = oldUser->type;
 		userName = oldUser->userName;
 		password = oldUser->password;
 	}
 
-    Guest::Guest() : User(0, "Guest", "Guest")
+    Guest::Guest() : User(0, "Guest", "Guest", GuestType)
     {
     }
 
-	NormalUser::NormalUser(const int id, const QString userName, const QString password) : User(id, userName, password)
+	NormalUser::NormalUser(const int id, const QString userName, const QString password, UserType type) : User(id, userName, password, type)
 	{
 	}
 
-	NormalUser::NormalUser(const string text) : User(text)
+	NormalUser::NormalUser(istringstream &iss, UserType type) : User(iss, type)
 	{
 	}
 
-	string NormalUser::dump() const
+	QString NormalUser::greeting() const
 	{
-		return to_string(id) + " " + userName.toStdString() + " " + password.toStdString();
+		return WELCOME_MESSAGE_NORMAL_USER + userName + " !";
 	}
-	string Admin::dump() const
+
+	Admin::Admin(istringstream &iss) : User(iss, AdminType)
 	{
-		return to_string(id) + " " + userName.toStdString() + " " + password.toStdString();
 	}
-	string Guest::dump() const
+
+	QString Admin::greeting() const
 	{
-		return to_string(id) + " " + userName.toStdString() + " " + password.toStdString();
+		return WELCOME_MESSAGE_ADMIN + userName + " !";
+	}
+
+	Moderator::Moderator(istringstream &iss) : NormalUser(iss, ModeratorType)
+	{
+	}
+
+	QString Moderator::greeting() const
+	{
+		return WELCOME_MESSAGE_MODERATOR + userName + " !";
+	}
+
+	QString Guest::greeting() const
+	{
+		return WELCOME_MESSAGE_GUEST + userName + " !";
+	}
+
+	string User::dump() const
+	{
+		return to_string(type) + " " + to_string(id) + " " + userName.toStdString() + " " + password.toStdString();
 	}
 }
