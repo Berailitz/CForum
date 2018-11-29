@@ -21,7 +21,7 @@ namespace cforum
     {
         Q_OBJECT
 	public:
-        Controller(QQmlApplicationEngine &engine);
+        Controller(QQmlApplicationEngine *engine = nullptr);
 		~Controller();
         CForum *cforum;
 		void addBoard(const QString boardName);
@@ -42,7 +42,7 @@ namespace cforum
         void load(const QString path);
         void save(const QString path) const;
 	private:
-        QQmlApplicationEngine &engine;
+        QQmlApplicationEngine *engine;
 		bool canDeleteThread(const User *user, const Board *board, const Thread *thread);
 		bool canDeleteComment(const User *user, const Board *board, const Thread *thread, const Comment *comment);
 		User *getUserByName(const QString userName);

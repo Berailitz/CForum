@@ -32,7 +32,7 @@ namespace cforum
 		Q_PROPERTY(QString time READ getTimeString NOTIFY contentChanged)
 		Q_PROPERTY(bool isDeleted MEMBER isDeleted NOTIFY contentChanged)
     public:
-        Comment(const int id, QString content, const int authorID);
+        Comment(const int id = 0, QString content = "", const int authorID = 0);
         Comment(const fs::path filename);
         Comment(const Comment *oldComment);
         Comment(const Comment &oldComment);

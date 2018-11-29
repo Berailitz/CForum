@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
     QCoreApplication::setAttribute(Qt::AA_UseOpenGLES);
     QQmlApplicationEngine engine;
-    cforum::Controller forumController(engine);
+    cforum::Controller forumController(&engine);
 	qmlRegisterType<cforum::CForum>("CForum", 1, 0, "CForum");
 	qmlRegisterType<cforum::User>("CForum", 1, 0, "User");
 	qmlRegisterType<cforum::Board>("CForum", 1, 0, "Board");

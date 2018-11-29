@@ -2,7 +2,7 @@
 
 namespace cforum
 {
-    Controller::Controller(QQmlApplicationEngine &engine) : 
+    Controller::Controller(QQmlApplicationEngine *engine) : 
 		QObject(), engine(engine),
 		cforum(new CForum()),
 		defaultUser(new Guest()),
@@ -130,7 +130,7 @@ namespace cforum
 				Thread *thread = board->getThreadByID(threadID);
 				if (thread && canDeleteThread(user, board, thread))
 				{
-					QQmlContext *ctxt = engine.rootContext();
+					QQmlContext *ctxt = engine->rootContext();
 					ctxt->setContextProperty("threadListModel", QVariant::fromValue(*defaultBoard->threads));
 					ctxt->setContextProperty("commentListModel", QVariant::fromValue(*defaultThread->comments));
 					board->remove(threadID);
