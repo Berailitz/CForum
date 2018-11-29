@@ -9,14 +9,14 @@ RowLayout {
         text: model.name
         Layout.preferredWidth: 800
         font.family: "dengxian"
-        font.pointSize: 30
+        font.pointSize: 20
     }
 
     Button {
         text: qsTr("🡲")
         Layout.preferredWidth: 100
         font.family: "dengxian"
-        font.pointSize: 30
+        font.pointSize: 20
         Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
         onClicked: forumController.viewBoard(model.id)
     }

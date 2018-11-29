@@ -10,7 +10,7 @@ Dialog {
         id: commentContentTextField
         font.family: "dengxian"
         placeholderText: qsTr("回复")
-        font.pointSize: 30
+        font.pointSize: 20
     }
 
     onAccepted: {

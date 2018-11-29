@@ -20,7 +20,7 @@ Page {
             anchors.horizontalCenter: parent.horizontalCenter
             Text {
                 text: forumController.greeting
-                font.pointSize: 30
+                font.pointSize: 20
                 font.family: "dengxian"
                 Layout.preferredHeight: 100
                 Layout.preferredWidth: 1080

@@ -55,7 +55,11 @@ Page {
                     font.pointSize: 40
                     focusPolicy: Qt.NoFocus
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    onClicked: forumController.registerUser(usernameTextField.text, passwordTextField.text)
+                    onClicked: {
+                        forumController.registerUser(usernameTextField.text, passwordTextField.text)
+                        usernameTextField.text = ""
+                        passwordTextField.text = ""
+                    }
                 }
 
                 Button {
@@ -65,7 +69,11 @@ Page {
                     font.family: "dengxian"
                     font.pointSize: 40
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    onClicked: forumController.login(usernameTextField.text, passwordTextField.text)
+                    onClicked: {
+                        forumController.login(usernameTextField.text, passwordTextField.text)
+                        usernameTextField.text = ""
+                        passwordTextField.text = ""
+                    }
                 }
             }
 

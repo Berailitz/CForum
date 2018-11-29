@@ -55,7 +55,7 @@ ApplicationWindow {
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
             font.family: "dengxian"
-            font.pointSize: 30
+            font.pointSize: 20
         }
 
         onOpened: PropertyAnimation {

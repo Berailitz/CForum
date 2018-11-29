@@ -6,6 +6,7 @@
 #include <fstream>
 #include <iomanip>
 #include <list>
+#include <QDateTime>
 #include <QDebug>
 #include <QObject>
 #include <QList>
@@ -26,6 +27,7 @@ namespace cforum
         Q_PROPERTY(int id MEMBER id CONSTANT)
         Q_PROPERTY(int authorID MEMBER authorID CONSTANT)
         Q_PROPERTY(QString content MEMBER content NOTIFY contentChanged)
+		Q_PROPERTY(QString time READ getTimeString NOTIFY contentChanged)
 		Q_PROPERTY(bool isDeleted MEMBER isDeleted NOTIFY contentChanged)
     public:
         Comment(const int id = 0, QString content = "", const int authorID = 0);
@@ -35,11 +37,12 @@ namespace cforum
 		~Comment();
         int id; // primary_kay in a thread, start from 1
 		QString content;
-        tm time;
+		QDateTime time;
         int authorID;
 		bool isDeleted;
 		void deleteContent();
         void initialize(const Comment *oldComment);
+		QString getTimeString() const;
         virtual bool load(const fs::path filename);
         virtual bool save(const fs::path filename) const;
 	Q_SIGNALS:

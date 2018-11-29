@@ -11,14 +11,14 @@ Dialog {
             Text {
                 text: qsTr("标题")
                 font.family: "dengxian"
-                font.pointSize: 30
+                font.pointSize: 20
             }
 
             TextField {
                 id: threadTitleTextField
                 font.family: "dengxian"
                 placeholderText: qsTr("标题")
-                font.pointSize: 30
+                font.pointSize: 20
             }
         }
 
@@ -26,14 +26,14 @@ Dialog {
             Text {
                 text: qsTr("正文")
                 font.family: "dengxian"
-                font.pointSize: 30
+                font.pointSize: 20
             }
 
             TextField {
                 id: threadContentTextField
                 font.family: "dengxian"
                 placeholderText: qsTr("正文")
-                font.pointSize: 30
+                font.pointSize: 20
             }
         }
     }

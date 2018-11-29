@@ -17,7 +17,7 @@ Page {
         anchors.horizontalCenter: parent.horizontalCenter
         Text {
             text: forumController.threadTitle
-            font.pointSize: 30
+            font.pointSize: 20
             font.family: "dengxian"
             Layout.preferredHeight: 100
             Layout.preferredWidth: 600
@@ -26,7 +26,7 @@ Page {
 
         Text {
             text: forumController.threadContent
-            font.pointSize: 30
+            font.pointSize: 20
             font.family: "dengxian"
             Layout.preferredHeight: 100
             Layout.preferredWidth: 600

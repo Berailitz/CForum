@@ -22,7 +22,7 @@ namespace cforum
 
 	QString Controller::getThreadTitle() const
 	{
-        return thread->title + " -- by: " + getUsername(thread->authorID);
+        return thread->title + " -- by: " + getUsername(thread->authorID) + ", " + thread->getTimeString();
 	}
 
     QString Controller::getThreadContent() const

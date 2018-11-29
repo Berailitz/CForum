@@ -10,7 +10,7 @@ Dialog {
         id: moderatorUsernameTextField
         font.family: "dengxian"
         placeholderText: qsTr("版主用户名")
-        font.pointSize: 30
+        font.pointSize: 20
     }
 
     onAccepted: {

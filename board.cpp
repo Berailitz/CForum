@@ -191,8 +191,8 @@ namespace cforum
             getline(stream, rawString);
 			title = QString::fromStdString(rawString);
             stream >> authorID;
-            stream >> get_time(&time, "%Y-%m-%d@%H:%M:%S");
-            stream.get();
+			getline(stream, rawString);
+			time = QDateTime::fromString(QString::fromStdString(rawString), "%Y-%m-%d@%H:%M:%S");
             content = QString::fromStdString(string((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>()));
             stream.close();
             for (int i = 1; i <= commentCounter; i++)
@@ -218,7 +218,7 @@ namespace cforum
 			stream << isDeleted << endl;
             stream << title.toStdString() << endl;
             stream << authorID << endl;
-            stream << put_time(&time, "%Y-%m-%d@%H:%M:%S") << endl;
+            stream << time.toString("%Y-%m-%d@%H:%M:%S").toStdString() << endl;
             stream << content.toStdString();
             stream.close();
             for (QObject *&qit : *comments)
@@ -246,9 +246,7 @@ namespace cforum
 
     Comment::Comment(const int id, QString content, const int authorID) : QObject(), id(id), content(content), authorID(authorID), isDeleted(false)
     {
-        auto now = chrono::system_clock::now();
-        auto in_time_t = chrono::system_clock::to_time_t(now);
-         localtime_s(&time, &in_time_t);
+		time = QDateTime::currentDateTime();
     }
 
     Comment::Comment(const fs::path filename) : QObject()
@@ -286,15 +284,22 @@ namespace cforum
 		isDeleted = oldComment->isDeleted;
 	}
 
+	QString Comment::getTimeString() const
+	{
+		return time.toString(QString::fromUtf8("M月d日 H:m:s"));
+	}
+
 	bool Comment::load(const fs::path filename)
     {
         ifstream stream(filename);
         if (stream.is_open())
         {
+			string rawString;
             stream >> id;
             stream >> authorID;
 			stream >> isDeleted;
-            stream >> get_time(&time, "%Y-%m-%d@%H:%M:%S");
+			getline(stream, rawString);
+			time = QDateTime::fromString(QString::fromStdString(rawString), "%Y-%m-%d@%H:%M:%S");
             stream.get();
             content = QString::fromStdString(string((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>()));
             stream.close();
@@ -313,7 +318,7 @@ namespace cforum
             stream << id << endl;
             stream << authorID << endl;
 			stream << isDeleted << endl;
-            stream << put_time(&time, "%Y-%m-%d@%H:%M:%S") << endl;
+            stream << time.toString("%Y-%m-%d@%H:%M:%S").toStdString() << endl;
             stream << content.toStdString();
             stream.close();
             return true;
