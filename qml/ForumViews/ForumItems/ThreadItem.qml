@@ -15,7 +15,7 @@ RowLayout {
     }
 
     Button {
-        visible: !model.isDeleted && (forumController.isModerator || model.authorID === forumController.userID)
+        visible: model.canDelete && (forumController.isModerator || model.authorID === forumController.userID)
         text: qsTr("❌")
         Layout.preferredWidth: 100
         font.family: "dengxian"

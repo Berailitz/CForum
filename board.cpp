@@ -147,14 +147,21 @@ namespace cforum
     bool Thread::post(Comment * newComment)
     {
         comments->push_back(newComment);
+		emit commentsChanged();
         return true;
     }
+
+	bool Thread::canDelete() const
+	{
+		return !isDeleted && comments->size() == 0;
+	}
 
     bool Thread::remove(const int commentID)
     {
         CommentList::iterator it = comments->begin();
         advance(it, commentID - 1);
 		static_cast<Comment*>(*it)->deleteContent();
+		emit commentsChanged();
         return true;
     }
 

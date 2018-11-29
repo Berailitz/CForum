@@ -60,6 +60,7 @@ namespace cforum
         void save(const QString path) const;
 	private:
         QQmlApplicationEngine &engine;
+		bool canDeleteThread(Thread *target) const;
 		void openForum();
         void openBoard(const int boardID);
         void openThread(const int threadID);

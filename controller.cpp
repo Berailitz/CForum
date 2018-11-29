@@ -125,7 +125,7 @@ namespace cforum
     void Controller::deleteThread(const int threadID)
 	{
 		Thread *target = board->getThreadByID(threadID);
-		if (target && !target->isDeleted && (isModerator() || user->id == target->authorID))
+		if (target && canDeleteThread(target) && (isModerator() || user->id == target->authorID))
 		{
 			QQmlContext *ctxt = engine.rootContext();
 			ctxt->setContextProperty("threadListModel", QVariant::fromValue(*defaultBoard->threads));
@@ -159,8 +159,7 @@ namespace cforum
 		Comment *target = thread->getCommentByID(commentID);
 		if (target && !target->isDeleted && (isModerator() || user->id == target->authorID))
 		{
-			QQmlContext *ctxt = engine.rootContext();
-			ctxt->setContextProperty("commentListModel", QVariant::fromValue(*defaultThread->comments));
+			engine.rootContext()->setContextProperty("commentListModel", QVariant::fromValue(*defaultThread->comments));
 			thread->remove(commentID);
 			qDebug() << DELETE_SUCCESS_MESSAGE << commentID;
 			emit messageSent(DELETE_SUCCESS_MESSAGE);
@@ -197,12 +196,19 @@ namespace cforum
     void Controller::refreshViews()
 	{
 		QQmlContext *ctxt = engine.rootContext();
+		ctxt->setContextProperty("threadListModel", QVariant::fromValue(*defaultBoard->threads));
+		ctxt->setContextProperty("commentListModel", QVariant::fromValue(*defaultThread->comments));
         ctxt->setContextProperty("forumController", QVariant::fromValue(&*this));
 		ctxt->setContextProperty("boardListModel", QVariant::fromValue(*cforum->boards));
         ctxt->setContextProperty("threadListModel", QVariant::fromValue(*board->threads));
 		ctxt->setContextProperty("commentListModel", QVariant::fromValue(*thread->comments));
         qDebug() << "Refresh: " << cforum->boards->size() << " Boards " << board->threads->size()
                  << " Threads " << thread->comments->size() << " Comments.";
+	}
+
+	bool Controller::canDeleteThread(Thread * target) const
+	{
+		return target->canDelete();
 	}
 
 	void Controller::openForum()

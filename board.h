@@ -55,6 +55,7 @@ namespace cforum
     {
         Q_OBJECT
         Q_PROPERTY(QString title MEMBER title CONSTANT)
+		Q_PROPERTY(bool canDelete READ canDelete NOTIFY commentsChanged)
     public:
         Thread(const int id, QString content, const int authorID, QString title);
         Thread(const fs::path path);
@@ -64,11 +65,14 @@ namespace cforum
 		QString title; // without `\n`
         CommentList* comments;
         bool post(Comment *newComment); // newComment is in heap
+		bool canDelete() const;
         bool remove(const int commentID); // commentID < comments->size()
 		Comment *getCommentByID(const int commentID);
         bool load(const fs::path path);
         bool save(const fs::path path) const;
         void initialize(const Thread *old_thread);
+	Q_SIGNALS:
+		void commentsChanged();
     };
 
     class Board : public QObject
