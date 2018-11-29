@@ -55,6 +55,7 @@ namespace cforum
     {
         Q_OBJECT
         Q_PROPERTY(QString title MEMBER title CONSTANT)
+		Q_PROPERTY(QList<QObject*> comments MEMBER comments)
     public:
         Thread(const int id = 0, QString content = "", const int authorID = 0, QString title = "");
         Thread(const fs::path path);
@@ -62,14 +63,16 @@ namespace cforum
         Thread(const Thread &old_thread);
         virtual ~Thread();
 		QString title; // without `\n`
-        CommentList* comments;
+        CommentList comments;
         bool post(Comment *newComment); // newComment is in heap
 		bool canDelete() const;
-        bool remove(const int commentID); // commentID < comments->size()
+        bool remove(const int commentID); // commentID < comments.size()
 		Comment *getCommentByID(const int commentID);
         bool load(const fs::path path);
         bool save(const fs::path path) const;
         void initialize(const Thread *old_thread);
+	Q_SIGNALS:
+		void commentsChanged();
     };
 
     class Board : public QObject

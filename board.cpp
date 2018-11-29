@@ -114,7 +114,7 @@ namespace cforum
         }
     }
 
-    Thread::Thread(const int id, QString content, const int authorID, QString title) : Comment(id, content, authorID), title(title), comments(new CommentList)
+    Thread::Thread(const int id, QString content, const int authorID, QString title) : Comment(id, content, authorID), title(title)
     {
     }
 
@@ -135,29 +135,28 @@ namespace cforum
 
     Thread::~Thread()
     {
-        for (QObject* &qit : *comments)
+        for (QObject* &qit : comments)
         {
 			Comment *cit;
 			cit = static_cast<Comment*>(qit);
             delete cit;
         }
-        delete comments;
     }
 
     bool Thread::post(Comment * newComment)
     {
-        comments->push_back(newComment);
+        comments.push_back(newComment);
         return true;
     }
 
 	bool Thread::canDelete() const
 	{
-		return !isDeleted && comments->length() == 0;
+		return !isDeleted && comments.length() == 0;
 	}
 
     bool Thread::remove(const int commentID)
     {
-        CommentList::iterator it = comments->begin();
+        CommentList::iterator it = comments.begin();
         advance(it, commentID - 1);
 		static_cast<Comment*>(*it)->deleteContent();
         return true;
@@ -165,9 +164,9 @@ namespace cforum
 
 	Comment * Thread::getCommentByID(const int commentID)
 	{
-		if (commentID > 0 && commentID <= comments->size())
+		if (commentID > 0 && commentID <= comments.size())
 		{
-			CommentList::iterator it = comments->begin();
+			CommentList::iterator it = comments.begin();
 			advance(it, commentID - 1);
 			return static_cast<Comment*>(*it);
 		}
@@ -180,7 +179,6 @@ namespace cforum
     bool Thread::load(const fs::path path)
     {
         ifstream stream(path / "thread.cfdata");
-        comments = new CommentList;
         if (stream.is_open())
         {
 			string rawString;
@@ -199,7 +197,7 @@ namespace cforum
             stream.close();
             for (int i = 1; i <= commentCounter; i++)
             {
-                comments->push_back(new Comment(path / (to_string(i) + ".cfdata")));
+                comments.push_back(new Comment(path / (to_string(i) + ".cfdata")));
             }
             return true;
         }
@@ -216,14 +214,14 @@ namespace cforum
         if (stream.is_open())
         {
             stream << id << endl;
-            stream << comments->size() << endl;
+            stream << comments.size() << endl;
 			stream << isDeleted << endl;
 			stream << authorID << endl;
 			stream << time.toString(DATETIME_FORMAT).toStdString() << endl;
             stream << title.toStdString() << endl;
             stream << content.toStdString();
             stream.close();
-            for (QObject *&qit : *comments)
+            for (QObject *qit : comments)
             {
                 Comment *it = static_cast<Thread*>(qit);
                 it->save(path / (to_string(it->id) + ".cfdata"));
@@ -238,11 +236,10 @@ namespace cforum
 
     void Thread::initialize(const Thread * old_thread)
     {
-        comments = new CommentList;
-        for (QObject* &qit : *old_thread->comments)
+        for (QObject* qit : old_thread->comments)
         {
             Comment *comment = static_cast<Thread*>(qit);
-            comments->push_back(comment);
+            comments.push_back(comment);
         }
     }
 

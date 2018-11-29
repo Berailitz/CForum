@@ -11,10 +11,10 @@ ApplicationWindow {
     width: 1080
     height: 720
 
-    property CForum cforum
-    property User user
-    property Board board
-    property Thread thread
+    property Controller controller : Controller {}
+    property User user : User {}
+    property Board board : Board {}
+    property Thread thread : Thread {}
 
     SwipeView {
         id: swipeView
@@ -33,7 +33,7 @@ ApplicationWindow {
         }
 
         Connections {
-            target: forumController
+            target: controller
             onForumOpened: swipeView.setCurrentIndex(1)
             onMessageSent: {
                 console.log(message)
@@ -43,6 +43,10 @@ ApplicationWindow {
                 messagePopup.open()
             }
         }
+    }
+
+    Button {
+        onClicked: console.log("user " + typeof user)
     }
 
     Popup {

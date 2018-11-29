@@ -18,6 +18,6 @@ RowLayout {
         font.family: "dengxian"
         font.pointSize: 20
         Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-        onClicked: forumController.viewBoard(model.id)
+        onClicked: controller.viewBoard(model.id)
     }
 }

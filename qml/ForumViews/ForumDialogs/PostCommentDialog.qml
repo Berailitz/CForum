@@ -14,7 +14,7 @@ Dialog {
     }
 
     onAccepted: {
-        forumController.postComment(user.id, board.id, thread.id, commentContentTextField.text)
+        controller.postComment(user.id, board.id, thread.id, commentContentTextField.text)
         commentContentTextField.text = ""
     }
 }

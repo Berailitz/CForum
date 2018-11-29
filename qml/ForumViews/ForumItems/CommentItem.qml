@@ -8,7 +8,7 @@ RowLayout {
     visible: !model.isDeleted
     height: model.isDeleted ? 0 : implicitHeight
     Text {
-        text: qsTr("#") + model.id + " " + model.content + qsTr(" -- by: ") + forumController.getUsername(model.authorID) + ", " + model.time
+        text: qsTr("#") + model.id + " " + model.content + qsTr(" -- by: ") + controller.getUsername(model.authorID) + ", " + model.time
         Layout.preferredWidth: 1080
         font.family: "dengxian"
         font.pointSize: 20
@@ -21,6 +21,6 @@ RowLayout {
         font.family: "dengxian"
         font.pointSize: 20
         Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-        onClicked: forumController.deleteComment(board.id, thread.id, model.id)
+        onClicked: controller.deleteComment(board.id, thread.id, model.id)
     }
 }

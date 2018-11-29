@@ -39,7 +39,7 @@ Page {
             Layout.alignment: Qt.AlignHCenter
             Layout.preferredWidth: 1080
             Layout.fillWidth: true
-            model: commentListModel
+            model: thread.comments
             delegate: CommentItem {}
             ScrollBar.vertical: ScrollBar {}
         }

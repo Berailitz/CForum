@@ -32,7 +32,7 @@ namespace cforum
 		// 此处的函数默认接受可传递的不安全的参数
 		QString getUsername(const int userID) const;
         User *registerUser(const QString userName, const QString password);
-		User *login(const QString userName, const QString password);
+		QObject *login(const QString userName, const QString password);
 		void setModerator(const int boardID, const QString userName);
 		Thread *getThread(const int boardID, const int threadID) const;
         void postThread(const int userID, const int boardID, const QString title, const QString content);

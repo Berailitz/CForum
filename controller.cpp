@@ -46,7 +46,7 @@ namespace cforum
 		return user;
 	}
 
-	User *Controller::login(const QString userName, const QString password)
+	QObject *Controller::login(const QString userName, const QString password)
 	{
         User *newUser = getUserByName(userName);
         if (newUser && newUser->isPasswordCorrect(password))
@@ -132,7 +132,7 @@ namespace cforum
 				{
 					QQmlContext *ctxt = engine->rootContext();
 					ctxt->setContextProperty("threadListModel", QVariant::fromValue(*defaultBoard->threads));
-					ctxt->setContextProperty("commentListModel", QVariant::fromValue(*defaultThread->comments));
+					ctxt->setContextProperty("commentListModel", QVariant::fromValue(defaultThread->comments));
 					board->remove(threadID);
 					qDebug() << DELETE_SUCCESS_MESSAGE << threadID;
 					emit messageSent(DELETE_SUCCESS_MESSAGE);
@@ -165,7 +165,7 @@ namespace cforum
 				Thread *thread = board->getThreadByID(threadID);
 				if (thread)
 				{
-					Comment *newComment = new Comment(thread->comments->size() + 1, content, user->id);
+					Comment *newComment = new Comment(thread->comments.size() + 1, content, user->id);
 					thread->post(newComment);
 					qDebug() << POST_SUCCESS_MESSAGE << newComment->content;
 					emit messageSent(POST_SUCCESS_MESSAGE);

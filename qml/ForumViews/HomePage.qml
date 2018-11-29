@@ -55,7 +55,7 @@ Page {
                     focusPolicy: Qt.NoFocus
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                     onClicked: {
-                        user = forumController.registerUser(usernameTextField.text, passwordTextField.text)
+                        user = controller.registerUser(usernameTextField.text, passwordTextField.text)
                         usernameTextField.text = ""
                         passwordTextField.text = ""
                     }
@@ -68,7 +68,7 @@ Page {
                     font.pointSize: 40
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                     onClicked: {
-                        user = forumController.login(usernameTextField.text, passwordTextField.text)
+                        user = controller.login(usernameTextField.text, passwordTextField.text)
                         usernameTextField.text = ""
                         passwordTextField.text = ""
                     }
