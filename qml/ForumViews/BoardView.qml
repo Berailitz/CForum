@@ -80,7 +80,7 @@ Page {
         onClicked: newPostDialog.open()
     }
 
-    PostPostDialog {
+    AddPostDialog {
         id: newPostDialog
     }
 

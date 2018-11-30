@@ -312,6 +312,11 @@ namespace cforum
 		return time.toString(QString::fromUtf8("M月d日 H:m:s"));
 	}
 
+	bool Comment::canDelete() const
+	{
+		return !isDeleted;
+	}
+
 	bool Comment::load(const fs::path filename)
     {
         ifstream stream(filename);

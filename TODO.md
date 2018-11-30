@@ -2,6 +2,7 @@ TODO
 ====
 
 1. 管理员可以添加版面
+2. 游客不可发帖
 3. 转数据库
 3. 展示个人信息
 5. 检查用户名、密码、标题等的输入
@@ -132,10 +133,10 @@ Controller
         - `bool login(const string userName, const string password)`
         - `bool setModerator(const int userID, const int boardID)`
         - `bool removeModerator(const int userID, const int boardID)`
-        - `bool postPost(const string title, const string content)`
-        - `bool deletePost(const int postID)`
-        - `bool postComment(const string content)`
-        - `bool deleteComment(const int commentID)`
+        - `bool addPost(const string title, const string content)`
+        - `bool removePost(const int postID)`
+        - `bool addComment(const string content)`
+        - `bool removeComment(const int commentID)`
     - `private`
         - `int _userID = 0`
         - `int _boardID`

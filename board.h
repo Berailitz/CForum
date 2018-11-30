@@ -47,14 +47,16 @@ namespace cforum
 		QString content;
 		QDateTime time;
         int authorID;
-		bool isDeleted;
 		void deleteContent();
         void initialize(const Comment *oldComment);
 		QString getTimeString() const;
+		virtual bool canDelete() const;
         virtual bool load(const fs::path filename);
         virtual bool save(const fs::path filename) const;
 	Q_SIGNALS:
 		void contentChanged();
+	protected:
+		bool isDeleted;
     };
 
     class Post : public Comment

@@ -26,16 +26,23 @@ namespace cforum
 
 	NormalUser *CForum::addNormalUser(const QString userName, const QString password)
 	{
-		User *user = getUserByName(userName);
-		if (user)
+		if (matchRegular(userName, standardRegular) && matchRegular(password, standardRegular))
 		{
-			return nullptr;
+			User *user = getUserByName(userName);
+			if (user)
+			{
+				return nullptr;
+			}
+			else
+			{
+				NormalUser *user = new NormalUser(users->size() + 1, userName, password);
+				users->push_back(user);
+				return user;
+			}
 		}
 		else
 		{
-			NormalUser *user = new NormalUser(users->size() + 1, userName, password);
-			users->push_back(user);
-			return user;
+			return false;
 		}
 	}
 
@@ -66,9 +73,16 @@ namespace cforum
 
 	Board * CForum::addBoard(const QString boardName)
 	{
-		Board *board = new Board(boards->size() + 1, boardName);
-		boards->push_back(board);
-		return board;
+		if (matchRegular(boardName, standardRegular))
+		{
+			Board *board = new Board(boards->size() + 1, boardName);
+			boards->push_back(board);
+			return board;
+		}
+		else
+		{
+			return nullptr;
+		}
 	}
 
 	BoardList * CForum::getBoards() const
@@ -162,6 +176,99 @@ namespace cforum
 					}
 				}
 				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	Post * CForum::addPost(const int boardID, const QString title, const QString content, const int userID)
+	{
+		Board *board = getBoardByID(boardID);
+		User *user = getUserByID(userID);
+		if (board && user && matchRegular(title, inlineRegular))
+		{
+			Post *post = new Post(board->posts->size() + 1, content, userID, title);
+			board->post(post);
+			return post;
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+
+	bool CForum::removePost(const int boardID, const int postID, const int userID)
+	{
+		Board *board = getBoardByID(boardID);
+		User *user = getUserByID(userID);
+		if (board && user)
+		{
+			Post *post = board->getPostByID(postID);
+			if (post && post->canDelete() && (user->isAdmin() || user->isModerator(board->id) || post->authorID == userID))
+			{
+				board->remove(postID);
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	bool CForum::addComment(const int boardID, const int postID, const QString content, const int userID)
+	{
+		Board *board = getBoardByID(boardID);
+		User *user = getUserByID(userID);
+		if (board && user)
+		{
+			Post *post = board->getPostByID(postID);
+			if (post)
+			{
+				post->post(content, userID);
+				return true;
+			}
+			else
+			{
+				return nullptr;
+			}
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+
+	bool CForum::removeComment(const int boardID, const int postID, const int commentID, const int userID)
+	{
+		Board *board = getBoardByID(boardID);
+		User *user = getUserByID(userID);
+		if (board && user)
+		{
+			Post *post = board->getPostByID(postID);
+			if (post)
+			{
+				Comment *comment = post->getCommentByID(commentID);
+				if (comment && comment->canDelete() && (user->isAdmin() || user->isModerator(board->id) || post->authorID == userID))
+				{
+					post->remove(commentID);
+					return true;
+				}
+				else
+				{
+					return false;
+				}
 			}
 			else
 			{

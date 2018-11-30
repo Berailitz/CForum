@@ -3,6 +3,7 @@
 #include <QQmlContext>
 
 #include "controller.h"
+#include "cftools.h"
 
 using namespace std;
 
@@ -18,8 +19,8 @@ int main(int argc, char *argv[])
  //   forumController.addUser("admin", "admin");
 	//forumController.cforum->admins->insert(1); // admin
  //   forumController.addBoard("TestBoard");
- //   forumController.postPost("Test post", "This is content.");
- //   forumController.postComment("Comment 1");
+ //   forumController.addPost("Test post", "This is content.");
+ //   forumController.addComment("Comment 1");
  //   forumController.setModerator("admin");
     forumController.refreshViews();
     engine.load(QUrl(QString::fromUtf8("qrc:/qml/main.qml")));

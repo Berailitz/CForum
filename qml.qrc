@@ -9,8 +9,8 @@
         <file>qml/ForumViews/ForumItems/BoardItem.qml</file>
         <file>qml/ForumViews/ForumItems/PostItem.qml</file>
         <file>qml/ForumViews/ForumItems/CommentItem.qml</file>
-        <file>qml/ForumViews/ForumDialogs/PostPostDialog.qml</file>
-        <file>qml/ForumViews/ForumDialogs/PostCommentDialog.qml</file>
+        <file>qml/ForumViews/ForumDialogs/AddPostDialog.qml</file>
+        <file>qml/ForumViews/ForumDialogs/AddCommentDialog.qml</file>
         <file>qml/ForumViews/ForumDialogs/AddBoard.qml</file>
     </qresource>
 </RCC>

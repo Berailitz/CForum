@@ -138,8 +138,16 @@ namespace cforum
 
     void Controller::addBoard(const QString boardName)
 	{
-		board = cforum->addBoard(boardName);
-		refreshViews();
+		Board *newBoard = cforum->addBoard(boardName);
+		if (newBoard)
+		{
+			board = newBoard;
+			refreshViews();
+		}
+		else
+		{
+			// TODO throw exception
+		}
 	}
 
     void Controller::viewBoard(const int boardID)
@@ -147,14 +155,23 @@ namespace cforum
 		openBoard(boardID);
     }
 
-    void Controller::postPost(const QString title, const QString content)
+    void Controller::addPost(const QString title, const QString content)
 	{
-        post = new Post(board->posts->size() + 1, content, user->id, title);
-        board->post(post);
-        qDebug() << POST_SUCCESS_MESSAGE << post->title;
-        emit messageSent(POST_SUCCESS_MESSAGE);
-        refreshViews();
-        emit postOpened();
+		QQmlContext *ctxt = engine.rootContext();
+		ctxt->setContextProperty("postListModel", QVariant::fromValue(*defaultBoard->posts));
+        post = cforum->addPost(board->id, title, content, user->id);
+		if (post)
+		{
+			qDebug() << POST_SUCCESS_MESSAGE << post->title;
+			refreshViews();
+			emit messageSent(POST_SUCCESS_MESSAGE);
+			emit postOpened();
+		}
+		else
+		{
+			refreshViews();
+			emit messageSent(ILLEGAL_OPERATION_MESSAGE);
+		}
 	}
 
 	void Controller::viewPost(const int postID)
@@ -162,44 +179,49 @@ namespace cforum
 		openPost(postID);
 	}
 
-    void Controller::deletePost(const int postID)
+    void Controller::removePost(const int postID)
 	{
-		Post *target = board->getPostByID(postID);
-		if (target && canDeletePost(target) && (isModerator() || user->id == target->authorID))
+		QQmlContext *ctxt = engine.rootContext();
+		ctxt->setContextProperty("postListModel", QVariant::fromValue(*defaultBoard->posts));
+		ctxt->setContextProperty("commentListModel", QVariant::fromValue(*defaultPost->getComments()));
+		if (cforum->removePost(board->id, postID, user->id))
 		{
-			QQmlContext *ctxt = engine.rootContext();
-			ctxt->setContextProperty("postListModel", QVariant::fromValue(*defaultBoard->posts));
-			ctxt->setContextProperty("commentListModel", QVariant::fromValue(*defaultPost->getComments()));
-            board->remove(postID);
 			post = defaultPost;
 			qDebug() << DELETE_SUCCESS_MESSAGE << postID;
+			refreshViews();
 			emit messageSent(DELETE_SUCCESS_MESSAGE);
-            refreshViews();
-            emit boardOpened();
-        }
+			emit boardOpened();
+		}
 		else
 		{
 			qDebug() << DELETE_FAILED_MESSAGE << postID;
+			refreshViews();
 			emit messageSent(DELETE_FAILED_MESSAGE);
 		}
 	}
 
-    void Controller::postComment(const QString content)
+    void Controller::addComment(const QString content)
 	{
-        post->post(content, user->id);
-        qDebug() << POST_SUCCESS_MESSAGE << content;
-        emit messageSent(POST_SUCCESS_MESSAGE);
-        refreshViews();
-        emit postOpened();
+		engine.rootContext()->setContextProperty("commentListModel", QVariant::fromValue(*defaultPost->getComments()));
+		if (cforum->addComment(board->id, post->id, content, user->id))
+		{
+			qDebug() << POST_SUCCESS_MESSAGE << content;
+			emit messageSent(POST_SUCCESS_MESSAGE);
+			refreshViews();
+			emit postOpened();
+		}
+		else
+		{
+			refreshViews();
+			emit messageSent(ILLEGAL_OPERATION_MESSAGE);
+		}
 	}
 
-    void Controller::deleteComment(const int commentID)
+    void Controller::removeComment(const int commentID)
 	{
-		Comment *target = post->getCommentByID(commentID);
-		if (target && !target->isDeleted && (isModerator() || user->id == target->authorID))
+		engine.rootContext()->setContextProperty("commentListModel", QVariant::fromValue(*defaultPost->getComments()));
+		if (cforum->removeComment(board->id, post->id, commentID, user->id))
 		{
-			engine.rootContext()->setContextProperty("commentListModel", QVariant::fromValue(*defaultPost->getComments()));
-			post->remove(commentID);
 			qDebug() << DELETE_SUCCESS_MESSAGE << commentID;
 			emit messageSent(DELETE_SUCCESS_MESSAGE);
 			refreshViews();
@@ -208,6 +230,7 @@ namespace cforum
 		else
 		{
 			qDebug() << DELETE_FAILED_MESSAGE << commentID;
+			refreshViews();
 			emit messageSent(DELETE_FAILED_MESSAGE);
 		}
 	}

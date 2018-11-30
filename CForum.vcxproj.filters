@@ -49,7 +49,7 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="utility.cpp">
+    <ClCompile Include="cftools.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="user.cpp">
@@ -69,7 +69,7 @@
     <QtMoc Include="user.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <ClInclude Include="utility.h">
+    <ClInclude Include="cftools.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -97,10 +97,10 @@
     <None Include="qml\ForumViews\HomePage.qml">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="qml\ForumViews\ForumDialogs\PostCommentDialog.qml">
+    <None Include="qml\ForumViews\ForumDialogs\AddCommentDialog.qml">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="qml\ForumViews\ForumDialogs\PostPostDialog.qml">
+    <None Include="qml\ForumViews\ForumDialogs\AddPostDialog.qml">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="qml\ForumViews\ForumDialogs\AddBoard.qml">

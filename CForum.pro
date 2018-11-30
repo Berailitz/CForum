@@ -19,7 +19,7 @@ SOURCES += \
     cforum.cpp \
     controller.cpp \
     user.cpp \
-    utility.cpp
+    cftools.cpp
 
 RESOURCES += qml.qrc
 
@@ -39,4 +39,4 @@ HEADERS += \
     cforum.h \
     controller.h \
     user.h \
-    utility.h
+    cftools.h

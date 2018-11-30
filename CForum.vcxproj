@@ -202,7 +202,7 @@
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\$(ConfigurationName)\.;.\GeneratedFiles;.;$(QTDIR)\include;$(QTDIR)\include\QtQuick;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtQml;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtCore;.\release;\include;$(QTDIR)\mkspecs\win32-msvc</IncludePath>
       <Define Condition="'$(Configuration)|$(Platform)'=='Release|x64'">_WINDOWS;UNICODE;_UNICODE;WIN32;WIN64;_ENABLE_EXTENDED_ALIGNED_STORAGE;QT_DEPRECATED_WARNINGS;QT_NO_DEBUG;QT_QUICK_LIB;QT_GUI_LIB;QT_QML_LIB;QT_NETWORK_LIB;QT_CORE_LIB;NDEBUG</Define>
     </ClCompile>
-    <ClCompile Include="utility.cpp" />
+    <ClCompile Include="cftools.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="board.h">
@@ -213,7 +213,7 @@
     </QtMoc>
     <QtMoc Include="user.h">
     </QtMoc>
-    <ClInclude Include="utility.h" />
+    <ClInclude Include="cftools.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="debug\moc_predefs.h.cbt">
@@ -239,8 +239,8 @@
     <None Include="qml\ForumViews\ForumItems\CommentItem.qml" />
     <None Include="qml\ForumViews\ForumView.qml" />
     <None Include="qml\ForumViews\HomePage.qml" />
-    <None Include="qml\ForumViews\ForumDialogs\PostCommentDialog.qml" />
-    <None Include="qml\ForumViews\ForumDialogs\PostPostDialog.qml" />
+    <None Include="qml\ForumViews\ForumDialogs\AddCommentDialog.qml" />
+    <None Include="qml\ForumViews\ForumDialogs\AddPostDialog.qml" />
     <None Include="qml\ForumViews\ForumDialogs\AddBoard.qml" />
     <None Include="qml\ForumViews\ForumItems\PostItem.qml" />
     <None Include="qml\ForumViews\PostView.qml" />

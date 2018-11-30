@@ -21,7 +21,7 @@ RowLayout {
         font.family: "dengxian"
         font.pointSize: 20
         Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-        onClicked: forumController.deletePost(model.id)
+        onClicked: forumController.removePost(model.id)
     }
 
     Button {

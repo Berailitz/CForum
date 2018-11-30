@@ -69,7 +69,7 @@ Page {
         onClicked: newCommentDialog.open()
     }
 
-    PostCommentDialog {
+    AddCommentDialog {
         id: newCommentDialog
     }
 

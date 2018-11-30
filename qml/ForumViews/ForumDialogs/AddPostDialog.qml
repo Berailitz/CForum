@@ -39,7 +39,7 @@ Dialog {
     }
 
     onAccepted: {
-        forumController.postPost(postTitleTextField.text, postContentTextField.text)
+        forumController.addPost(postTitleTextField.text, postContentTextField.text)
         postTitleTextField.text = ""
         postContentTextField.text = ""
     }

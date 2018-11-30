@@ -58,11 +58,11 @@ namespace cforum
 		void viewForum();
         void addBoard(const QString boardName);
         void viewBoard(const int boardID = -1);
-        void postPost(const QString title, const QString content);
+        void addPost(const QString title, const QString content);
 		void viewPost(const int postID);
-        void deletePost(const int postID);
-        void postComment(const QString content);
-        void deleteComment(const int commentID);
+        void removePost(const int postID);
+        void addComment(const QString content);
+        void removeComment(const int commentID);
         void load(const QString path);
         void save(const QString path) const;
 	private:

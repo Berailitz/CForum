@@ -21,6 +21,6 @@ RowLayout {
         font.family: "dengxian"
         font.pointSize: 20
         Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-        onClicked: forumController.deleteComment(model.id)
+        onClicked: forumController.removeComment(model.id)
     }
 }
