@@ -29,7 +29,7 @@ Page {
             }
 
             ListView {
-                height: contentHeight
+                id: threadListView
                 width: contentWidth
                 Layout.alignment: Qt.AlignHCenter
                 Layout.preferredWidth: 1080
@@ -51,7 +51,7 @@ Page {
         text: qsTr("🡰")
         font.pointSize: 50
         font.family: "dengxian"
-        onClicked: swipeView.setCurrentIndex(1)
+        onClicked: forumController.viewForum()
     }
 
     RoundButton {
@@ -85,5 +85,13 @@ Page {
 
     SetModeratorDialog {
         id: setModeratorDialog
+    }
+
+    Connections {
+        target: forumController
+        onBoardOpened: {
+            swipeView.setCurrentIndex(2)
+            threadListView.height = threadListView.contentHeight
+        }
     }
 }

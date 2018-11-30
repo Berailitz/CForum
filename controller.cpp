@@ -96,6 +96,11 @@ namespace cforum
         }
     }
 
+	void Controller::viewForum()
+	{
+		emit openForum();
+	}
+
     void Controller::addBoard(const QString boardName)
 	{
 		board = new Board(cforum->boards->size() + 1, boardName);
@@ -218,12 +223,20 @@ namespace cforum
 
 	void Controller::openBoard(const int boardID)
 	{
-		Board *newBoard = cforum->getBoardByID(boardID);
-		if (newBoard != nullptr)
+		if (boardID == -1)
 		{
-			board = newBoard;
 			refreshViews();
 			emit boardOpened();
+		}
+		else
+		{
+			Board *newBoard = cforum->getBoardByID(boardID);
+			if (newBoard != nullptr)
+			{
+				board = newBoard;
+				refreshViews();
+				emit boardOpened();
+			}
 		}
 	}
 

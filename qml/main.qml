@@ -28,9 +28,6 @@ ApplicationWindow {
 
         Connections {
             target: forumController
-            onForumOpened: swipeView.setCurrentIndex(1)
-            onBoardOpened: swipeView.setCurrentIndex(2)
-            onThreadOpened: swipeView.setCurrentIndex(3)
             onMessageSent: {
                 console.log(message)
                 messageText.text = message

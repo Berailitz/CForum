@@ -28,6 +28,7 @@ Page {
             }
 
             ListView {
+                id: boardListView
                 Layout.alignment: Qt.AlignHCenter
                 Layout.preferredWidth: 1080
                 Layout.fillWidth: true
@@ -53,5 +54,13 @@ Page {
         font.pointSize: 50
         font.family: "dengxian"
         onClicked: swipeView.setCurrentIndex(0)
+    }
+
+    Connections {
+        target: forumController
+        onForumOpened: {
+            swipeView.setCurrentIndex(1)
+            boardListView.height = boardListViewcontentHeight
+        }
     }
 }

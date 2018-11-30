@@ -34,7 +34,7 @@ Page {
         }
 
         ListView {
-            height: contentHeight
+            id: commentListView
             width: contentWidth
             Layout.alignment: Qt.AlignHCenter
             Layout.preferredWidth: 1080
@@ -54,7 +54,7 @@ Page {
         text: qsTr("🡰")
         font.pointSize: 50
         font.family: "dengxian"
-        onClicked: swipeView.setCurrentIndex(2)
+        onClicked: forumController.viewBoard()
     }
 
     RoundButton {
@@ -71,5 +71,13 @@ Page {
 
     PostCommentDialog {
         id: newCommentDialog
+    }
+
+    Connections {
+        target: forumController
+        onThreadOpened: {
+            swipeView.setCurrentIndex(3)
+            commentListView.height = commentListView.contentHeight
+        }
     }
 }

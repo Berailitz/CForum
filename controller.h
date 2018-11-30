@@ -49,8 +49,9 @@ namespace cforum
         void login(const QString userName, const QString password);
         void setModerator(const QString userName);
         QString getUsername(const int userID) const;
+		void viewForum();
         void addBoard(const QString boardName);
-        void viewBoard(const int boardID);
+        void viewBoard(const int boardID = -1);
         void postThread(const QString title, const QString content);
 		void viewThread(const int threadID);
         void deleteThread(const int threadID);
