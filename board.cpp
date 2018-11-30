@@ -123,14 +123,14 @@ namespace cforum
         load(path);
     }
 
-    Thread::Thread(const Thread * old_thread) : Comment(*old_thread)
+    Thread::Thread(const Thread * oldThread) : Comment(*oldThread)
     {
-        initialize(old_thread);
+        initialize(oldThread);
     }
 
-    Thread::Thread(const Thread & old_thread) : Comment(old_thread)
+    Thread::Thread(const Thread & oldThread) : Comment(oldThread)
     {
-        initialize(&old_thread);
+        initialize(&oldThread);
     }
 
     Thread::~Thread()
@@ -144,16 +144,23 @@ namespace cforum
         delete comments;
     }
 
-    bool Thread::post(Comment * newComment)
+	CommentList * Thread::getComments()
+	{
+		return comments;
+	}
+
+    bool Thread::post(const QString content, const int userID)
     {
+		Comment * newComment = new Comment(comments->size() + 1, content, userID);
         comments->push_back(newComment);
+		visibleCommentCounter++;
 		emit commentsChanged();
         return true;
     }
 
 	bool Thread::canDelete() const
 	{
-		return !isDeleted && comments->size() == 0;
+		return !isDeleted && visibleCommentCounter == 0;
 	}
 
     bool Thread::remove(const int commentID)
@@ -161,6 +168,7 @@ namespace cforum
         CommentList::iterator it = comments->begin();
         advance(it, commentID - 1);
 		static_cast<Comment*>(*it)->deleteContent();
+		visibleCommentCounter--;
 		emit commentsChanged();
         return true;
     }
@@ -202,6 +210,7 @@ namespace cforum
             for (int i = 1; i <= commentCounter; i++)
             {
                 comments->push_back(new Comment(path / (to_string(i) + ".cfdata")));
+				visibleCommentCounter++;
             }
             return true;
         }
@@ -238,10 +247,12 @@ namespace cforum
         }
     }
 
-    void Thread::initialize(const Thread * old_thread)
+    void Thread::initialize(const Thread * oldThread)
     {
+		title = oldThread->title;
+		visibleCommentCounter = oldThread->visibleCommentCounter;
         comments = new CommentList;
-        for (QObject* &qit : *old_thread->comments)
+        for (QObject* &qit : *oldThread->comments)
         {
             Comment *comment = static_cast<Thread*>(qit);
             comments->push_back(comment);

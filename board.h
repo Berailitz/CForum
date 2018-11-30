@@ -59,20 +59,23 @@ namespace cforum
     public:
         Thread(const int id, QString content, const int authorID, QString title);
         Thread(const fs::path path);
-        Thread(const Thread *old_thread);
-        Thread(const Thread &old_thread);
+        Thread(const Thread *oldThread);
+        Thread(const Thread &oldThread);
         virtual ~Thread();
 		QString title; // without `\n`
-        CommentList* comments;
-        bool post(Comment *newComment); // newComment is in heap
+		CommentList* getComments();
+		int visibleCommentCounter = 0;
+        bool post(const QString content, const int userID); // newComment is in heap
 		bool canDelete() const;
         bool remove(const int commentID); // commentID < comments->size()
 		Comment *getCommentByID(const int commentID);
         bool load(const fs::path path);
         bool save(const fs::path path) const;
-        void initialize(const Thread *old_thread);
+        void initialize(const Thread *oldThread);
 	Q_SIGNALS:
 		void commentsChanged();
+	private:
+		CommentList* comments;
     };
 
     class Board : public QObject

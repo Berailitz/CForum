@@ -134,7 +134,7 @@ namespace cforum
 		{
 			QQmlContext *ctxt = engine.rootContext();
 			ctxt->setContextProperty("threadListModel", QVariant::fromValue(*defaultBoard->threads));
-			ctxt->setContextProperty("commentListModel", QVariant::fromValue(*defaultThread->comments));
+			ctxt->setContextProperty("commentListModel", QVariant::fromValue(*defaultThread->getComments()));
             board->remove(threadID);
 			thread = defaultThread;
 			qDebug() << DELETE_SUCCESS_MESSAGE << threadID;
@@ -151,9 +151,8 @@ namespace cforum
 
     void Controller::postComment(const QString content)
 	{
-        Comment *newComment = new Comment(thread->comments->size() + 1, content, user->id);
-        thread->post(newComment);
-        qDebug() << POST_SUCCESS_MESSAGE << newComment->content;
+        thread->post(content, user->id);
+        qDebug() << POST_SUCCESS_MESSAGE << content;
         emit messageSent(POST_SUCCESS_MESSAGE);
         refreshViews();
         emit threadOpened();
@@ -164,7 +163,7 @@ namespace cforum
 		Comment *target = thread->getCommentByID(commentID);
 		if (target && !target->isDeleted && (isModerator() || user->id == target->authorID))
 		{
-			engine.rootContext()->setContextProperty("commentListModel", QVariant::fromValue(*defaultThread->comments));
+			engine.rootContext()->setContextProperty("commentListModel", QVariant::fromValue(*defaultThread->getComments()));
 			thread->remove(commentID);
 			qDebug() << DELETE_SUCCESS_MESSAGE << commentID;
 			emit messageSent(DELETE_SUCCESS_MESSAGE);
@@ -202,13 +201,13 @@ namespace cforum
 	{
 		QQmlContext *ctxt = engine.rootContext();
 		ctxt->setContextProperty("threadListModel", QVariant::fromValue(*defaultBoard->threads));
-		ctxt->setContextProperty("commentListModel", QVariant::fromValue(*defaultThread->comments));
+		ctxt->setContextProperty("commentListModel", QVariant::fromValue(*defaultThread->getComments()));
         ctxt->setContextProperty("forumController", QVariant::fromValue(&*this));
 		ctxt->setContextProperty("boardListModel", QVariant::fromValue(*cforum->boards));
         ctxt->setContextProperty("threadListModel", QVariant::fromValue(*board->threads));
-		ctxt->setContextProperty("commentListModel", QVariant::fromValue(*thread->comments));
-        qDebug() << "Refresh: " << cforum->boards->size() << " Boards " << board->threads->size()
-                 << " Threads " << thread->comments->size() << " Comments.";
+		ctxt->setContextProperty("commentListModel", QVariant::fromValue(*thread->getComments()));
+        qDebug() << "Refresh: " << cforum->boards->size() << " (ALL) Boards " << board->threads->size()
+                 << " Threads " << thread->visibleCommentCounter << " Comments.";
 	}
 
 	bool Controller::canDeleteThread(Thread * target) const
