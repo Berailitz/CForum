@@ -70,7 +70,7 @@ namespace cforum
 
     void Controller::setModerator(const QString userName)
 	{
-		const User *user = cforum->getUserByName(userName);
+ 		const User *user = cforum->getUserByName(userName);
 		if (user == nullptr)
 		{
 			emit messageSent(NO_USER_MESSAGE);
@@ -81,7 +81,7 @@ namespace cforum
 		}
 		else if (user->isModerator(board->id))
 		{
-			emit messageSent(USER_IS_ADMIN_MESSAGE);
+			emit messageSent(USER_IS_MODERATOR_MESSAGE);
 		}
 		else
 		{

@@ -92,14 +92,15 @@ namespace cforum
 		User *user = getUserByID(userID);
 		if (board && user)
 		{
-			board->setModerator(user->id);
 			if (user->isModerator())
 			{
 				static_cast<Moderator*>(user)->setModerator(board->id);
+				board->setModerator(user->id);
 			}
-			else
+			else if (!user->isAdmin())
 			{
 				// user is normal user
+				board->setModerator(user->id);
 				for (UserList::iterator qit = users->begin(); qit != users->end(); qit++)
 				{
 					NormalUser *oldNormalUser = static_cast<NormalUser*>(*qit);
@@ -109,8 +110,14 @@ namespace cforum
 						newModerator->setModerator(boardID);
 						delete *qit;
 						*qit = newModerator;
+						break;
 					}
 				}
+				return true;
+			}
+			else
+			{
+				return false;
 			}
 		}
 		else
@@ -132,7 +139,7 @@ namespace cforum
 				moderator->removeModerator(boardID);
 				if (moderator->getBoardCounter() == 0)
 				{
-					// ½µ¼¶ÎªÆÕÍ¨ÓÃ»§
+					// é™çº§ä¸ºæ™®é€šç”¨æˆ·
 					for (UserList::iterator qit = users->begin(); qit != users->end(); qit++)
 					{
 						Moderator *oldModerator = static_cast<Moderator*>(*qit);
@@ -141,6 +148,7 @@ namespace cforum
 							NormalUser *newNormalUser = moderator->toNormalUser();
 							delete *qit;
 							*qit = newNormalUser;
+							break;
 						}
 					}
 				}
@@ -244,7 +252,7 @@ namespace cforum
 					int boardID, userID;
 					iss >> boardID;
 					iss >> userID;
-					getBoardByID(boardID)->setModerator(userID);
+					setModerator(boardID, userID);
 					getline(stream, raw_string);
 				}
 				stream.close();

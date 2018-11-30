@@ -115,7 +115,10 @@ Page {
                     font.family: "dengxian"
                     font.pointSize: 20
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    onClicked: forumController.setModerator(moderatorUsernameTextField.text)
+                    onClicked: {
+                        forumController.setModerator(moderatorUsernameTextField.text)
+                        moderatorUsernameTextField.text = ""
+                    }
                 }
 
                 Button {
@@ -123,7 +126,10 @@ Page {
                     font.family: "dengxian"
                     font.pointSize: 20
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    onClicked: forumController.removeModerator(moderatorUsernameTextField.text)
+                    onClicked: {
+                        forumController.removeModerator(moderatorUsernameTextField.text)
+                        moderatorUsernameTextField.text = ""
+                    }
                 }
             }
         }
