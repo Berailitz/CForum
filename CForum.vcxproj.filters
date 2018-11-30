@@ -103,7 +103,7 @@
     <None Include="qml\ForumViews\ForumDialogs\PostPostDialog.qml">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="qml\ForumViews\ForumDialogs\SetModeratorDialog.qml">
+    <None Include="qml\ForumViews\ForumDialogs\AddBoard.qml">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="qml\ForumViews\ForumItems\PostItem.qml">

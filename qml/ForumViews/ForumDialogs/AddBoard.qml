@@ -4,17 +4,17 @@ import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.3
 
 Dialog {
-    title: qsTr("设置版主")
+    title: qsTr("新建版面")
     standardButtons: Dialog.Ok | Dialog.Cancel
     TextField {
-        id: moderatorUsernameTextField
+        id: boardNameTextField
         font.family: "dengxian"
-        placeholderText: qsTr("版主用户名")
+        placeholderText: qsTr("版主名")
         font.pointSize: 20
     }
 
     onAccepted: {
-        forumController.setModerator(moderatorUsernameTextField.text)
-        moderatorUsernameTextField.text = ""
+        forumController.addBoard(boardNameTextField.text)
+        boardNameTextField.text = ""
     }
 }

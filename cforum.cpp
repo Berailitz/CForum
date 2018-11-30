@@ -96,6 +96,7 @@ namespace cforum
 			{
 				static_cast<Moderator*>(user)->setModerator(board->id);
 				board->setModerator(user->id);
+				return true;
 			}
 			else if (!user->isAdmin())
 			{

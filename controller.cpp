@@ -139,6 +139,7 @@ namespace cforum
     void Controller::addBoard(const QString boardName)
 	{
 		board = cforum->addBoard(boardName);
+		refreshViews();
 	}
 
     void Controller::viewBoard(const int boardID)

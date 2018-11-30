@@ -3,6 +3,7 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 
 import "ForumItems"
+import "ForumDialogs"
 
 Page {
     Layout.fillWidth: true
@@ -54,6 +55,23 @@ Page {
         font.pointSize: 50
         font.family: "dengxian"
         onClicked: swipeView.setCurrentIndex(0)
+    }
+
+    RoundButton {
+        visible: forumController.isAdmin
+        anchors.top: parent.top
+        anchors.topMargin: 100
+        anchors.right: parent.right
+        anchors.rightMargin: 100
+        radius: 50
+        text: qsTr("➕")
+        font.pointSize: 50
+        font.family: "dengxian"
+        onClicked: addBoardDialog.open()
+    }
+
+    AddBoard {
+        id: addBoardDialog
     }
 
     Connections {

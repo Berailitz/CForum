@@ -26,7 +26,7 @@ namespace cforum
         Q_PROPERTY(QString boardName READ getBoardName NOTIFY boardOpened)
         Q_PROPERTY(QString postTitle READ getPostTitle NOTIFY postOpened)
         Q_PROPERTY(QString postContent READ getPostContent NOTIFY postOpened)
-        Q_PROPERTY(bool isAdmin READ isAdmin NOTIFY boardOpened)
+        Q_PROPERTY(bool isAdmin READ isAdmin NOTIFY forumOpened)
 		Q_PROPERTY(bool isModerator READ isModerator NOTIFY boardOpened)
 		Q_PROPERTY(int userID READ getUserID NOTIFY forumOpened)
 	public:

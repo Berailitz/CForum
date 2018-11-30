@@ -241,7 +241,7 @@
     <None Include="qml\ForumViews\HomePage.qml" />
     <None Include="qml\ForumViews\ForumDialogs\PostCommentDialog.qml" />
     <None Include="qml\ForumViews\ForumDialogs\PostPostDialog.qml" />
-    <None Include="qml\ForumViews\ForumDialogs\SetModeratorDialog.qml" />
+    <None Include="qml\ForumViews\ForumDialogs\AddBoard.qml" />
     <None Include="qml\ForumViews\ForumItems\PostItem.qml" />
     <None Include="qml\ForumViews\PostView.qml" />
     <None Include="qml\main.qml" />

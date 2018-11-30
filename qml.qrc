@@ -11,6 +11,6 @@
         <file>qml/ForumViews/ForumItems/CommentItem.qml</file>
         <file>qml/ForumViews/ForumDialogs/PostPostDialog.qml</file>
         <file>qml/ForumViews/ForumDialogs/PostCommentDialog.qml</file>
-        <file>qml/ForumViews/ForumDialogs/SetModeratorDialog.qml</file>
+        <file>qml/ForumViews/ForumDialogs/AddBoard.qml</file>
     </qresource>
 </RCC>
