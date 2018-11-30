@@ -240,10 +240,10 @@
     <None Include="qml\ForumViews\ForumView.qml" />
     <None Include="qml\ForumViews\HomePage.qml" />
     <None Include="qml\ForumViews\ForumDialogs\PostCommentDialog.qml" />
-    <None Include="qml\ForumViews\ForumDialogs\PostThreadDialog.qml" />
+    <None Include="qml\ForumViews\ForumDialogs\PostPostDialog.qml" />
     <None Include="qml\ForumViews\ForumDialogs\SetModeratorDialog.qml" />
-    <None Include="qml\ForumViews\ForumItems\ThreadItem.qml" />
-    <None Include="qml\ForumViews\ThreadView.qml" />
+    <None Include="qml\ForumViews\ForumItems\PostItem.qml" />
+    <None Include="qml\ForumViews\PostView.qml" />
     <None Include="qml\main.qml" />
     <QtRcc Include="qml.qrc">
     </QtRcc>

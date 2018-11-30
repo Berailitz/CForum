@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
  //   forumController.registerUser("admin", "admin");
 	//forumController.cforum->admins->insert(1); // admin
  //   forumController.addBoard("TestBoard");
- //   forumController.postThread("Test thread", "This is content.");
+ //   forumController.postPost("Test post", "This is content.");
  //   forumController.postComment("Comment 1");
  //   forumController.setModerator("admin");
 	//forumController.save("data");

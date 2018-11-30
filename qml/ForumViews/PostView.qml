@@ -16,7 +16,7 @@ Page {
         anchors.topMargin: 200
         anchors.horizontalCenter: parent.horizontalCenter
         Text {
-            text: forumController.threadTitle
+            text: forumController.postTitle
             font.pointSize: 20
             font.family: "dengxian"
             Layout.preferredHeight: 100
@@ -25,7 +25,7 @@ Page {
         }
 
         Text {
-            text: forumController.threadContent
+            text: forumController.postContent
             font.pointSize: 20
             font.family: "dengxian"
             Layout.preferredHeight: 100
@@ -75,7 +75,7 @@ Page {
 
     Connections {
         target: forumController
-        onThreadOpened: {
+        onPostOpened: {
             swipeView.setCurrentIndex(3)
             commentListView.height = commentListView.contentHeight
         }

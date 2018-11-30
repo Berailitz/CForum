@@ -19,8 +19,8 @@ namespace cforum
         Q_OBJECT
         Q_PROPERTY(QString greeting READ getGreeting NOTIFY forumOpened)
         Q_PROPERTY(QString boardName READ getBoardName NOTIFY boardOpened)
-        Q_PROPERTY(QString threadTitle READ getThreadTitle NOTIFY threadOpened)
-        Q_PROPERTY(QString threadContent READ getThreadContent NOTIFY threadOpened)
+        Q_PROPERTY(QString postTitle READ getPostTitle NOTIFY postOpened)
+        Q_PROPERTY(QString postContent READ getPostContent NOTIFY postOpened)
         Q_PROPERTY(bool isAdmin READ isAdmin NOTIFY boardOpened)
 		Q_PROPERTY(bool isModerator READ isModerator NOTIFY boardOpened)
 		Q_PROPERTY(int userID READ getUserID NOTIFY forumOpened)
@@ -30,11 +30,11 @@ namespace cforum
         CForum *cforum;
         User *user;
         Board *board;
-        Thread *thread;
+        Post *post;
         QString getGreeting() const;
         QString getBoardName() const;
-		QString getThreadTitle() const;
-        QString getThreadContent() const;
+		QString getPostTitle() const;
+        QString getPostContent() const;
 		int getUserID() const;
         bool isAdmin() const;
 		bool isModerator() const;
@@ -42,7 +42,7 @@ namespace cforum
     Q_SIGNALS:
         void forumOpened();
         void boardOpened();
-        void threadOpened();
+        void postOpened();
         void messageSent(QString message);
     public Q_SLOTS:
         void registerUser(const QString userName, const QString password);
@@ -52,23 +52,23 @@ namespace cforum
 		void viewForum();
         void addBoard(const QString boardName);
         void viewBoard(const int boardID = -1);
-        void postThread(const QString title, const QString content);
-		void viewThread(const int threadID);
-        void deleteThread(const int threadID);
+        void postPost(const QString title, const QString content);
+		void viewPost(const int postID);
+        void deletePost(const int postID);
         void postComment(const QString content);
         void deleteComment(const int commentID);
         void load(const QString path);
         void save(const QString path) const;
 	private:
         QQmlApplicationEngine &engine;
-		bool canDeleteThread(Thread *target) const;
+		bool canDeletePost(Post *target) const;
 		void openForum();
         void openBoard(const int boardID);
-        void openThread(const int threadID);
+        void openPost(const int postID);
 		User *getUserByName(const QString userName);
         User *defaultUser;
         Board *defaultBoard;
-        Thread *defaultThread;
+        Post *defaultPost;
 	};
 }
 

@@ -18,7 +18,7 @@ namespace fs = std::experimental::filesystem;
 namespace cforum
 {
 	using CommentList = QList<QObject*>;
-	using ThreadList = QList<QObject*>;
+	using PostList = QList<QObject*>;
 
 	const QString DELETED_MESSAGE = QString::fromUtf8("Oops, 它被删除了...");
 	const QString DATETIME_FORMAT = QString::fromUtf8("yyyyMMddHHmmss");
@@ -37,7 +37,7 @@ namespace cforum
         Comment(const Comment *oldComment);
         Comment(const Comment &oldComment);
 		~Comment();
-        int id; // primary_kay in a thread, start from 1
+        int id; // primary_kay in a post, start from 1
 		QString content;
 		QDateTime time;
         int authorID;
@@ -51,17 +51,17 @@ namespace cforum
 		void contentChanged();
     };
 
-    class Thread : public Comment
+    class Post : public Comment
     {
         Q_OBJECT
         Q_PROPERTY(QString title MEMBER title CONSTANT)
 		Q_PROPERTY(bool canDelete READ canDelete NOTIFY commentsChanged)
     public:
-        Thread(const int id, QString content, const int authorID, QString title);
-        Thread(const fs::path path);
-        Thread(const Thread *oldThread);
-        Thread(const Thread &oldThread);
-        virtual ~Thread();
+        Post(const int id, QString content, const int authorID, QString title);
+        Post(const fs::path path);
+        Post(const Post *oldPost);
+        Post(const Post &oldPost);
+        virtual ~Post();
 		QString title; // without `\n`
 		CommentList* getComments();
 		int visibleCommentCounter = 0;
@@ -71,7 +71,7 @@ namespace cforum
 		Comment *getCommentByID(const int commentID);
         bool load(const fs::path path);
         bool save(const fs::path path) const;
-        void initialize(const Thread *oldThread);
+        void initialize(const Post *oldPost);
 	Q_SIGNALS:
 		void commentsChanged();
 	private:
@@ -88,13 +88,13 @@ namespace cforum
         Board(const int id, const QString name);
         Board(const fs::path path);
         ~Board();
-        int id; // primary_kay in a thread, start from 1
+        int id; // primary_kay in a post, start from 1
         QString name;
-        ThreadList* threads;
+        PostList* posts;
         int moderatorID = -1;
-		Thread *getThreadByID(const int threadID);
-        bool post(Thread *newThread); // newThread is in heap
-        bool remove(const int threadID); // threadID < threads->size()
+		Post *getPostByID(const int postID);
+        bool post(Post *newPost); // newPost is in heap
+        bool remove(const int postID); // postID < posts->size()
         bool isModerator(const int userID) const;
         bool setModerator(const int userID);
         bool removeModerator();

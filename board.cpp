@@ -3,7 +3,7 @@
 
 namespace cforum
 {
-    Board::Board(const int id, const QString name) : QObject(), id(id), name(name), threads(new ThreadList)
+    Board::Board(const int id, const QString name) : QObject(), id(id), name(name), posts(new PostList)
     {
     }
 
@@ -15,19 +15,19 @@ namespace cforum
 
     Board::~Board()
     {
-		for (QObject *qit : *threads)
+		for (QObject *qit : *posts)
 		{
-			delete static_cast<Thread*>(qit);
+			delete static_cast<Post*>(qit);
 		}
     }
 
-	Thread * Board::getThreadByID(const int threadID)
+	Post * Board::getPostByID(const int postID)
 	{
-        if (threadID > 0 && threadID <= threads->size())
+        if (postID > 0 && postID <= posts->size())
 		{
-			ThreadList::iterator it = threads->begin();
-			advance(it, threadID - 1);
-			return static_cast<Thread*>(*it);
+			PostList::iterator it = posts->begin();
+			advance(it, postID - 1);
+			return static_cast<Post*>(*it);
 		}
 		else
 		{
@@ -35,17 +35,17 @@ namespace cforum
 		}
 	}
 
-	bool Board::post(Thread * newThread)
+	bool Board::post(Post * newPost)
     {
-        threads->push_back(newThread);
+        posts->push_back(newPost);
         return true;
     }
 
-    bool Board::remove(const int threadID)
+    bool Board::remove(const int postID)
     {
-        ThreadList::iterator it = threads->begin();
-        advance(it, threadID - 1);
-		static_cast<Thread*>(*it)->deleteContent();
+        PostList::iterator it = posts->begin();
+        advance(it, postID - 1);
+		static_cast<Post*>(*it)->deleteContent();
         return true;
     }
 
@@ -69,19 +69,19 @@ namespace cforum
     bool Board::load(const fs::path path)
     {
         ifstream stream(path / "board.cfdata");
-        threads = new ThreadList;
+        posts = new PostList;
         if (stream.is_open())
         {
             string nameTemp;
-            int threadsCounter;
+            int postsCounter;
             stream >> id;
             stream >> nameTemp;
             name = QString::fromStdString(nameTemp);
-            stream >> threadsCounter;
+            stream >> postsCounter;
             stream.close();
-            for (int i = 1; i <= threadsCounter; i++)
+            for (int i = 1; i <= postsCounter; i++)
             {
-                threads->push_back(new Thread(path / to_string(i)));
+                posts->push_back(new Post(path / to_string(i)));
             }
             return true;
         }
@@ -99,11 +99,11 @@ namespace cforum
         {
             stream << id << endl;
             stream << name.toStdString() << endl;
-            stream << threads->size() << endl;
+            stream << posts->size() << endl;
             stream.close();
-            for (QObject *&qit : *threads)
+            for (QObject *&qit : *posts)
             {
-                Thread *it = static_cast<Thread*>(qit);
+                Post *it = static_cast<Post*>(qit);
                 it->save(path / to_string(it->id));
             }
             return true;
@@ -114,26 +114,26 @@ namespace cforum
         }
     }
 
-    Thread::Thread(const int id, QString content, const int authorID, QString title) : Comment(id, content, authorID), title(title), comments(new CommentList)
+    Post::Post(const int id, QString content, const int authorID, QString title) : Comment(id, content, authorID), title(title), comments(new CommentList)
     {
     }
 
-    Thread::Thread(const fs::path path) : Comment(-1, "", -1)
+    Post::Post(const fs::path path) : Comment(-1, "", -1)
     {
         load(path);
     }
 
-    Thread::Thread(const Thread * oldThread) : Comment(*oldThread)
+    Post::Post(const Post * oldPost) : Comment(*oldPost)
     {
-        initialize(oldThread);
+        initialize(oldPost);
     }
 
-    Thread::Thread(const Thread & oldThread) : Comment(oldThread)
+    Post::Post(const Post & oldPost) : Comment(oldPost)
     {
-        initialize(&oldThread);
+        initialize(&oldPost);
     }
 
-    Thread::~Thread()
+    Post::~Post()
     {
         for (QObject* &qit : *comments)
         {
@@ -144,12 +144,12 @@ namespace cforum
         delete comments;
     }
 
-	CommentList * Thread::getComments()
+	CommentList * Post::getComments()
 	{
 		return comments;
 	}
 
-    bool Thread::post(const QString content, const int userID)
+    bool Post::post(const QString content, const int userID)
     {
 		Comment * newComment = new Comment(comments->size() + 1, content, userID);
         comments->push_back(newComment);
@@ -158,12 +158,12 @@ namespace cforum
         return true;
     }
 
-	bool Thread::canDelete() const
+	bool Post::canDelete() const
 	{
 		return !isDeleted && visibleCommentCounter == 0;
 	}
 
-    bool Thread::remove(const int commentID)
+    bool Post::remove(const int commentID)
     {
         CommentList::iterator it = comments->begin();
         advance(it, commentID - 1);
@@ -173,7 +173,7 @@ namespace cforum
         return true;
     }
 
-	Comment * Thread::getCommentByID(const int commentID)
+	Comment * Post::getCommentByID(const int commentID)
 	{
 		if (commentID > 0 && commentID <= comments->size())
 		{
@@ -187,9 +187,9 @@ namespace cforum
 		}
 	}
 
-    bool Thread::load(const fs::path path)
+    bool Post::load(const fs::path path)
     {
-        ifstream stream(path / "thread.cfdata");
+        ifstream stream(path / "post.cfdata");
         comments = new CommentList;
         if (stream.is_open())
         {
@@ -220,10 +220,10 @@ namespace cforum
         }
     }
 
-    bool Thread::save(const fs::path path) const
+    bool Post::save(const fs::path path) const
     {
         fs::create_directory(path);
-        ofstream stream(path / "thread.cfdata");
+        ofstream stream(path / "post.cfdata");
         if (stream.is_open())
         {
             stream << id << endl;
@@ -236,7 +236,7 @@ namespace cforum
             stream.close();
             for (QObject *&qit : *comments)
             {
-                Comment *it = static_cast<Thread*>(qit);
+                Comment *it = static_cast<Post*>(qit);
                 it->save(path / (to_string(it->id) + ".cfdata"));
             }
             return true;
@@ -247,14 +247,14 @@ namespace cforum
         }
     }
 
-    void Thread::initialize(const Thread * oldThread)
+    void Post::initialize(const Post * oldPost)
     {
-		title = oldThread->title;
-		visibleCommentCounter = oldThread->visibleCommentCounter;
+		title = oldPost->title;
+		visibleCommentCounter = oldPost->visibleCommentCounter;
         comments = new CommentList;
-        for (QObject* &qit : *oldThread->comments)
+        for (QObject* &qit : *oldPost->comments)
         {
-            Comment *comment = static_cast<Thread*>(qit);
+            Comment *comment = static_cast<Post*>(qit);
             comments->push_back(comment);
         }
     }

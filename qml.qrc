@@ -5,11 +5,11 @@
         <file>qml/ForumViews/BoardView.qml</file>
         <file>qml/ForumViews/ForumView.qml</file>
         <file>qml/ForumViews/HomePage.qml</file>
-        <file>qml/ForumViews/ThreadView.qml</file>
+        <file>qml/ForumViews/PostView.qml</file>
         <file>qml/ForumViews/ForumItems/BoardItem.qml</file>
-        <file>qml/ForumViews/ForumItems/ThreadItem.qml</file>
+        <file>qml/ForumViews/ForumItems/PostItem.qml</file>
         <file>qml/ForumViews/ForumItems/CommentItem.qml</file>
-        <file>qml/ForumViews/ForumDialogs/PostThreadDialog.qml</file>
+        <file>qml/ForumViews/ForumDialogs/PostPostDialog.qml</file>
         <file>qml/ForumViews/ForumDialogs/PostCommentDialog.qml</file>
         <file>qml/ForumViews/ForumDialogs/SetModeratorDialog.qml</file>
     </qresource>

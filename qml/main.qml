@@ -24,7 +24,7 @@ ApplicationWindow {
         BoardView {
         }
 
-        ThreadView {
+        PostView {
         }
 
         Connections {

@@ -15,7 +15,7 @@ Dialog {
             }
 
             TextField {
-                id: threadTitleTextField
+                id: postTitleTextField
                 font.family: "dengxian"
                 placeholderText: qsTr("标题")
                 font.pointSize: 20
@@ -30,7 +30,7 @@ Dialog {
             }
 
             TextField {
-                id: threadContentTextField
+                id: postContentTextField
                 font.family: "dengxian"
                 placeholderText: qsTr("正文")
                 font.pointSize: 20
@@ -39,8 +39,8 @@ Dialog {
     }
 
     onAccepted: {
-        forumController.postThread(threadTitleTextField.text, threadContentTextField.text)
-        threadTitleTextField.text = ""
-        threadContentTextField.text = ""
+        forumController.postPost(postTitleTextField.text, postContentTextField.text)
+        postTitleTextField.text = ""
+        postContentTextField.text = ""
     }
 }

@@ -7,11 +7,11 @@ namespace cforum
 		cforum(new CForum()),
 		defaultUser(new Guest()),
 		defaultBoard(new Board(-1, "DefaultBoard")),
-		defaultThread(new Thread(-1, "DefaultThread", -1, "DefaultContent"))
+		defaultPost(new Post(-1, "DefaultPost", -1, "DefaultContent"))
 	{
 		user = defaultUser;
 		board = defaultBoard;
-		thread = defaultThread;
+		post = defaultPost;
 	}
 
     Controller::~Controller()
@@ -28,14 +28,14 @@ namespace cforum
         return board->name;
 	}
 
-	QString Controller::getThreadTitle() const
+	QString Controller::getPostTitle() const
 	{
-        return thread->title + " -- by: " + getUsername(thread->authorID) + ", " + thread->getTimeString();
+        return post->title + " -- by: " + getUsername(post->authorID) + ", " + post->getTimeString();
 	}
 
-    QString Controller::getThreadContent() const
+    QString Controller::getPostContent() const
     {
-        return thread->content;
+        return post->content;
     }
 
 	int Controller::getUserID() const
@@ -112,63 +112,63 @@ namespace cforum
 		openBoard(boardID);
     }
 
-    void Controller::postThread(const QString title, const QString content)
+    void Controller::postPost(const QString title, const QString content)
 	{
-        thread = new Thread(board->threads->size() + 1, content, user->id, title);
-        board->post(thread);
-        qDebug() << POST_SUCCESS_MESSAGE << thread->title;
+        post = new Post(board->posts->size() + 1, content, user->id, title);
+        board->post(post);
+        qDebug() << POST_SUCCESS_MESSAGE << post->title;
         emit messageSent(POST_SUCCESS_MESSAGE);
         refreshViews();
-        emit threadOpened();
+        emit postOpened();
 	}
 
-	void Controller::viewThread(const int threadID)
+	void Controller::viewPost(const int postID)
 	{
-		openThread(threadID);
+		openPost(postID);
 	}
 
-    void Controller::deleteThread(const int threadID)
+    void Controller::deletePost(const int postID)
 	{
-		Thread *target = board->getThreadByID(threadID);
-		if (target && canDeleteThread(target) && (isModerator() || user->id == target->authorID))
+		Post *target = board->getPostByID(postID);
+		if (target && canDeletePost(target) && (isModerator() || user->id == target->authorID))
 		{
 			QQmlContext *ctxt = engine.rootContext();
-			ctxt->setContextProperty("threadListModel", QVariant::fromValue(*defaultBoard->threads));
-			ctxt->setContextProperty("commentListModel", QVariant::fromValue(*defaultThread->getComments()));
-            board->remove(threadID);
-			thread = defaultThread;
-			qDebug() << DELETE_SUCCESS_MESSAGE << threadID;
+			ctxt->setContextProperty("postListModel", QVariant::fromValue(*defaultBoard->posts));
+			ctxt->setContextProperty("commentListModel", QVariant::fromValue(*defaultPost->getComments()));
+            board->remove(postID);
+			post = defaultPost;
+			qDebug() << DELETE_SUCCESS_MESSAGE << postID;
 			emit messageSent(DELETE_SUCCESS_MESSAGE);
             refreshViews();
             emit boardOpened();
         }
 		else
 		{
-			qDebug() << DELETE_FAILED_MESSAGE << threadID;
+			qDebug() << DELETE_FAILED_MESSAGE << postID;
 			emit messageSent(DELETE_FAILED_MESSAGE);
 		}
 	}
 
     void Controller::postComment(const QString content)
 	{
-        thread->post(content, user->id);
+        post->post(content, user->id);
         qDebug() << POST_SUCCESS_MESSAGE << content;
         emit messageSent(POST_SUCCESS_MESSAGE);
         refreshViews();
-        emit threadOpened();
+        emit postOpened();
 	}
 
     void Controller::deleteComment(const int commentID)
 	{
-		Comment *target = thread->getCommentByID(commentID);
+		Comment *target = post->getCommentByID(commentID);
 		if (target && !target->isDeleted && (isModerator() || user->id == target->authorID))
 		{
-			engine.rootContext()->setContextProperty("commentListModel", QVariant::fromValue(*defaultThread->getComments()));
-			thread->remove(commentID);
+			engine.rootContext()->setContextProperty("commentListModel", QVariant::fromValue(*defaultPost->getComments()));
+			post->remove(commentID);
 			qDebug() << DELETE_SUCCESS_MESSAGE << commentID;
 			emit messageSent(DELETE_SUCCESS_MESSAGE);
 			refreshViews();
-			emit threadOpened();
+			emit postOpened();
 		}
 		else
 		{
@@ -200,17 +200,17 @@ namespace cforum
     void Controller::refreshViews()
 	{
 		QQmlContext *ctxt = engine.rootContext();
-		ctxt->setContextProperty("threadListModel", QVariant::fromValue(*defaultBoard->threads));
-		ctxt->setContextProperty("commentListModel", QVariant::fromValue(*defaultThread->getComments()));
+		ctxt->setContextProperty("postListModel", QVariant::fromValue(*defaultBoard->posts));
+		ctxt->setContextProperty("commentListModel", QVariant::fromValue(*defaultPost->getComments()));
         ctxt->setContextProperty("forumController", QVariant::fromValue(&*this));
 		ctxt->setContextProperty("boardListModel", QVariant::fromValue(*cforum->boards));
-        ctxt->setContextProperty("threadListModel", QVariant::fromValue(*board->threads));
-		ctxt->setContextProperty("commentListModel", QVariant::fromValue(*thread->getComments()));
-        qDebug() << "Refresh: " << cforum->boards->size() << " (ALL) Boards " << board->threads->size()
-                 << " Threads " << thread->visibleCommentCounter << " Comments.";
+        ctxt->setContextProperty("postListModel", QVariant::fromValue(*board->posts));
+		ctxt->setContextProperty("commentListModel", QVariant::fromValue(*post->getComments()));
+        qDebug() << "Refresh: " << cforum->boards->size() << " (ALL) Boards " << board->posts->size()
+                 << " Posts " << post->visibleCommentCounter << " Comments.";
 	}
 
-	bool Controller::canDeleteThread(Thread * target) const
+	bool Controller::canDeletePost(Post * target) const
 	{
 		return target->canDelete();
 	}
@@ -239,14 +239,14 @@ namespace cforum
 		}
 	}
 
-	void Controller::openThread(const int threadID)
+	void Controller::openPost(const int postID)
 	{
-		Thread *newThread = board->getThreadByID(threadID);
-		if (newThread)
+		Post *newPost = board->getPostByID(postID);
+		if (newPost)
 		{
-			thread = newThread;
+			post = newPost;
 			refreshViews();
-			emit threadOpened();
+			emit postOpened();
 		}
 	}
 

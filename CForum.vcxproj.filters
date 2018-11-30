@@ -100,16 +100,16 @@
     <None Include="qml\ForumViews\ForumDialogs\PostCommentDialog.qml">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="qml\ForumViews\ForumDialogs\PostThreadDialog.qml">
+    <None Include="qml\ForumViews\ForumDialogs\PostPostDialog.qml">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="qml\ForumViews\ForumDialogs\SetModeratorDialog.qml">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="qml\ForumViews\ForumItems\ThreadItem.qml">
+    <None Include="qml\ForumViews\ForumItems\PostItem.qml">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="qml\ForumViews\ThreadView.qml">
+    <None Include="qml\ForumViews\PostView.qml">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="qml\main.qml">

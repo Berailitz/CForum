@@ -29,13 +29,13 @@ Page {
             }
 
             ListView {
-                id: threadListView
+                id: postListView
                 width: contentWidth
                 Layout.alignment: Qt.AlignHCenter
                 Layout.preferredWidth: 1080
                 Layout.fillWidth: true
-                model: threadListModel
-                delegate: ThreadItem {}
+                model: postListModel
+                delegate: PostItem {}
             }
         }
 
@@ -76,11 +76,11 @@ Page {
         text: qsTr("➕")
         font.pointSize: 50
         font.family: "dengxian"
-        onClicked: newThreadDialog.open()
+        onClicked: newPostDialog.open()
     }
 
-    PostThreadDialog {
-        id: newThreadDialog
+    PostPostDialog {
+        id: newPostDialog
     }
 
     SetModeratorDialog {
@@ -91,7 +91,7 @@ Page {
         target: forumController
         onBoardOpened: {
             swipeView.setCurrentIndex(2)
-            threadListView.height = threadListView.contentHeight
+            postListView.height = postListView.contentHeight
         }
     }
 }

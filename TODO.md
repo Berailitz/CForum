@@ -92,10 +92,10 @@ Model
    - 版面类，继承自`Object`
    - `int id`: primary_kay, 从`1`开始
    - `string name`: unique
-   - `list<Thread*>* threads`
+   - `list<Post*>* posts`
    - `int moderator`
-   - `bool post(const Thread &newThread)`
-   - `bool remove(const int threadID)`
+   - `bool post(const Post &newPost)`
+   - `bool remove(const int postID)`
    - `bool isModerator(const int userID) const`
    - `bool setModerator(const int userID) const`
    - `bool removeModerator(const int userID) const`
@@ -103,13 +103,13 @@ Model
    - `bool save(const string path) const`
 1. `Comment`类
    - 回复帖类，继承自`Object`
-   - `int id`: primary_kay in a thread, 从`1`开始
+   - `int id`: primary_kay in a post, 从`1`开始
    - `string content`
    - `chrono::system_clock::time_point time`
    - `int owner`
    - `virtual bool load(const string path)`
    - `virtual bool save(const string path) const`
-1. `Thread`类
+1. `Post`类
    - 主题帖类，继承自`Comment`类
    - `string title`: 不含换行符
    - `list<Comment*>* comments`
@@ -126,20 +126,20 @@ Controller
         - `CForum cforum* = nullptr`
         - `string username`
         - `string boardName`
-        - `string threadTitle`
-        - `string threadContent`
+        - `string postTitle`
+        - `string postContent`
         - `bool registerUser(const string userName, const string password)`
         - `bool login(const string userName, const string password)`
         - `bool setModerator(const int userID, const int boardID)`
         - `bool removeModerator(const int userID, const int boardID)`
-        - `bool postThread(const string title, const string content)`
-        - `bool deleteThread(const int threadID)`
+        - `bool postPost(const string title, const string content)`
+        - `bool deletePost(const int postID)`
         - `bool postComment(const string content)`
         - `bool deleteComment(const int commentID)`
     - `private`
         - `int _userID = 0`
         - `int _boardID`
-        - `int _threadID`
+        - `int _postID`
 
 视图
 =====
@@ -161,19 +161,19 @@ Controller
                 - 版主用户名
                 - 撤销版主按钮
             - 任命版主按钮
-2. `BoardView`: `ThreadListView`
+2. `BoardView`: `PostListView`
     - 板块名
     - 主题帖列表
         - 标题
         - 发帖人
         - 阅读按钮
-            - `ThreadController.loadThread(threadID)`
+            - `PostController.loadPost(postID)`
     - 发帖按钮
-    - 发帖窗口: `NewThreadPopup`
+    - 发帖窗口: `NewPostPopup`
         - 标题框
         - 正文框
         - 发布按钮，发布后进入该主题帖
-2. `ThreadView`
+2. `PostView`
     - 主题帖标题
     - 主题帖发帖人
     - 主题帖正文
@@ -196,9 +196,9 @@ Controller
     - 每个用户存储至一行文本: `{type} {id} {name} {password}`
 - 内容表
     - 存储至一个文件夹: `/content`
-    - 每个板块存储至一个子文件夹: `{boardID}`，及其下的一个文本文件`board.cfdata`: `{boardID}\n{boardName}\n{threadCounter}`
-    - 每个主题帖存储至一个二级子文件夹`{threadID}`，及其下的一个文本文件`thread.cfdata`: `{threadID}\n{commentCounter}\n{isDeleted}\n{authorID}\n{time}\n{title}\n{content}`
-    - 每个回复贴存储至一个文本文件`{threadID}.cfdata`: `{commentID}\n{authorID}\n{isDeleted}\n{time}\n{content}`
+    - 每个板块存储至一个子文件夹: `{boardID}`，及其下的一个文本文件`board.cfdata`: `{boardID}\n{boardName}\n{postCounter}`
+    - 每个主题帖存储至一个二级子文件夹`{postID}`，及其下的一个文本文件`post.cfdata`: `{postID}\n{commentCounter}\n{isDeleted}\n{authorID}\n{time}\n{title}\n{content}`
+    - 每个回复贴存储至一个文本文件`{postID}.cfdata`: `{commentID}\n{authorID}\n{isDeleted}\n{time}\n{content}`
 - 元数据
     - 存储至一个文件夹: `/matedata`
     - 版主数据存储至一个文本文件`moderator.cfdata`，每个版面-版主关系存储至一行: `{boardID} {userID}`
