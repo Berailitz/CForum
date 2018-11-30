@@ -9,6 +9,7 @@ using namespace std;
 int main(int argc, char *argv[])
 {
 	// _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF | _CRTDBG_LEAK_CHECK_DF);
+	int returnValue;
     QGuiApplication app(argc, argv);
     QCoreApplication::setAttribute(Qt::AA_UseOpenGLES);
     QQmlApplicationEngine engine;
@@ -20,8 +21,9 @@ int main(int argc, char *argv[])
  //   forumController.postPost("Test post", "This is content.");
  //   forumController.postComment("Comment 1");
  //   forumController.setModerator("admin");
-	//forumController.save("data");
     forumController.refreshViews();
-    engine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
-    return app.exec();
+    engine.load(QUrl(QString::fromUtf8("qrc:/qml/main.qml")));
+	returnValue = app.exec();
+	forumController.save("data");
+	return returnValue;
 }

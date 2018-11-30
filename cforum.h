@@ -9,12 +9,13 @@
 #include "board.h"
 #include "user.h"
 
-using BoardList = QList<QObject*>;
-using UserList = vector<cforum::User*>;
-using UserSet = unordered_set<int>;
 
 namespace cforum
 {
+	using BoardList = QList<QObject*>;
+	using UserList = vector<cforum::User*>;
+	using UserSet = unordered_set<int>;
+
     class CForum : public QObject
     {
         Q_OBJECT

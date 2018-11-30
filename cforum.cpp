@@ -26,9 +26,17 @@ namespace cforum
 
 	NormalUser *CForum::addNormalUser(const QString userName, const QString password)
 	{
-		NormalUser *user = new NormalUser(users->size() + 1, userName, password);
-		users->push_back(user);
-		return user;
+		User *user = getUserByName(userName);
+		if (user)
+		{
+			return nullptr;
+		}
+		else
+		{
+			NormalUser *user = new NormalUser(users->size() + 1, userName, password);
+			users->push_back(user);
+			return user;
+		}
 	}
 
 	User * CForum::getUserByName(const QString userName) const

@@ -25,6 +25,10 @@ namespace cforum
 	const QString DELETED_MESSAGE = QString::fromUtf8("Oops, 它被删除了...");
 	const QString DATETIME_FORMAT = QString::fromUtf8("yyyyMMddHHmmss");
 
+	class Comment;
+	class Post;
+	class Board;
+
     class Comment : public QObject
     {
         Q_OBJECT
