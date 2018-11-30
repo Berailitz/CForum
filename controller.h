@@ -18,7 +18,7 @@ namespace cforum
     {
         Q_OBJECT
         Q_PROPERTY(QString greeting READ getGreeting NOTIFY forumOpened)
-        Q_PROPERTY(QString boardTitle READ getBoardTitle NOTIFY boardOpened)
+        Q_PROPERTY(QString boardName READ getBoardName NOTIFY boardOpened)
         Q_PROPERTY(QString threadTitle READ getThreadTitle NOTIFY threadOpened)
         Q_PROPERTY(QString threadContent READ getThreadContent NOTIFY threadOpened)
         Q_PROPERTY(bool isAdmin READ isAdmin NOTIFY boardOpened)
@@ -32,7 +32,7 @@ namespace cforum
         Board *board;
         Thread *thread;
         QString getGreeting() const;
-        QString getBoardTitle() const;
+        QString getBoardName() const;
 		QString getThreadTitle() const;
         QString getThreadContent() const;
 		int getUserID() const;

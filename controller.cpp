@@ -23,9 +23,9 @@ namespace cforum
         return user->greeting();
     }
 
-    QString Controller::getBoardTitle() const
+    QString Controller::getBoardName() const
 	{
-        return board->name + "(" + QString::fromStdString(to_string(board->threads->size())) + QString::fromUtf8("篇帖子)");
+        return board->name;
 	}
 
 	QString Controller::getThreadTitle() const
