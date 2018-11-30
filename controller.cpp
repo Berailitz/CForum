@@ -138,8 +138,7 @@ namespace cforum
 
     void Controller::addBoard(const QString boardName)
 	{
-		board = new Board(cforum->boards->size() + 1, boardName);
-        cforum->boards->push_back(board);
+		board = cforum->addBoard(boardName);
 	}
 
     void Controller::viewBoard(const int boardID)
@@ -238,10 +237,10 @@ namespace cforum
 		ctxt->setContextProperty("postListModel", QVariant::fromValue(*defaultBoard->posts));
 		ctxt->setContextProperty("commentListModel", QVariant::fromValue(*defaultPost->getComments()));
         ctxt->setContextProperty("forumController", QVariant::fromValue(&*this));
-		ctxt->setContextProperty("boardListModel", QVariant::fromValue(*cforum->boards));
+		ctxt->setContextProperty("boardListModel", QVariant::fromValue(*cforum->getBoards()));
         ctxt->setContextProperty("postListModel", QVariant::fromValue(*board->posts));
 		ctxt->setContextProperty("commentListModel", QVariant::fromValue(*post->getComments()));
-        qDebug() << "Refresh: " << cforum->boards->size() << " (ALL) Boards " << board->posts->size()
+        qDebug() << "Refresh: " << cforum->getBoards()->size() << " (ALL) Boards " << board->posts->size()
                  << " Posts " << post->visibleCommentCounter << " Comments.";
 	}
 

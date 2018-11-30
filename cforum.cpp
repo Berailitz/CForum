@@ -31,7 +31,7 @@ namespace cforum
 		return user;
 	}
 
-	User * CForum::getUserByName(const QString userName)
+	User * CForum::getUserByName(const QString userName) const
 	{
 		for (User *user : *users)
 		{
@@ -43,7 +43,7 @@ namespace cforum
 		return nullptr;
 	}
 
-	User * CForum::checkPassword(const QString userName, const QString password)
+	User * CForum::checkPassword(const QString userName, const QString password) const
 	{
 		User *user = getUserByName(userName);
 		if (user && user->isPasswordCorrect(password))
@@ -54,6 +54,18 @@ namespace cforum
 		{
 			return nullptr;
 		}
+	}
+
+	Board * CForum::addBoard(const QString boardName)
+	{
+		Board *board = new Board(boards->size() + 1, boardName);
+		boards->push_back(board);
+		return board;
+	}
+
+	BoardList * CForum::getBoards() const
+	{
+		return boards;
 	}
 
 	bool CForum::isAdmin(const int userID) const
@@ -145,7 +157,7 @@ namespace cforum
 		}
 	}
 
-	Board * CForum::getBoardByID(const int boardID)
+	Board * CForum::getBoardByID(const int boardID) const
 	{
         if (boardID <= boards->size())
 		{
@@ -159,7 +171,7 @@ namespace cforum
 		}
 	}
 
-    User * CForum::getUserByID(const int userID)
+    User * CForum::getUserByID(const int userID) const
     {
         if (userID == 0)
         {
