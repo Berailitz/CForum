@@ -60,7 +60,14 @@ Page {
         target: forumController
         onForumOpened: {
             swipeView.setCurrentIndex(1)
-            boardListView.height = boardListViewcontentHeight
+            boardListView.height = boardListView.contentHeight
+        }
+    }
+
+    Connections {
+        target: appWindow
+        onAfterSynchronizing: {
+            boardListView.height = boardListView.contentHeight
         }
     }
 }

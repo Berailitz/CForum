@@ -43,10 +43,9 @@ namespace cforum
 		return user->id;
 	}
 
-    void Controller::registerUser(const QString newUserName, const QString newPassword)
+    void Controller::addUser(const QString newUserName, const QString newPassword)
     {
-		user = new NormalUser(cforum->users->size() + 1, newUserName, newPassword);
-        cforum->users->push_back(user);
+		user = cforum->addNormalUser(newUserName, newPassword);
 		qDebug() << REGISTER_SUCCESS_MESSAGE << newUserName << ":" << newPassword;
 		emit messageSent(REGISTER_SUCCESS_MESSAGE);
         login(newUserName, newPassword);
@@ -54,8 +53,8 @@ namespace cforum
 
     void Controller::login(const QString userName, const QString password)
 	{
-        User *newUser = getUserByName(userName);
-        if (newUser && newUser->isPasswordCorrect(password))
+        User *newUser = cforum->checkPassword(userName, password);
+        if (newUser)
 		{
             qDebug() << LOGIN_SUCCESS_MESSAGE << userName;
             emit messageSent(LOGIN_SUCCESS_MESSAGE);
@@ -71,14 +70,50 @@ namespace cforum
 
     void Controller::setModerator(const QString userName)
 	{
-		const User *user = getUserByName(userName);
+		const User *user = cforum->getUserByName(userName);
 		if (user == nullptr)
 		{
-            board->removeModerator();
+			emit messageSent(NO_USER_MESSAGE);
+		}
+		else if (user->isAdmin())
+		{
+			emit messageSent(USER_IS_ADMIN_MESSAGE);
+		}
+		else if (user->isModerator(board->id))
+		{
+			emit messageSent(USER_IS_ADMIN_MESSAGE);
 		}
 		else
 		{
-            board->setModerator(user->id);
+			if (cforum->setModerator(board->id, user->id))
+			{
+				emit messageSent(SET_SUCCESS_MESSAGE);
+			}
+			else
+			{
+				emit messageSent(ILLEGAL_OPERATION_MESSAGE);
+			}
+		}
+		openBoard(board->id);
+	}
+
+	void Controller::removeModerator(const QString userName)
+	{
+		const User *user = cforum->getUserByName(userName);
+		if (user == nullptr)
+		{
+			emit messageSent(NO_USER_MESSAGE);
+		}
+		else
+		{
+			if (cforum->removeModerator(board->id, user->id))
+			{
+				emit messageSent(DELETE_SUCCESS_MESSAGE);
+			}
+			else
+			{
+				emit messageSent(ILLEGAL_OPERATION_MESSAGE);
+			}
 		}
 		openBoard(board->id);
 	}
@@ -189,7 +224,7 @@ namespace cforum
 
 	bool Controller::isAdmin() const
 	{
-		return cforum->isAdmin(user->id);
+		return user->isAdmin();
 	}
 
     bool Controller::isModerator() const
@@ -248,17 +283,5 @@ namespace cforum
 			refreshViews();
 			emit postOpened();
 		}
-	}
-
-	User * Controller::getUserByName(const QString userName)
-	{
-		for (User *user : *cforum->users)
-		{
-			if (user->userName == userName)
-			{
-				return user;
-			}
-		}
-		return nullptr;
 	}
 }

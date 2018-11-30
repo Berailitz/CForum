@@ -1,6 +1,8 @@
 TODO
 ====
 
+1. 管理员可以添加版面
+2. 版主和版面多对多，可以互查
 3. 转数据库
 3. 展示个人信息
 5. 检查用户名、密码、标题等的输入
@@ -128,7 +130,7 @@ Controller
         - `string boardName`
         - `string postTitle`
         - `string postContent`
-        - `bool registerUser(const string userName, const string password)`
+        - `bool addUser(const string userName, const string password)`
         - `bool login(const string userName, const string password)`
         - `bool setModerator(const int userID, const int boardID)`
         - `bool removeModerator(const int userID, const int boardID)`

@@ -55,6 +55,7 @@ Page {
     }
 
     RoundButton {
+        id: setModeratorButton
         visible: forumController.isAdmin
         anchors.top: parent.top
         anchors.topMargin: 100
@@ -64,7 +65,7 @@ Page {
         text: qsTr("⚙")
         font.pointSize: 50
         font.family: "dengxian"
-        onClicked: setModeratorDialog.open()
+        onClicked: setModeratorPopup.open()
     }
 
     RoundButton {
@@ -83,14 +84,62 @@ Page {
         id: newPostDialog
     }
 
-    SetModeratorDialog {
-        id: setModeratorDialog
+    Popup {
+        id: setModeratorPopup
+        x: setModeratorButton.x - width - 50
+        y: setModeratorButton.y
+        height: contentHeight + 20
+        width: contentWidth + 20
+        ColumnLayout {
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            RowLayout {
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                TextField {
+                    id: moderatorUsernameTextField
+                    font.family: "dengxian"
+                    placeholderText: qsTr("用户名")
+                    font.pointSize: 20
+                }
+            }
+
+            RowLayout {
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Button {
+                    text: qsTr("设置为版主")
+                    font.family: "dengxian"
+                    font.pointSize: 20
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    onClicked: forumController.setModerator(moderatorUsernameTextField.text)
+                }
+
+                Button {
+                    text: qsTr("撤销版主")
+                    font.family: "dengxian"
+                    font.pointSize: 20
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    onClicked: forumController.removeModerator(moderatorUsernameTextField.text)
+                }
+            }
+        }
     }
 
     Connections {
         target: forumController
         onBoardOpened: {
             swipeView.setCurrentIndex(2)
+            postListView.height = postListView.contentHeight
+        }
+    }
+
+    Connections {
+        target: appWindow
+        onAfterSynchronizing: {
             postListView.height = postListView.contentHeight
         }
     }

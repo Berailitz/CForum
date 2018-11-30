@@ -51,19 +51,27 @@ namespace cforum
 
     bool Board::isModerator(const int userID) const
     {
-        return moderatorID == userID;
+        return moderators->find(userID) != moderators->end();
     }
 
     bool Board::setModerator(const int userID)
     {
-        moderatorID = userID;
+        moderators->insert(userID);
         return true;
     }
 
-    bool Board::removeModerator()
+    bool Board::removeModerator(const int userID)
     {
-        moderatorID = -1;
-        return true;
+		ModeratorSet::iterator mit = moderators->find(userID);
+		if (mit != moderators->end())
+		{
+			moderators->erase(mit);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
     }
 
     bool Board::load(const fs::path path)

@@ -11,8 +11,13 @@ namespace cforum
 	const QString LOGIN_SUCCESS_MESSAGE = QString::fromUtf8("登录成功");
 	const QString LOGIN_FAILED_MESSAGE = QString::fromUtf8("登录失败：用户名或密码错误");
 	const QString POST_SUCCESS_MESSAGE = QString::fromUtf8("发布成功");
+	const QString SET_SUCCESS_MESSAGE = QString::fromUtf8("设置成功");
 	const QString DELETE_SUCCESS_MESSAGE = QString::fromUtf8("删除成功");
 	const QString DELETE_FAILED_MESSAGE = QString::fromUtf8("删除失败");
+	const QString NO_USER_MESSAGE = QString::fromUtf8("用户不存在");
+	const QString USER_IS_ADMIN_MESSAGE = QString::fromUtf8("用户是管理员");
+	const QString USER_IS_MODERATOR_MESSAGE = QString::fromUtf8("用户是版主");
+	const QString ILLEGAL_OPERATION_MESSAGE = QString::fromUtf8("非法操作");
 
     class Controller : public QObject
     {
@@ -45,9 +50,10 @@ namespace cforum
         void postOpened();
         void messageSent(QString message);
     public Q_SLOTS:
-        void registerUser(const QString userName, const QString password);
+        void addUser(const QString userName, const QString password);
         void login(const QString userName, const QString password);
         void setModerator(const QString userName);
+		void removeModerator(const QString userName);
         QString getUsername(const int userID) const;
 		void viewForum();
         void addBoard(const QString boardName);
@@ -65,7 +71,6 @@ namespace cforum
 		void openForum();
         void openBoard(const int boardID);
         void openPost(const int postID);
-		User *getUserByName(const QString userName);
         User *defaultUser;
         Board *defaultBoard;
         Post *defaultPost;

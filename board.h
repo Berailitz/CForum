@@ -11,6 +11,7 @@
 #include <QObject>
 #include <QList>
 #include <string>
+#include <unordered_set>
 
 using namespace std;
 namespace fs = std::experimental::filesystem;
@@ -19,6 +20,7 @@ namespace cforum
 {
 	using CommentList = QList<QObject*>;
 	using PostList = QList<QObject*>;
+	using ModeratorSet = unordered_set<int>;
 
 	const QString DELETED_MESSAGE = QString::fromUtf8("Oops, 它被删除了...");
 	const QString DATETIME_FORMAT = QString::fromUtf8("yyyyMMddHHmmss");
@@ -82,7 +84,6 @@ namespace cforum
     {
         Q_OBJECT
         Q_PROPERTY(int id MEMBER id CONSTANT)
-        Q_PROPERTY(int moderatorID MEMBER moderatorID CONSTANT)
         Q_PROPERTY(QString name MEMBER name CONSTANT)
     public:
         Board(const int id, const QString name);
@@ -91,13 +92,13 @@ namespace cforum
         int id; // primary_kay in a post, start from 1
         QString name;
         PostList* posts;
-        int moderatorID = -1;
+		ModeratorSet* moderators = new ModeratorSet();
 		Post *getPostByID(const int postID);
         bool post(Post *newPost); // newPost is in heap
         bool remove(const int postID); // postID < posts->size()
         bool isModerator(const int userID) const;
         bool setModerator(const int userID);
-        bool removeModerator();
+        bool removeModerator(const int userID);
         bool load(const fs::path path);
         bool save(const fs::path path) const;
     };

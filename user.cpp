@@ -26,6 +26,16 @@ namespace cforum
 		return userName;
 	}
 
+	bool User::isAdmin() const
+	{
+		return false;
+	}
+
+	bool User::isModerator(const int boardID) const
+	{
+		return false;
+	}
+
 	int User::getID() const
 	{
 		return id;
@@ -59,12 +69,21 @@ namespace cforum
     {
     }
 
+	NormalUser::NormalUser(const User *oldUser) : User(oldUser)
+	{
+	}
+
 	NormalUser::NormalUser(const int id, const QString userName, const QString password, UserType type) : User(id, userName, password, type)
 	{
 	}
 
 	NormalUser::NormalUser(istringstream &iss, UserType type) : User(iss, type)
 	{
+	}
+
+	Moderator * NormalUser::toModerator() const
+	{
+		return new Moderator(this);
 	}
 
 	QString NormalUser::greeting() const
@@ -76,18 +95,68 @@ namespace cforum
 	{
 	}
 
+	bool Admin::isAdmin() const
+	{
+		return true;
+	}
+
 	QString Admin::greeting() const
 	{
 		return WELCOME_MESSAGE_ADMIN + userName + " !";
+	}
+
+	Moderator::Moderator(const NormalUser &oldNormalUser) : NormalUser(oldNormalUser)
+	{
 	}
 
 	Moderator::Moderator(istringstream &iss) : NormalUser(iss, ModeratorType)
 	{
 	}
 
+	void Moderator::setModerator(const int boardID)
+	{
+		boards->insert(boardID);
+	}
+
+	bool Moderator::removeModerator(const int boardID)
+	{
+		BoardSet::iterator bit = boards->find(boardID);
+		if (bit != boards->end())
+		{
+			boards->erase(bit);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	bool Moderator::isModerator(const int boardID) const
+	{
+		if (boardID == -1 || boards->find(boardID) != boards->end())
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	int Moderator::getBoardCounter() const
+	{
+		return boards->size();
+	}
+
 	QString Moderator::greeting() const
 	{
 		return WELCOME_MESSAGE_MODERATOR + userName + " !";
+	}
+
+	NormalUser * Moderator::toNormalUser() const
+	{
+		return new NormalUser(static_cast<const User*>(this));
 	}
 
 	QString Guest::greeting() const

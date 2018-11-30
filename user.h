@@ -4,11 +4,13 @@
 #include <QObject>
 #include <sstream>
 #include <string>
+#include <unordered_set>
 
 using namespace std;
 
 namespace cforum
 {
+	using BoardSet = unordered_set<int>;
 	enum UserType
 	{
 		AdminType = -1,
@@ -24,6 +26,11 @@ namespace cforum
 	const QString WELCOME_MESSAGE_NORMAL_USER = QString::fromUtf8("欢迎普通用户 ");
 	const QString WELCOME_MESSAGE_MODERATOR = QString::fromUtf8("欢迎版主 ");
 
+	class User;
+	class NormalUser;
+	class Admin;
+	class Moderator;
+
     class User : public QObject
     {
         Q_OBJECT
@@ -37,6 +44,8 @@ namespace cforum
 		QString userName; // [A-Za-z0-9_]+
 		QString password; // [A-Za-z0-9_]+
 		QString getName() const;
+		virtual bool isAdmin() const;
+		virtual bool isModerator(const int boardID = -1) const;
 		int getID() const;
 		bool isPasswordCorrect(const QString testPassword);
 		virtual QString greeting() const = 0;
@@ -49,8 +58,10 @@ namespace cforum
 	{
         Q_OBJECT
 	public:
+		NormalUser(const User *oldUser);
 		NormalUser(const int id, const QString userName, const QString password, UserType type = NormalUserType);
 		NormalUser(istringstream &iss, UserType type);
+		Moderator *toModerator() const;
 		virtual QString greeting() const;
 	};
 
@@ -59,6 +70,7 @@ namespace cforum
         Q_OBJECT
 	public:
 		Admin(istringstream &iss);
+		bool isAdmin() const;
 		virtual QString greeting() const;
 	};
 
@@ -66,8 +78,16 @@ namespace cforum
 	{
         Q_OBJECT
 	public:
+		Moderator(const NormalUser &oldNormalUser);
 		Moderator(istringstream &iss);
+		void setModerator(const int boardID);
+		bool removeModerator(const int boardID);
+		bool isModerator(const int boardID = -1) const;
+		int getBoardCounter() const;
 		virtual QString greeting() const;
+		NormalUser *toNormalUser() const;
+	private:
+		BoardSet *boards = new BoardSet();
 	};
 
     class Guest : public User

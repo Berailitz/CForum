@@ -24,14 +24,125 @@ namespace cforum
 		delete admins;
 	}
 
-    bool CForum::isAdmin(const int userID) const
+	NormalUser *CForum::addNormalUser(const QString userName, const QString password)
+	{
+		NormalUser *user = new NormalUser(users->size() + 1, userName, password);
+		users->push_back(user);
+		return user;
+	}
+
+	User * CForum::getUserByName(const QString userName)
+	{
+		for (User *user : *users)
+		{
+			if (user->userName == userName)
+			{
+				return user;
+			}
+		}
+		return nullptr;
+	}
+
+	User * CForum::checkPassword(const QString userName, const QString password)
+	{
+		User *user = getUserByName(userName);
+		if (user && user->isPasswordCorrect(password))
+		{
+			return user;
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+
+	bool CForum::isAdmin(const int userID) const
     {
         return admins->find(userID) != admins->end();
     }
 
-	void CForum::setAdmin(const int userID)
+	bool CForum::setAdmin(const int userID)
 	{
-		admins->insert(userID);
+		if (getUserByID(userID))
+		{
+			admins->insert(userID);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	bool CForum::setModerator(const int boardID, const int userID)
+	{
+		Board *board = getBoardByID(boardID);
+		User *user = getUserByID(userID);
+		if (board && user)
+		{
+			board->setModerator(user->id);
+			if (user->isModerator())
+			{
+				static_cast<Moderator*>(user)->setModerator(board->id);
+			}
+			else
+			{
+				// user is normal user
+				for (UserList::iterator qit = users->begin(); qit != users->end(); qit++)
+				{
+					NormalUser *oldNormalUser = static_cast<NormalUser*>(*qit);
+					if (oldNormalUser->id == userID)
+					{
+						Moderator *newModerator = oldNormalUser->toModerator();
+						newModerator->setModerator(boardID);
+						delete *qit;
+						*qit = newModerator;
+					}
+				}
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	bool CForum::removeModerator(const int boardID, const int userID)
+	{
+		Board *board = getBoardByID(boardID);
+		User *user = getUserByID(userID);
+		if (board && user)
+		{
+			board->removeModerator(userID);
+			Moderator *moderator = static_cast<Moderator*>(user);
+			if (moderator->isModerator())
+			{
+				moderator->removeModerator(boardID);
+				if (moderator->getBoardCounter() == 0)
+				{
+					// 降级为普通用户
+					for (UserList::iterator qit = users->begin(); qit != users->end(); qit++)
+					{
+						Moderator *oldModerator = static_cast<Moderator*>(*qit);
+						if (oldModerator->id == userID)
+						{
+							NormalUser *newNormalUser = moderator->toNormalUser();
+							delete *qit;
+							*qit = newNormalUser;
+						}
+					}
+				}
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	Board * CForum::getBoardByID(const int boardID)
@@ -155,11 +266,14 @@ namespace cforum
 			fs::create_directory(path / "content");
             for (QObject *&qit: *boards)
             {
-                Board *it = static_cast<Board*>(qit);
-				it->save(path / "content" / to_string(it->id));
-				if (stream.is_open() && it->moderatorID != -1)
+                Board *bit = static_cast<Board*>(qit);
+				bit->save(path / "content" / to_string(bit->id));
+				if (stream.is_open())
 				{
-					stream << it->id << " " << it->moderatorID << endl;
+					for (const int moderatorID : *bit->moderators)
+					{
+						stream << bit->id << " " << moderatorID << endl;
+					}
 				}
 			}
 			if (stream.is_open())
