@@ -4,6 +4,7 @@ import QtQuick.Controls 2.2
 import "ForumViews"
 
 ApplicationWindow {
+    id: appWindow
     visible: true
     flags: Qt.Window | Qt.WindowFullscreenButtonHint
     visibility: "Maximized"

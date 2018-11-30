@@ -80,4 +80,11 @@ Page {
             commentListView.height = commentListView.contentHeight
         }
     }
+
+    Connections {
+        target: appWindow
+        onAfterSynchronizing: {
+            commentListView.height = commentListView.contentHeight
+        }
+    }
 }
