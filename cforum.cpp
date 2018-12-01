@@ -26,7 +26,7 @@ namespace cforum
 
 	NormalUser *CForum::addNormalUser(const QString userName, const QString password)
 	{
-		if (matchRegular(userName, standardRegular) && matchRegular(password, standardRegular))
+		if (matchRegular(userName, standardRegular) && matchRegular(password, standardRegular) && !getUserByName(userName))
 		{
 			User *user = getUserByName(userName);
 			if (user)
