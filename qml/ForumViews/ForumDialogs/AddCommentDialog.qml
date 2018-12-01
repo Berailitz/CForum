@@ -9,13 +9,10 @@ Dialog {
     title: qsTr("发布回复帖")
     contentItem: ColumnLayout {
         RowLayout {
-            Layout.preferredWidth: 1080
-            Layout.preferredHeight: 580
             TextArea {
                     id: commentContentTextField
-                    anchors.fill: parent
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.verticalCenter: parent.verticalCenter
+                    Layout.preferredWidth: 1080
+                    Layout.preferredHeight: 580
                     font.family: "dengxian"
                     placeholderText: qsTr("回复")
                     font.pointSize: 20

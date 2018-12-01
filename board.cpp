@@ -98,7 +98,8 @@ namespace cforum
             string nameTemp;
             int postsCounter;
             stream >> id;
-            stream >> nameTemp;
+            stream.get();
+			getline(stream, nameTemp);
             name = QString::fromStdString(nameTemp);
             stream >> postsCounter;
             stream.close();
@@ -238,7 +239,6 @@ namespace cforum
 			stream.get();
 			getline(stream, rawString);
 			time = QDateTime::fromString(QString::fromStdString(rawString), BACK_END_DATETIME_FORMAT);
-			qDebug() << getTimeString();
             getline(stream, rawString);
 			title = QString::fromStdString(rawString);
             content = QString::fromStdString(string((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>()));
