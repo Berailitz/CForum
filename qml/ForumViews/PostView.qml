@@ -52,6 +52,10 @@ Page {
         anchors.leftMargin: 100
         radius: 50
         text: qsTr("🡰")
+        bottomPadding: 0
+        topPadding: 0
+        rightPadding: 10
+        leftPadding: 10
         font.pointSize: 50
         font.family: "dengxian"
         onClicked: forumController.viewBoard()
