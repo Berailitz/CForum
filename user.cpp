@@ -6,9 +6,9 @@ namespace cforum
 	{
 	}
 
-    User::User(istringstream &iss, UserType type) : QObject(), type(type)
+    User::User(ifstream &stream, UserType type) : QObject(), type(type)
 	{
-		load(iss);
+		load(stream);
 	}
 
     User::User(const User *oldUser) : QObject()
@@ -41,21 +41,39 @@ namespace cforum
 		return id;
 	}
 
-	bool User::isPasswordCorrect(const QString testPassword)
+	bool User::login(const QString testPassword)
 	{
-		return password == testPassword;
+		if (password == testPassword)
+		{
+			lastLoginTime = QDateTime::currentDateTime();
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+		
 	}
 
-	bool User::load(istringstream &iss)
+	void User::logout()
+	{
+		lastLogoutTime = QDateTime::currentDateTime();
+	}
+
+	void User::load(ifstream &stream)
 	{
 		// TODO do NOT load type
 		string tempString;
-		iss >> id;
-		iss >> tempString;
+		stream >> id;
+		stream.get();
+		getline(stream, tempString);
+		lastLoginTime = QDateTime::fromString(QString::fromStdString(tempString), DATETIME_FORMAT);
+		getline(stream, tempString);
+		lastLogoutTime = QDateTime::fromString(QString::fromStdString(tempString), DATETIME_FORMAT);
+		getline(stream, tempString);
 		userName = QString::fromStdString(tempString);
-		iss >> tempString;
+		getline(stream, tempString);
 		password = QString::fromStdString(tempString);
-		return true;
 	}
 	void User::initialize(const User * oldUser)
 	{
@@ -63,6 +81,14 @@ namespace cforum
 		type = oldUser->type;
 		userName = oldUser->userName;
 		password = oldUser->password;
+	}
+
+	QString User::getBasicInfo() const
+	{
+		QString text = userName + QString::fromUtf8(" (ID: ") + QString::number(id) + QString::fromUtf8(", ");
+		text += (LAST_LOGIN_MESSAGE + lastLoginTime.toString(FRONT_END_DATETIME_FORMAT));
+		text += (", " + LAST_LOGOUT_MESSAGE + lastLogoutTime.toString(FRONT_END_DATETIME_FORMAT));
+		return text;
 	}
 
     Guest::Guest() : User(0, "Guest", "Guest", GuestType)
@@ -77,7 +103,7 @@ namespace cforum
 	{
 	}
 
-	NormalUser::NormalUser(istringstream &iss, UserType type) : User(iss, type)
+	NormalUser::NormalUser(ifstream &stream, UserType type) : User(stream, type)
 	{
 	}
 
@@ -86,12 +112,12 @@ namespace cforum
 		return new Moderator(this);
 	}
 
-	QString NormalUser::greeting() const
+	QString NormalUser::getInfo() const
 	{
-		return WELCOME_MESSAGE_NORMAL_USER + userName + " !";
+		return INFO_MESSAGE_NORMAL_USER + getBasicInfo();
 	}
 
-	Admin::Admin(istringstream &iss) : User(iss, AdminType)
+	Admin::Admin(ifstream &stream) : User(stream, AdminType)
 	{
 	}
 
@@ -100,16 +126,16 @@ namespace cforum
 		return true;
 	}
 
-	QString Admin::greeting() const
+	QString Admin::getInfo() const
 	{
-		return WELCOME_MESSAGE_ADMIN + userName + " !";
+		return INFO_MESSAGE_ADMIN + getBasicInfo();
 	}
 
 	Moderator::Moderator(const NormalUser &oldNormalUser) : NormalUser(oldNormalUser)
 	{
 	}
 
-	Moderator::Moderator(istringstream &iss) : NormalUser(iss, ModeratorType)
+	Moderator::Moderator(ifstream &stream) : NormalUser(stream, ModeratorType)
 	{
 	}
 
@@ -149,9 +175,9 @@ namespace cforum
 		return boards->size();
 	}
 
-	QString Moderator::greeting() const
+	QString Moderator::getInfo() const
 	{
-		return WELCOME_MESSAGE_MODERATOR + userName + " !";
+		return INFO_MESSAGE_MODERATOR + getBasicInfo();
 	}
 
 	NormalUser * Moderator::toNormalUser() const
@@ -159,13 +185,18 @@ namespace cforum
 		return new NormalUser(static_cast<const User*>(this));
 	}
 
-	QString Guest::greeting() const
+	QString Guest::getInfo() const
 	{
-		return WELCOME_MESSAGE_GUEST + userName + " !";
+		return INFO_MESSAGE_GUEST;
 	}
 
-	string User::dump() const
+	void User::dump(ofstream &stream) const
 	{
-		return to_string(type) + " " + to_string(id) + " " + userName.toStdString() + " " + password.toStdString();
+		stream << type << endl;
+		stream << id << endl;
+		stream << lastLoginTime.toString(DATETIME_FORMAT).toStdString() << endl;
+		stream << lastLogoutTime.toString(DATETIME_FORMAT).toStdString() << endl;
+		stream << userName.toStdString() << endl;
+		stream << password.toStdString() << endl;
 	}
 }

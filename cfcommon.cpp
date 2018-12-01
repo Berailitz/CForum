@@ -1,4 +1,4 @@
-#include "cftools.h"
+#include "cfcommon.h"
 
 bool matchRegular(const QString text, const QString regularExpression)
 {

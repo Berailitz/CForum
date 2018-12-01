@@ -237,7 +237,7 @@ namespace cforum
 			stream >> authorID;
 			stream.get();
 			getline(stream, rawString);
-			time = QDateTime::fromString(QString::fromStdString(rawString), DATETIME_FORMAT);
+			time = QDateTime::fromString(QString::fromStdString(rawString), BACK_END_DATETIME_FORMAT);
 			qDebug() << getTimeString();
             getline(stream, rawString);
 			title = QString::fromStdString(rawString);
@@ -266,7 +266,7 @@ namespace cforum
             stream << comments->size() << endl;
 			stream << isDeleted << endl;
 			stream << authorID << endl;
-			stream << time.toString(DATETIME_FORMAT).toStdString() << endl;
+			stream << time.toString(BACK_END_DATETIME_FORMAT).toStdString() << endl;
             stream << title.toStdString() << endl;
             stream << content.toStdString();
             stream.close();
@@ -352,7 +352,7 @@ namespace cforum
 
 	QString Comment::getTimeString() const
 	{
-		return time.toString(QString::fromUtf8("M月d日 H:m:s"));
+		return time.toString(FRONT_END_DATETIME_FORMAT);
 	}
 
 	bool Comment::canDelete() const
@@ -371,7 +371,7 @@ namespace cforum
 			stream >> isDeleted;
 			stream.get();
 			getline(stream, rawString);
-			time = QDateTime::fromString(QString::fromStdString(rawString), DATETIME_FORMAT);
+			time = QDateTime::fromString(QString::fromStdString(rawString), BACK_END_DATETIME_FORMAT);
 			qDebug() << getTimeString();
             content = QString::fromStdString(string((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>()));
             stream.close();
@@ -390,7 +390,7 @@ namespace cforum
             stream << id << endl;
             stream << authorID << endl;
 			stream << isDeleted << endl;
-            stream << time.toString(DATETIME_FORMAT).toStdString() << endl;
+            stream << time.toString(BACK_END_DATETIME_FORMAT).toStdString() << endl;
             stream << content.toStdString();
             stream.close();
             return true;

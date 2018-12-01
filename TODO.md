@@ -1,10 +1,11 @@
 TODO
 ====
 
+1. `User`类展示个人信息、登录、注销
 1. 测试
 2. 游客不可发帖
 3. 转数据库
-3. 展示个人信息
+4. 用户名和版面名查重
 
 Note
 ====
@@ -66,24 +67,24 @@ Model
    - `string password`: `[A-Za-z0-9_]+`
    - `string getName() const`
    - `int getID() const`
-   - `virtual bool checkPassword(string test_password)`
+   - `virtual bool login(string test_password)`
    - `string dump() const`: `{name} {password}`
    - `bool load(const string text)`
    - `virtual hello() const`
    - `virtual string getBoardNames() const`
 1. `NormalUser`类
    - 继承自`User`类
-   - `bool checkPassword(string test_password)`
+   - `bool login(string test_password)`
    - `hello() const`
 1. `Moderator`类
    - 继承自`NormalUser`类
-   - `bool checkPassword(string test_password)`
+   - `bool login(string test_password)`
    - `hello() const`
    - `string getBoardNames() const`
 1. `Admin`类
    - 继承自`User`类
    - `hello() const`
-   - `bool checkPassword(string test_password)`
+   - `bool login(string test_password)`
 
 内容
 ----
@@ -192,13 +193,13 @@ Controller
 ====
 
 - 用户表
-    - 存储至一个文本文件: `/user/user.cfdata`
-    - 每个用户存储至一行文本: `{type} {id} {name} {password}`
+    - 表结构存储至一个文本文件`/user/user.cfdata`: `{userCounter}`
+    - 每个用户存储至一个文本文件`/user/{id}.cfdata`: `{type}\n{id}\n{lastLoginTime}\n{lastLogoutTime}\n{name}\n{password}`
 - 内容表
     - 存储至一个文件夹: `/content`
-    - 每个板块存储至一个子文件夹: `{boardID}`，及其下的一个文本文件`board.cfdata`: `{boardID}\n{boardName}\n{postCounter}`
-    - 每个主题帖存储至一个二级子文件夹`{postID}`，及其下的一个文本文件`post.cfdata`: `{postID}\n{commentCounter}\n{isDeleted}\n{authorID}\n{time}\n{title}\n{content}`
-    - 每个回复贴存储至一个文本文件`{postID}.cfdata`: `{commentID}\n{authorID}\n{isDeleted}\n{time}\n{content}`
+    - 每个板块存储至一个子文件夹: `/content/{boardID}`，及其下的一个文本文件`board.cfdata`: `{boardID}\n{boardName}\n{postCounter}`
+    - 每个主题帖存储至一个二级子文件夹`/content/{boardID}/{postID}`，及其下的一个文本文件`post.cfdata`: `{postID}\n{commentCounter}\n{isDeleted}\n{authorID}\n{time}\n{title}\n{content}`
+    - 每个回复贴存储至一个文本文件`/content/{boardID}/{postID}/{commentID}.cfdata`: `{commentID}\n{authorID}\n{isDeleted}\n{time}\n{content}`
 - 元数据
     - 存储至一个文件夹: `/matedata`
     - 版主数据存储至一个文本文件`moderator.cfdata`，每个版面-版主关系存储至一行: `{boardID} {userID}`

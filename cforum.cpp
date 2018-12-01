@@ -58,16 +58,30 @@ namespace cforum
 		return nullptr;
 	}
 
-	User * CForum::checkPassword(const QString userName, const QString password) const
+	User * CForum::login(const QString userName, const QString password)
 	{
 		User *user = getUserByName(userName);
-		if (user && user->isPasswordCorrect(password))
+		if (user && user->login(password))
 		{
 			return user;
 		}
 		else
 		{
 			return nullptr;
+		}
+	}
+
+	bool CForum::logout(const QString userName)
+	{
+		User *user = getUserByName(userName);
+		if (user)
+		{
+			user->logout();
+			return true;
+		}
+		else
+		{
+			return false;
 		}
 	}
 
@@ -317,46 +331,63 @@ namespace cforum
 	{
 		ifstream stream;
 		string raw_string;
+		int userCounter = 0;
 		users = new UserList;
 		boards = new BoardList;
 		admins = new UserSet;
 		stream.open(path / "user" / "user.cfdata");
 		if (stream.is_open())
 		{
-			getline(stream, raw_string);
-			while (raw_string.size() > 1)
-			{
-				int typeInt;
-				UserType type;
-				User *newUser;
-				istringstream iss(raw_string);
-				iss >> typeInt;
-				type = static_cast<UserType>(typeInt);
-				switch (type)
-				{
-				case AdminType:
-					newUser = new Admin(iss);
-					users->push_back(newUser);
-					setAdmin(newUser->getID());
-					break;
-				case GuestType:
-					// TODO throw exception
-					break;
-				case NormalUserType:
-					users->push_back(new NormalUser(iss, type));
-					break;
-				case ModeratorType:
-					users->push_back(new Moderator(iss));
-					break;
-				default:
-					break;
-				}
-				getline(stream, raw_string);
-			}
+			stream >> userCounter;
 			stream.close();
-			for (auto& p : fs::directory_iterator(path / "content"))
+			for (int userID = 1; userID <= userCounter; userID++)
 			{
-				boards->push_back(new Board(p.path()));
+				stream.open(path / "user" / (to_string(userID) + ".cfdata"));
+				if (stream.is_open())
+				{
+					int typeInt;
+					UserType type;
+					User *newUser;
+					stream >> typeInt;
+					type = static_cast<UserType>(typeInt);
+					switch (type)
+					{
+					case AdminType:
+						newUser = new Admin(stream);
+						users->push_back(newUser);
+						setAdmin(newUser->getID());
+						break;
+					case GuestType:
+						// TODO throw exception
+						break;
+					case NormalUserType:
+						users->push_back(new NormalUser(stream, type));
+						break;
+					case ModeratorType:
+						users->push_back(new Moderator(stream));
+						break;
+					}
+					stream.close();
+				}
+				else
+				{
+					return false;
+				}
+			}
+			stream.open(path / "content" / "forum.cfdata");
+			if (stream.is_open())
+			{
+				int boardCounter;
+				stream >> boardCounter;
+				for (int boardID = 1; boardID <= boardCounter; boardID++)
+				{
+					boards->push_back(new Board(path / "content" / to_string(boardID)));
+				}
+				stream.close();
+			}
+			else
+			{
+				return false;
 			}
 			stream.open(path / "matedata" / "moderator.cfdata");
 			if (stream.is_open())
@@ -384,6 +415,7 @@ namespace cforum
 			return false;
 		}
 	}
+
 	bool CForum::save(const fs::path path) const
 	{
 		ofstream stream;
@@ -392,32 +424,42 @@ namespace cforum
 		stream.open(path / "user" / "user.cfdata");
 		if (stream.is_open())
 		{
-			for (const User *it : *users)
-			{
-				stream << it->dump() << endl;
-			}
+			stream << users->size();
 			stream.close();
-			fs::create_directory(path / "matedata");
-			stream.open(path / "matedata" / "moderator.cfdata");
-			fs::create_directory(path / "content");
-            for (QObject *&qit: *boards)
-            {
-                Board *bit = static_cast<Board*>(qit);
-				bit->save(path / "content" / to_string(bit->getID()));
-				if (stream.is_open())
-				{
-					bit->saveModerators(stream);
-				}
-			}
+		}
+		else
+		{
+			return false;
+		}
+		for (const User *uit : *users)
+		{
+			stream.open(path / "user" / (to_string(uit->getID()) + ".cfdata"));
 			if (stream.is_open())
 			{
+				uit->dump(stream);
 				stream.close();
-				return true;
 			}
 			else
 			{
 				return false;
 			}
+		}
+		fs::create_directory(path / "matedata");
+		stream.open(path / "matedata" / "moderator.cfdata");
+		fs::create_directory(path / "content");
+		for (QObject *&qit : *boards)
+		{
+			Board *bit = static_cast<Board*>(qit);
+			bit->save(path / "content" / to_string(bit->getID()));
+			if (stream.is_open())
+			{
+				bit->saveModerators(stream);
+			}
+		}
+		if (stream.is_open())
+		{
+			stream.close();
+			return true;
 		}
 		else
 		{

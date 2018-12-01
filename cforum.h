@@ -4,11 +4,12 @@
 #include <list>
 #include <QList>
 #include <string>
+#include <sstream>
 #include <unordered_set>
 #include <vector>
 
 #include "board.h"
-#include "cftools.h"
+#include "cfcommon.h"
 #include "user.h"
 
 
@@ -30,7 +31,8 @@ namespace cforum
         ~CForum();
 		NormalUser *addNormalUser(const QString userName, const QString password);
 		User *getUserByName(const QString userName) const;
-		User *checkPassword(const QString userName, const QString password) const;
+		User *login(const QString userName, const QString password);
+		bool logout(const QString userName);
 		Board *addBoard(const QString boardName);
 		BoardList* getBoards() const;
         bool isAdmin(const int userID) const; // 用户不存在则返回假

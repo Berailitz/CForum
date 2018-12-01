@@ -13,6 +13,8 @@
 #include <string>
 #include <unordered_set>
 
+#include "cfcommon.h"
+
 using namespace std;
 namespace fs = std::experimental::filesystem;
 
@@ -23,7 +25,7 @@ namespace cforum
 	using ModeratorSet = unordered_set<int>;
 
 	const QString DELETED_MESSAGE = QString::fromUtf8("Oops, 它被删除了...");
-	const QString DATETIME_FORMAT = QString::fromUtf8("yyyyMMddHHmmss");
+	const QString BACK_END_DATETIME_FORMAT = QString::fromUtf8("yyyyMMddHHmmss");
 
 	class Comment;
 	class Post;

@@ -20,7 +20,7 @@ namespace cforum
 
     QString Controller::getGreeting() const
     {
-        return user->greeting();
+        return WELCOME_MESSAGE + user->getInfo();
     }
 
     QString Controller::getBoardName() const
@@ -53,7 +53,7 @@ namespace cforum
 
     void Controller::login(const QString userName, const QString password)
 	{
-        User *newUser = cforum->checkPassword(userName, password);
+        User *newUser = cforum->login(userName, password);
         if (newUser)
 		{
             qDebug() << LOGIN_SUCCESS_MESSAGE << userName;
@@ -66,6 +66,16 @@ namespace cforum
             qDebug() << LOGIN_FAILED_MESSAGE << userName;
             emit messageSent(LOGIN_FAILED_MESSAGE);
         }
+	}
+
+	void Controller::logout()
+	{
+		cforum->logout(user->getName());
+		user = defaultUser;
+		board = defaultBoard;
+		post = defaultPost;
+		refreshViews();
+		emit messageSent(LOGOUT_SUCCESS_MESSAGE);
 	}
 
     void Controller::setModerator(const QString userName)
@@ -235,14 +245,14 @@ namespace cforum
 		}
 	}
 
-    void Controller::load(const QString path)
+    bool Controller::load(const QString path)
 	{
-        cforum->load(path.toStdString());
+        return cforum->load(path.toStdString());
 	}
 
-    void Controller::save(const QString path) const
+	bool Controller::save(const QString path) const
 	{
-        cforum->save(path.toStdString());
+        return cforum->save(path.toStdString());
 	}
 
 	bool Controller::isAdmin() const

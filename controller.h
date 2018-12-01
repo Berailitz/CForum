@@ -7,9 +7,11 @@
 
 namespace cforum
 {
+	const QString WELCOME_MESSAGE = QString::fromUtf8("欢迎 ");
 	const QString REGISTER_SUCCESS_MESSAGE = QString::fromUtf8("注册成功");
 	const QString LOGIN_SUCCESS_MESSAGE = QString::fromUtf8("登录成功");
 	const QString LOGIN_FAILED_MESSAGE = QString::fromUtf8("登录失败：用户名或密码错误");
+	const QString LOGOUT_SUCCESS_MESSAGE = QString::fromUtf8("注销成功");
 	const QString POST_SUCCESS_MESSAGE = QString::fromUtf8("发布成功");
 	const QString SET_SUCCESS_MESSAGE = QString::fromUtf8("设置成功");
 	const QString DELETE_SUCCESS_MESSAGE = QString::fromUtf8("删除成功");
@@ -48,6 +50,7 @@ namespace cforum
     public Q_SLOTS:
         void addUser(const QString userName, const QString password);
         void login(const QString userName, const QString password);
+		void logout();
         void setModerator(const QString userName);
 		void removeModerator(const QString userName);
         QString getUsername(const int userID) const;
@@ -59,8 +62,8 @@ namespace cforum
         void removePost(const int postID);
         void addComment(const QString content);
         void removeComment(const int commentID);
-        void load(const QString path);
-        void save(const QString path) const;
+		bool load(const QString path);
+		bool save(const QString path) const;
 	private:
         QQmlApplicationEngine &engine;
 		CForum *cforum;

@@ -49,7 +49,7 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cftools.cpp">
+    <ClCompile Include="cfcommon.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="user.cpp">
@@ -69,7 +69,7 @@
     <QtMoc Include="user.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <ClInclude Include="cftools.h">
+    <ClInclude Include="cfcommon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

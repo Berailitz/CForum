@@ -54,7 +54,10 @@ Page {
         leftPadding: 10
         font.pointSize: 50
         font.family: "dengxian"
-        onClicked: swipeView.setCurrentIndex(0)
+        onClicked: {
+            forumController.logout()
+            swipeView.setCurrentIndex(0)
+        }
     }
 
     RoundButton {
