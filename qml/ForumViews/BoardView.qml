@@ -23,7 +23,7 @@ Page {
                 text: forumController.boardName
                 font.pointSize: 20
                 font.family: "dengxian"
-                Layout.preferredHeight: 100
+                Layout.preferredHeight: 60
                 Layout.preferredWidth: 1080
                 Layout.fillWidth: true
             }

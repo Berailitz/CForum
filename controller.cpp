@@ -20,7 +20,7 @@ namespace cforum
 
     QString Controller::getGreeting() const
     {
-        return WELCOME_MESSAGE + user->getInfo();
+        return WELCOME_MESSAGE + user->getInfo() + QString::fromUtf8("。");
     }
 
     QString Controller::getBoardName() const

@@ -12,8 +12,10 @@ Dialog {
             Text {
                 text: qsTr("标题")
                 Layout.preferredWidth: 100
+                horizontalAlignment: Text.AlignHCenter
                 font.family: "dengxian"
                 font.pointSize: 20
+                Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
             }
 
             TextField {
@@ -31,15 +33,16 @@ Dialog {
             Text {
                 text: qsTr("正文")
                 Layout.preferredWidth: 100
+                horizontalAlignment: Text.AlignHCenter
                 font.family: "dengxian"
-                Layout.alignment: Qt.AlignRight | Qt.AlignTop
                 font.pointSize: 20
+                Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
             }
             TextArea {
                     id: postContentTextArea
                     Layout.preferredWidth: 970
                     Layout.preferredHeight: parent.Layout.preferredHeight
-                    Layout.alignment: Qt.AlignRight | Qt.AlignTop
+                    Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
                     font.family: "dengxian"
                     placeholderText: qsTr("正文")
                     font.pointSize: 20

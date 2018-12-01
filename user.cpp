@@ -85,9 +85,9 @@ namespace cforum
 
 	QString User::getBasicInfo() const
 	{
-		QString text = userName + QString::fromUtf8(" (ID: ") + QString::number(id) + QString::fromUtf8(", ");
+		QString text = userName + QString::fromUtf8(" 用户信息：ID: ") + QString::number(id) + QString::fromUtf8("，");
 		text += (LAST_LOGIN_MESSAGE + lastLoginTime.toString(FRONT_END_DATETIME_FORMAT));
-		text += (", " + LAST_LOGOUT_MESSAGE + lastLogoutTime.toString(FRONT_END_DATETIME_FORMAT));
+		text += ("，" + LAST_LOGOUT_MESSAGE + lastLogoutTime.toString(FRONT_END_DATETIME_FORMAT));
 		return text;
 	}
 

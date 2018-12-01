@@ -3,13 +3,12 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 
 RowLayout {
-    width: 1280
-    Layout.preferredWidth: 1280
+    width: 1080
     visible: !model.isDeleted
     height: model.isDeleted ? 0 : implicitHeight
     Text {
         text: qsTr("#") + model.id + " " + model.content + qsTr(" -- by: ") + forumController.getUsername(model.authorID) + ", " + model.time
-        Layout.preferredWidth: 1080
+        Layout.preferredWidth: 960
         font.family: "dengxian"
         font.pointSize: 20
     }

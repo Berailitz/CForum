@@ -19,8 +19,7 @@ Page {
             text: forumController.postTitle
             font.pointSize: 20
             font.family: "dengxian"
-            Layout.preferredHeight: 100
-            Layout.preferredWidth: 600
+            Layout.preferredHeight: 80
             Layout.fillWidth: true
         }
 
@@ -28,8 +27,6 @@ Page {
             text: forumController.postContent
             font.pointSize: 20
             font.family: "dengxian"
-            Layout.preferredHeight: 100
-            Layout.preferredWidth: 600
             Layout.fillWidth: true
         }
 
