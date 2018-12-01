@@ -50,7 +50,7 @@ namespace cforum
 	{
 		for (User *user : *users)
 		{
-			if (user->userName == userName)
+			if (user->getName() == userName)
 			{
 				return user;
 			}
@@ -116,18 +116,18 @@ namespace cforum
 		{
 			if (user->isModerator())
 			{
-				static_cast<Moderator*>(user)->setModerator(board->id);
-				board->setModerator(user->id);
+				static_cast<Moderator*>(user)->setModerator(board->getID());
+				board->setModerator(user->getID());
 				return true;
 			}
 			else if (!user->isAdmin())
 			{
 				// user is normal user
-				board->setModerator(user->id);
+				board->setModerator(user->getID());
 				for (UserList::iterator qit = users->begin(); qit != users->end(); qit++)
 				{
 					NormalUser *oldNormalUser = static_cast<NormalUser*>(*qit);
-					if (oldNormalUser->id == userID)
+					if (oldNormalUser->getID() == userID)
 					{
 						Moderator *newModerator = oldNormalUser->toModerator();
 						newModerator->setModerator(boardID);
@@ -166,7 +166,7 @@ namespace cforum
 					for (UserList::iterator qit = users->begin(); qit != users->end(); qit++)
 					{
 						Moderator *oldModerator = static_cast<Moderator*>(*qit);
-						if (oldModerator->id == userID)
+						if (oldModerator->getID() == userID)
 						{
 							NormalUser *newNormalUser = moderator->toNormalUser();
 							delete *qit;
@@ -194,7 +194,7 @@ namespace cforum
 		User *user = getUserByID(userID);
 		if (board && user && matchRegular(title, inlineRegular))
 		{
-			Post *post = new Post(board->posts->size() + 1, content, userID, title);
+			Post *post = new Post(board->getPosts()->size() + 1, content, userID, title);
 			board->post(post);
 			return post;
 		}
@@ -211,7 +211,7 @@ namespace cforum
 		if (board && user)
 		{
 			Post *post = board->getPostByID(postID);
-			if (post && post->canDelete() && (user->isAdmin() || user->isModerator(board->id) || post->authorID == userID))
+			if (post && post->canDelete() && (user->isAdmin() || user->isModerator(board->getID()) || post->getAuthorID() == userID))
 			{
 				board->remove(postID);
 				return true;
@@ -260,7 +260,7 @@ namespace cforum
 			if (post)
 			{
 				Comment *comment = post->getCommentByID(commentID);
-				if (comment && comment->canDelete() && (user->isAdmin() || user->isModerator(board->id) || post->authorID == userID))
+				if (comment && comment->canDelete() && (user->isAdmin() || user->isModerator(board->getID()) || post->getAuthorID() == userID))
 				{
 					post->remove(commentID);
 					return true;
@@ -337,7 +337,7 @@ namespace cforum
 				case AdminType:
 					newUser = new Admin(iss);
 					users->push_back(newUser);
-					setAdmin(newUser->id);
+					setAdmin(newUser->getID());
 					break;
 				case GuestType:
 					// TODO throw exception
@@ -403,13 +403,10 @@ namespace cforum
             for (QObject *&qit: *boards)
             {
                 Board *bit = static_cast<Board*>(qit);
-				bit->save(path / "content" / to_string(bit->id));
+				bit->save(path / "content" / to_string(bit->getID()));
 				if (stream.is_open())
 				{
-					for (const int moderatorID : *bit->moderators)
-					{
-						stream << bit->id << " " << moderatorID << endl;
-					}
+					bit->saveModerators(stream);
 				}
 			}
 			if (stream.is_open())

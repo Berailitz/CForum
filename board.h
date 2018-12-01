@@ -43,10 +43,9 @@ namespace cforum
         Comment(const Comment *oldComment);
         Comment(const Comment &oldComment);
 		~Comment();
-        int id; // primary_kay in a post, start from 1
-		QString content;
-		QDateTime time;
-        int authorID;
+		int getID() const;
+		QString getContent() const;
+		int getAuthorID() const;
 		void deleteContent();
         void initialize(const Comment *oldComment);
 		QString getTimeString() const;
@@ -56,6 +55,10 @@ namespace cforum
 	Q_SIGNALS:
 		void contentChanged();
 	protected:
+        int id; // primary_kay in a post, start from 1
+		QString content;
+		QDateTime time;
+        int authorID;
 		bool isDeleted;
     };
 
@@ -70,9 +73,8 @@ namespace cforum
         Post(const Post *oldPost);
         Post(const Post &oldPost);
         virtual ~Post();
-		QString title; // without `\n`
+		QString getTitle() const;
 		CommentList* getComments();
-		int visibleCommentCounter = 0;
         bool post(const QString content, const int userID); // newComment is in heap
 		bool canDelete() const;
         bool remove(const int commentID); // commentID < comments->size()
@@ -83,6 +85,8 @@ namespace cforum
 	Q_SIGNALS:
 		void commentsChanged();
 	private:
+		int visibleCommentCounter = 0;
+		QString title; // without `\n`
 		CommentList* comments;
     };
 
@@ -95,10 +99,9 @@ namespace cforum
         Board(const int id, const QString name);
         Board(const fs::path path);
         ~Board();
-        int id; // primary_kay in a post, start from 1
-        QString name;
-        PostList* posts;
-		ModeratorSet* moderators = new ModeratorSet();
+		int getID() const;
+		QString getName() const;
+		PostList* getPosts() const;
 		Post *getPostByID(const int postID);
         bool post(Post *newPost); // newPost is in heap
         bool remove(const int postID); // postID < posts->size()
@@ -107,6 +110,12 @@ namespace cforum
         bool removeModerator(const int userID);
         bool load(const fs::path path);
         bool save(const fs::path path) const;
+		void saveModerators(ostream &stream) const;
+	private:
+		int id; // primary_kay in a post, start from 1
+		QString name;
+		PostList* posts;
+		ModeratorSet* moderators = new ModeratorSet();
     };
 }
 

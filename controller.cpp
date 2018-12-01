@@ -25,22 +25,22 @@ namespace cforum
 
     QString Controller::getBoardName() const
 	{
-        return board->name;
+        return board->getName();
 	}
 
 	QString Controller::getPostTitle() const
 	{
-        return post->title + " -- by: " + getUsername(post->authorID) + ", " + post->getTimeString();
+        return post->getTitle() + " -- by: " + getUsername(post->getAuthorID()) + ", " + post->getTimeString();
 	}
 
     QString Controller::getPostContent() const
     {
-        return post->content;
+        return post->getContent();
     }
 
 	int Controller::getUserID() const
 	{
-		return user->id;
+		return user->getID();
 	}
 
     void Controller::addUser(const QString newUserName, const QString newPassword)
@@ -79,13 +79,13 @@ namespace cforum
 		{
 			emit messageSent(USER_IS_ADMIN_MESSAGE);
 		}
-		else if (user->isModerator(board->id))
+		else if (user->isModerator(board->getID()))
 		{
 			emit messageSent(USER_IS_MODERATOR_MESSAGE);
 		}
 		else
 		{
-			if (cforum->setModerator(board->id, user->id))
+			if (cforum->setModerator(board->getID(), user->getID()))
 			{
 				emit messageSent(SET_SUCCESS_MESSAGE);
 			}
@@ -94,7 +94,7 @@ namespace cforum
 				emit messageSent(ILLEGAL_OPERATION_MESSAGE);
 			}
 		}
-		openBoard(board->id);
+		openBoard(board->getID());
 	}
 
 	void Controller::removeModerator(const QString userName)
@@ -106,7 +106,7 @@ namespace cforum
 		}
 		else
 		{
-			if (cforum->removeModerator(board->id, user->id))
+			if (cforum->removeModerator(board->getID(), user->getID()))
 			{
 				emit messageSent(DELETE_SUCCESS_MESSAGE);
 			}
@@ -115,7 +115,7 @@ namespace cforum
 				emit messageSent(ILLEGAL_OPERATION_MESSAGE);
 			}
 		}
-		openBoard(board->id);
+		openBoard(board->getID());
 	}
 
     QString Controller::getUsername(const int userID) const
@@ -123,7 +123,7 @@ namespace cforum
         const User *user = cforum->getUserByID(userID);
         if (user != nullptr)
         {
-            return user->userName;
+            return user->getName();
         }
         else
         {
@@ -158,11 +158,11 @@ namespace cforum
     void Controller::addPost(const QString title, const QString content)
 	{
 		QQmlContext *ctxt = engine.rootContext();
-		ctxt->setContextProperty("postListModel", QVariant::fromValue(*defaultBoard->posts));
-        post = cforum->addPost(board->id, title, content, user->id);
+		ctxt->setContextProperty("postListModel", QVariant::fromValue(*defaultBoard->getPosts()));
+        post = cforum->addPost(board->getID(), title, content, user->getID());
 		if (post)
 		{
-			qDebug() << POST_SUCCESS_MESSAGE << post->title;
+			qDebug() << POST_SUCCESS_MESSAGE << post->getTitle();
 			refreshViews();
 			emit messageSent(POST_SUCCESS_MESSAGE);
 			emit postOpened();
@@ -182,9 +182,9 @@ namespace cforum
     void Controller::removePost(const int postID)
 	{
 		QQmlContext *ctxt = engine.rootContext();
-		ctxt->setContextProperty("postListModel", QVariant::fromValue(*defaultBoard->posts));
+		ctxt->setContextProperty("postListModel", QVariant::fromValue(*defaultBoard->getPosts()));
 		ctxt->setContextProperty("commentListModel", QVariant::fromValue(*defaultPost->getComments()));
-		if (cforum->removePost(board->id, postID, user->id))
+		if (cforum->removePost(board->getID(), postID, user->getID()))
 		{
 			post = defaultPost;
 			qDebug() << DELETE_SUCCESS_MESSAGE << postID;
@@ -203,7 +203,7 @@ namespace cforum
     void Controller::addComment(const QString content)
 	{
 		engine.rootContext()->setContextProperty("commentListModel", QVariant::fromValue(*defaultPost->getComments()));
-		if (cforum->addComment(board->id, post->id, content, user->id))
+		if (cforum->addComment(board->getID(), post->getID(), content, user->getID()))
 		{
 			qDebug() << POST_SUCCESS_MESSAGE << content;
 			emit messageSent(POST_SUCCESS_MESSAGE);
@@ -220,7 +220,7 @@ namespace cforum
     void Controller::removeComment(const int commentID)
 	{
 		engine.rootContext()->setContextProperty("commentListModel", QVariant::fromValue(*defaultPost->getComments()));
-		if (cforum->removeComment(board->id, post->id, commentID, user->id))
+		if (cforum->removeComment(board->getID(), post->getID(), commentID, user->getID()))
 		{
 			qDebug() << DELETE_SUCCESS_MESSAGE << commentID;
 			emit messageSent(DELETE_SUCCESS_MESSAGE);
@@ -252,20 +252,19 @@ namespace cforum
 
     bool Controller::isModerator() const
     {
-        return cforum->isAdmin(user->id) || board->isModerator(user->id);
+        return cforum->isAdmin(user->getID()) || board->isModerator(user->getID());
     }
 
     void Controller::refreshViews()
 	{
 		QQmlContext *ctxt = engine.rootContext();
-		ctxt->setContextProperty("postListModel", QVariant::fromValue(*defaultBoard->posts));
+		ctxt->setContextProperty("postListModel", QVariant::fromValue(*defaultBoard->getPosts()));
 		ctxt->setContextProperty("commentListModel", QVariant::fromValue(*defaultPost->getComments()));
         ctxt->setContextProperty("forumController", QVariant::fromValue(&*this));
 		ctxt->setContextProperty("boardListModel", QVariant::fromValue(*cforum->getBoards()));
-        ctxt->setContextProperty("postListModel", QVariant::fromValue(*board->posts));
+        ctxt->setContextProperty("postListModel", QVariant::fromValue(*board->getPosts()));
 		ctxt->setContextProperty("commentListModel", QVariant::fromValue(*post->getComments()));
-        qDebug() << "Refresh: " << cforum->getBoards()->size() << " (ALL) Boards " << board->posts->size()
-                 << " Posts " << post->visibleCommentCounter << " Comments.";
+        qDebug() << "Refresh: " << cforum->getBoards()->size() << " (ALL) Boards ";
 	}
 
 	bool Controller::canDeletePost(Post * target) const

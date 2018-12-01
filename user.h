@@ -39,19 +39,21 @@ namespace cforum
 		User(istringstream &iss, UserType type);
         User(const User *oldUser);
         User(const User &oldUser);
-		int id; // primary_kay, ai, positive integer for typical user
-		UserType type;
-		QString userName; // [A-Za-z0-9_]+
-		QString password; // [A-Za-z0-9_]+
+		int getID() const;
 		QString getName() const;
 		virtual bool isAdmin() const;
 		virtual bool isModerator(const int boardID = -1) const;
-		int getID() const;
 		bool isPasswordCorrect(const QString testPassword);
 		virtual QString greeting() const = 0;
 		string dump() const;
         bool load(istringstream &iss);
         void initialize(const User *oldUser);
+	protected:
+		int id; // primary_kay, ai, positive integer for typical user
+		UserType type;
+		QString userName; // [A-Za-z0-9_]+
+	private:
+		QString password; // [A-Za-z0-9_]+
 	};
 
 	class NormalUser : public User

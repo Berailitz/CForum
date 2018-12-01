@@ -32,10 +32,6 @@ namespace cforum
 	public:
         Controller(QQmlApplicationEngine &engine);
 		~Controller();
-        CForum *cforum;
-        User *user;
-        Board *board;
-        Post *post;
         QString getGreeting() const;
         QString getBoardName() const;
 		QString getPostTitle() const;
@@ -67,6 +63,10 @@ namespace cforum
         void save(const QString path) const;
 	private:
         QQmlApplicationEngine &engine;
+		CForum *cforum;
+		User *user;
+		Board *board;
+		Post *post;
 		bool canDeletePost(Post *target) const;
 		void openForum();
         void openBoard(const int boardID);

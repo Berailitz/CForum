@@ -21,6 +21,21 @@ namespace cforum
 		}
     }
 
+	int Board::getID() const
+	{
+		return id;
+	}
+
+	QString Board::getName() const
+	{
+		return name;
+	}
+
+	PostList * Board::getPosts() const
+	{
+		return posts;
+	}
+
 	Post * Board::getPostByID(const int postID)
 	{
         if (postID > 0 && postID <= posts->size())
@@ -112,7 +127,7 @@ namespace cforum
             for (QObject *&qit : *posts)
             {
                 Post *it = static_cast<Post*>(qit);
-                it->save(path / to_string(it->id));
+                it->save(path / to_string(it->getID()));
             }
             return true;
         }
@@ -121,6 +136,14 @@ namespace cforum
             return false;
         }
     }
+
+	void Board::saveModerators(ostream & stream) const
+	{
+		for (const int moderatorID : *moderators)
+		{
+			stream << id << " " << moderatorID << endl;
+		}
+	}
 
     Post::Post(const int id, QString content, const int authorID, QString title) : Comment(id, content, authorID), title(title), comments(new CommentList)
     {
@@ -151,6 +174,11 @@ namespace cforum
         }
         delete comments;
     }
+
+	QString Post::getTitle() const
+	{
+		return title;
+	}
 
 	CommentList * Post::getComments()
 	{
@@ -245,7 +273,7 @@ namespace cforum
             for (QObject *&qit : *comments)
             {
                 Comment *it = static_cast<Post*>(qit);
-                it->save(path / (to_string(it->id) + ".cfdata"));
+                it->save(path / (to_string(it->getID()) + ".cfdata"));
             }
             return true;
         }
@@ -289,6 +317,21 @@ namespace cforum
 
 	Comment::~Comment()
 	{
+	}
+
+	int Comment::getID() const
+	{
+		return id;
+	}
+
+	QString Comment::getContent() const
+	{
+		return content;
+	}
+
+	int Comment::getAuthorID() const
+	{
+		return authorID;
 	}
 
 	void Comment::deleteContent()
