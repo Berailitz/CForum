@@ -8,9 +8,15 @@
 #include <unordered_set>
 #include <vector>
 
-#include "board.h"
 #include "cfcommon.h"
+#include "board.h"
+#include "comment.h"
+#include "post.h"
 #include "user.h"
+#include "normal_user.h"
+#include "moderator.h"
+#include "guest.h"
+#include "admin.h"
 
 
 namespace cforum

@@ -19,7 +19,13 @@ SOURCES += \
     cforum.cpp \
     controller.cpp \
     user.cpp \
-    cfcommon.cpp
+    cfcommon.cpp \
+    admin.cpp \
+    comment.cpp \
+    guest.cpp \
+    moderator.cpp \
+    normal_user.cpp \
+    post.cpp
 
 RESOURCES += qml.qrc
 
@@ -39,4 +45,10 @@ HEADERS += \
     cforum.h \
     controller.h \
     user.h \
-    cfcommon.h
+    cfcommon.h \
+    admin.h \
+    comment.h \
+    guest.h \
+    moderator.h \
+    normal_user.h \
+    post.h

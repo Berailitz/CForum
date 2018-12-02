@@ -188,10 +188,16 @@
     </QtMoc>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="admin.cpp" />
     <ClCompile Include="board.cpp" />
     <ClCompile Include="cforum.cpp" />
+    <ClCompile Include="comment.cpp" />
     <ClCompile Include="controller.cpp" />
+    <ClCompile Include="guest.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="moderator.cpp" />
+    <ClCompile Include="normal_user.cpp" />
+    <ClCompile Include="post.cpp" />
     <ClCompile Include="user.cpp">
       <OutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\$(ConfigurationName)\%(Filename).moc</OutputFile>
       <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">input</DynamicSource>
@@ -205,6 +211,36 @@
     <ClCompile Include="cfcommon.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="post.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\$(ConfigurationName)\.;.\GeneratedFiles;.;$(QTDIR)\include;$(QTDIR)\include\QtQuick;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtQml;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtCore;.\debug;\include;$(QTDIR)\mkspecs\win32-msvc</IncludePath>
+      <Define Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">_WINDOWS;UNICODE;_UNICODE;WIN32;WIN64;_ENABLE_EXTENDED_ALIGNED_STORAGE;QT_DEPRECATED_WARNINGS;QT_QUICK_LIB;QT_GUI_LIB;QT_QML_LIB;QT_NETWORK_LIB;QT_CORE_LIB</Define>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\$(ConfigurationName)\.;.\GeneratedFiles;.;$(QTDIR)\include;$(QTDIR)\include\QtQuick;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtQml;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtCore;.\release;\include;$(QTDIR)\mkspecs\win32-msvc</IncludePath>
+      <Define Condition="'$(Configuration)|$(Platform)'=='Release|x64'">_WINDOWS;UNICODE;_UNICODE;WIN32;WIN64;_ENABLE_EXTENDED_ALIGNED_STORAGE;QT_DEPRECATED_WARNINGS;QT_NO_DEBUG;QT_QUICK_LIB;QT_GUI_LIB;QT_QML_LIB;QT_NETWORK_LIB;QT_CORE_LIB;NDEBUG</Define>
+    </QtMoc>
+    <QtMoc Include="normal_user.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\$(ConfigurationName)\.;.\GeneratedFiles;.;$(QTDIR)\include;$(QTDIR)\include\QtQuick;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtQml;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtCore;.\debug;\include;$(QTDIR)\mkspecs\win32-msvc</IncludePath>
+      <Define Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">_WINDOWS;UNICODE;_UNICODE;WIN32;WIN64;_ENABLE_EXTENDED_ALIGNED_STORAGE;QT_DEPRECATED_WARNINGS;QT_QUICK_LIB;QT_GUI_LIB;QT_QML_LIB;QT_NETWORK_LIB;QT_CORE_LIB</Define>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\$(ConfigurationName)\.;.\GeneratedFiles;.;$(QTDIR)\include;$(QTDIR)\include\QtQuick;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtQml;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtCore;.\release;\include;$(QTDIR)\mkspecs\win32-msvc</IncludePath>
+      <Define Condition="'$(Configuration)|$(Platform)'=='Release|x64'">_WINDOWS;UNICODE;_UNICODE;WIN32;WIN64;_ENABLE_EXTENDED_ALIGNED_STORAGE;QT_DEPRECATED_WARNINGS;QT_NO_DEBUG;QT_QUICK_LIB;QT_GUI_LIB;QT_QML_LIB;QT_NETWORK_LIB;QT_CORE_LIB;NDEBUG</Define>
+    </QtMoc>
+    <QtMoc Include="moderator.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\$(ConfigurationName)\.;.\GeneratedFiles;.;$(QTDIR)\include;$(QTDIR)\include\QtQuick;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtQml;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtCore;.\debug;\include;$(QTDIR)\mkspecs\win32-msvc</IncludePath>
+      <Define Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">_WINDOWS;UNICODE;_UNICODE;WIN32;WIN64;_ENABLE_EXTENDED_ALIGNED_STORAGE;QT_DEPRECATED_WARNINGS;QT_QUICK_LIB;QT_GUI_LIB;QT_QML_LIB;QT_NETWORK_LIB;QT_CORE_LIB</Define>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\$(ConfigurationName)\.;.\GeneratedFiles;.;$(QTDIR)\include;$(QTDIR)\include\QtQuick;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtQml;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtCore;.\release;\include;$(QTDIR)\mkspecs\win32-msvc</IncludePath>
+      <Define Condition="'$(Configuration)|$(Platform)'=='Release|x64'">_WINDOWS;UNICODE;_UNICODE;WIN32;WIN64;_ENABLE_EXTENDED_ALIGNED_STORAGE;QT_DEPRECATED_WARNINGS;QT_NO_DEBUG;QT_QUICK_LIB;QT_GUI_LIB;QT_QML_LIB;QT_NETWORK_LIB;QT_CORE_LIB;NDEBUG</Define>
+    </QtMoc>
+    <QtMoc Include="guest.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\$(ConfigurationName)\.;.\GeneratedFiles;.;$(QTDIR)\include;$(QTDIR)\include\QtQuick;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtQml;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtCore;.\debug;\include;$(QTDIR)\mkspecs\win32-msvc</IncludePath>
+      <Define Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">_WINDOWS;UNICODE;_UNICODE;WIN32;WIN64;_ENABLE_EXTENDED_ALIGNED_STORAGE;QT_DEPRECATED_WARNINGS;QT_QUICK_LIB;QT_GUI_LIB;QT_QML_LIB;QT_NETWORK_LIB;QT_CORE_LIB</Define>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\$(ConfigurationName)\.;.\GeneratedFiles;.;$(QTDIR)\include;$(QTDIR)\include\QtQuick;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtQml;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtCore;.\release;\include;$(QTDIR)\mkspecs\win32-msvc</IncludePath>
+      <Define Condition="'$(Configuration)|$(Platform)'=='Release|x64'">_WINDOWS;UNICODE;_UNICODE;WIN32;WIN64;_ENABLE_EXTENDED_ALIGNED_STORAGE;QT_DEPRECATED_WARNINGS;QT_NO_DEBUG;QT_QUICK_LIB;QT_GUI_LIB;QT_QML_LIB;QT_NETWORK_LIB;QT_CORE_LIB;NDEBUG</Define>
+    </QtMoc>
+    <QtMoc Include="comment.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\$(ConfigurationName)\.;.\GeneratedFiles;.;$(QTDIR)\include;$(QTDIR)\include\QtQuick;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtQml;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtCore;.\debug;\include;$(QTDIR)\mkspecs\win32-msvc</IncludePath>
+      <Define Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">_WINDOWS;UNICODE;_UNICODE;WIN32;WIN64;_ENABLE_EXTENDED_ALIGNED_STORAGE;QT_DEPRECATED_WARNINGS;QT_QUICK_LIB;QT_GUI_LIB;QT_QML_LIB;QT_NETWORK_LIB;QT_CORE_LIB</Define>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\$(ConfigurationName)\.;.\GeneratedFiles;.;$(QTDIR)\include;$(QTDIR)\include\QtQuick;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtQml;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtCore;.\release;\include;$(QTDIR)\mkspecs\win32-msvc</IncludePath>
+      <Define Condition="'$(Configuration)|$(Platform)'=='Release|x64'">_WINDOWS;UNICODE;_UNICODE;WIN32;WIN64;_ENABLE_EXTENDED_ALIGNED_STORAGE;QT_DEPRECATED_WARNINGS;QT_NO_DEBUG;QT_QUICK_LIB;QT_GUI_LIB;QT_QML_LIB;QT_NETWORK_LIB;QT_CORE_LIB;NDEBUG</Define>
+    </QtMoc>
     <QtMoc Include="board.h">
     </QtMoc>
     <QtMoc Include="cforum.h">
@@ -212,6 +248,12 @@
     <QtMoc Include="controller.h">
     </QtMoc>
     <QtMoc Include="user.h">
+    </QtMoc>
+    <QtMoc Include="admin.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\$(ConfigurationName)\.;.\GeneratedFiles;.;$(QTDIR)\include;$(QTDIR)\include\QtQuick;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtQml;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtCore;.\debug;\include;$(QTDIR)\mkspecs\win32-msvc</IncludePath>
+      <Define Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">_WINDOWS;UNICODE;_UNICODE;WIN32;WIN64;_ENABLE_EXTENDED_ALIGNED_STORAGE;QT_DEPRECATED_WARNINGS;QT_QUICK_LIB;QT_GUI_LIB;QT_QML_LIB;QT_NETWORK_LIB;QT_CORE_LIB</Define>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\$(ConfigurationName)\.;.\GeneratedFiles;.;$(QTDIR)\include;$(QTDIR)\include\QtQuick;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtQml;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtCore;.\release;\include;$(QTDIR)\mkspecs\win32-msvc</IncludePath>
+      <Define Condition="'$(Configuration)|$(Platform)'=='Release|x64'">_WINDOWS;UNICODE;_UNICODE;WIN32;WIN64;_ENABLE_EXTENDED_ALIGNED_STORAGE;QT_DEPRECATED_WARNINGS;QT_NO_DEBUG;QT_QUICK_LIB;QT_GUI_LIB;QT_QML_LIB;QT_NETWORK_LIB;QT_CORE_LIB;NDEBUG</Define>
     </QtMoc>
     <ClInclude Include="cfcommon.h" />
   </ItemGroup>

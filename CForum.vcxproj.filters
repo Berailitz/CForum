@@ -55,6 +55,24 @@
     <ClCompile Include="user.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="admin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="comment.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="guest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="moderator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="normal_user.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="post.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="board.h">
@@ -72,6 +90,24 @@
     <ClInclude Include="cfcommon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <QtMoc Include="admin.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="comment.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="guest.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="moderator.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="normal_user.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="post.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="debug\moc_predefs.h.cbt">
