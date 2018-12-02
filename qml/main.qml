@@ -14,6 +14,7 @@ ApplicationWindow {
     SwipeView {
         id: swipeView
         anchors.fill: parent
+        interactive: false
 
         HomePage {
         }

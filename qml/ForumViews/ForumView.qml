@@ -21,10 +21,11 @@ Page {
             anchors.horizontalCenter: parent.horizontalCenter
             Text {
                 text: forumController.greeting
+                Layout.alignment: Qt.AlignLeft
                 font.pointSize: 20
                 font.family: "dengxian"
-                Layout.preferredHeight: 80
-                Layout.preferredWidth: 1080
+                height: 80
+                width: 720
                 Layout.fillWidth: true
             }
 

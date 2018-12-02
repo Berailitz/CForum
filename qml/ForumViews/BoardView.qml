@@ -23,16 +23,15 @@ Page {
                 text: forumController.boardName
                 font.pointSize: 20
                 font.family: "dengxian"
-                Layout.preferredHeight: 60
-                Layout.preferredWidth: 1080
+                height: 60
+                width: 1080
                 Layout.fillWidth: true
             }
 
             ListView {
                 id: postListView
-                width: contentWidth
                 Layout.alignment: Qt.AlignHCenter
-                Layout.preferredWidth: 1080
+                width: 1080
                 Layout.fillWidth: true
                 model: postListModel
                 delegate: PostItem {}
