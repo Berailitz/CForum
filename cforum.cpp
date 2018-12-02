@@ -206,7 +206,7 @@ namespace cforum
 	{
 		Board *board = getBoardByID(boardID);
 		User *user = getUserByID(userID);
-		if (board && user && matchRegular(title, inlineRegular))
+		if (board && user && !user->isAdmin() && matchRegular(title, inlineRegular))
 		{
 			Post *post = new Post(board->getPosts()->size() + 1, content, userID, title);
 			board->post(post);
@@ -245,7 +245,7 @@ namespace cforum
 	{
 		Board *board = getBoardByID(boardID);
 		User *user = getUserByID(userID);
-		if (board && user)
+		if (board && user && !user->isAdmin())
 		{
 			Post *post = board->getPostByID(postID);
 			if (post)
