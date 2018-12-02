@@ -41,27 +41,27 @@ namespace cforum
 		int getUserID() const;
         bool isAdmin() const;
 		bool isModerator() const;
-        void refreshViews();
+        void refreshViews(); // 刷新UI
     Q_SIGNALS:
         void forumOpened();
         void boardOpened();
         void postOpened();
         void messageSent(QString message);
     public Q_SLOTS:
-        void addUser(const QString userName, const QString password);
+        void addUser(const QString userName, const QString password); // 注册
         void login(const QString userName, const QString password);
 		void logout();
-        void setModerator(const QString userName);
-		void removeModerator(const QString userName);
+        void setModerator(const QString userName); // 将用户设为当前版面的版主之一
+		void removeModerator(const QString userName); // 将用户从当前版面的版主列表中移除
         QString getUsername(const int userID) const;
-		void viewForum();
+		void viewForum(); // 控制UI转向论坛界面
         void addBoard(const QString boardName);
-        void viewBoard(const int boardID = -1);
-        void addPost(const QString title, const QString content);
-		void viewPost(const int postID);
-        void removePost(const int postID);
-        void addComment(const QString content);
-        void removeComment(const int commentID);
+        void viewBoard(const int boardID = -1); // 控制UI转向版面界面
+        void addPost(const QString title, const QString content); // 发主题帖
+		void viewPost(const int postID); // 控制UI转向主题帖界面
+        void removePost(const int postID); // 删除主题帖
+        void addComment(const QString content); // 发回复帖
+        void removeComment(const int commentID); // 删除回复帖
 		bool load(const QString path);
 		bool save(const QString path) const;
 	private:

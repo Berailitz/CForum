@@ -43,11 +43,11 @@ namespace cforum
         User(const User &oldUser);
 		int getID() const;
 		QString getName() const;
-		bool login(const QString testPassword);
-		void logout();
+		bool login(const QString testPassword); // 登录
+		void logout(); // 注销
 		virtual bool isAdmin() const;
 		virtual bool isModerator(const int boardID = -1) const;
-		virtual QString getInfo() const = 0;
+		virtual QString getInfo() const = 0; // 获取个人信息，纯虚函数
 		void dump(ofstream &stream) const;
         void load(ifstream &stream);
         void initialize(const User *oldUser);
@@ -57,7 +57,7 @@ namespace cforum
 		QString userName; // [A-Za-z0-9_]+
 		QDateTime lastLoginTime = QDateTime::currentDateTime();
 		QDateTime lastLogoutTime = QDateTime::currentDateTime();
-		virtual QString getBasicInfo() const;
+		virtual QString getBasicInfo() const; // 获取基本个人信息
 	private:
 		QString password; // [A-Za-z0-9_]+
 	};

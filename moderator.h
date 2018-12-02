@@ -13,14 +13,14 @@ namespace cforum
 	public:
 		Moderator(const NormalUser &oldNormalUser);
 		Moderator(ifstream &stream);
-		void setModerator(const int boardID);
-		bool removeModerator(const int boardID);
-		bool isModerator(const int boardID = -1) const;
-		int getBoardCounter() const;
+		void setModerator(const int boardID); // 设置为某个版面的版主
+		bool removeModerator(const int boardID); // 取消设置为某个版面的版主
+		bool isModerator(const int boardID = -1) const; // 检查是否为某个版面的版主
+		int getBoardCounter() const; // 是多少个版面的版主
 		virtual QString getInfo() const;
-		NormalUser *toNormalUser() const;
+		NormalUser *toNormalUser() const; // 降级为普通用户
 	private:
-		BoardSet *boards = new BoardSet();
+		BoardSet *boards = new BoardSet(); // 管理的版面的ID集合
 	};
 }
 

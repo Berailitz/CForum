@@ -77,10 +77,9 @@ namespace cforum
             stream >> id;
             stream >> authorID;
 			stream >> isDeleted;
-			stream.get();
+			stream.get(); // 处理行末换行符
 			getline(stream, rawString);
 			time = QDateTime::fromString(QString::fromStdString(rawString), BACK_END_DATETIME_FORMAT);
-			qDebug() << getTimeString();
             content = QString::fromStdString(string((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>()));
             stream.close();
             return true;

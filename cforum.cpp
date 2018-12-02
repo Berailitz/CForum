@@ -36,13 +36,15 @@ namespace cforum
 			else
 			{
 				NormalUser *user = new NormalUser(users->size() + 1, userName, password);
+				// 用户ID为正数
 				users->push_back(user);
 				return user;
 			}
 		}
 		else
 		{
-			return false;
+			// 用户名或者密码不合法
+			return nullptr;
 		}
 	}
 
@@ -95,6 +97,7 @@ namespace cforum
 		}
 		else
 		{
+			// 版面名不合法
 			return nullptr;
 		}
 	}
@@ -130,13 +133,14 @@ namespace cforum
 		{
 			if (user->isModerator())
 			{
+				// 本已是版主
 				static_cast<Moderator*>(user)->setModerator(board->getID());
 				board->setModerator(user->getID());
 				return true;
 			}
 			else if (!user->isAdmin())
 			{
-				// user is normal user
+				// user is normal user，升级为版主
 				board->setModerator(user->getID());
 				for (UserList::iterator qit = users->begin(); qit != users->end(); qit++)
 				{
@@ -214,6 +218,7 @@ namespace cforum
 		}
 		else
 		{
+			// 用户不可发帖，或帖子标题不合法
 			return nullptr;
 		}
 	}
@@ -338,10 +343,12 @@ namespace cforum
 		stream.open(path / "user" / "user.cfdata");
 		if (stream.is_open())
 		{
+			// 读取用户表结构
 			stream >> userCounter;
 			stream.close();
 			for (int userID = 1; userID <= userCounter; userID++)
 			{
+				// 读取用户信息
 				stream.open(path / "user" / (to_string(userID) + ".cfdata"));
 				if (stream.is_open())
 				{
@@ -377,10 +384,12 @@ namespace cforum
 			stream.open(path / "content" / "forum.cfdata");
 			if (stream.is_open())
 			{
+				// 读取版面表结构
 				int boardCounter;
 				stream >> boardCounter;
 				for (int boardID = 1; boardID <= boardCounter; boardID++)
 				{
+					// 读取版面
 					boards->push_back(new Board(path / "content" / to_string(boardID)));
 				}
 				stream.close();
@@ -392,6 +401,7 @@ namespace cforum
 			stream.open(path / "matedata" / "moderator.cfdata");
 			if (stream.is_open())
 			{
+				// 读取版主信息
 				getline(stream, raw_string);
 				while (raw_string.size() > 1)
 				{
@@ -424,6 +434,7 @@ namespace cforum
 		stream.open(path / "user" / "user.cfdata");
 		if (stream.is_open())
 		{
+			// 保存用户表结构
 			stream << users->size();
 			stream.close();
 		}
@@ -433,6 +444,7 @@ namespace cforum
 		}
 		for (const User *uit : *users)
 		{
+			// 保存用户信息
 			stream.open(path / "user" / (to_string(uit->getID()) + ".cfdata"));
 			if (stream.is_open())
 			{
@@ -449,10 +461,12 @@ namespace cforum
 		fs::create_directory(path / "content");
 		for (QObject *&qit : *boards)
 		{
+			// 保存版面信息
 			Board *bit = static_cast<Board*>(qit);
 			bit->save(path / "content" / to_string(bit->getID()));
 			if (stream.is_open())
 			{
+				// 保存版主信息
 				bit->saveModerators(stream);
 			}
 		}

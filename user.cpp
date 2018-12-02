@@ -62,10 +62,9 @@ namespace cforum
 
 	void User::load(ifstream &stream)
 	{
-		// TODO do NOT load type
 		string tempString;
 		stream >> id;
-		stream.get();
+		stream.get(); // 处理行末换行符
 		getline(stream, tempString);
 		lastLoginTime = QDateTime::fromString(QString::fromStdString(tempString), DATETIME_FORMAT);
 		getline(stream, tempString);

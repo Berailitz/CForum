@@ -38,7 +38,7 @@ namespace cforum
 		void deleteContent();
         void initialize(const Comment *oldComment);
 		QString getTimeString() const;
-		virtual bool canDelete() const;
+		virtual bool canDelete() const; // 对回复帖而言，未被删除的（回复帖）都能被（某些用户）删除
         virtual bool load(const fs::path filename);
         virtual bool save(const fs::path filename) const;
 	Q_SIGNALS:

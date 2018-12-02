@@ -93,7 +93,7 @@ namespace cforum
             stream >> commentCounter;
 			stream >> isDeleted;
 			stream >> authorID;
-			stream.get();
+			stream.get(); // 处理行末换行符
 			getline(stream, rawString);
 			time = QDateTime::fromString(QString::fromStdString(rawString), BACK_END_DATETIME_FORMAT);
             getline(stream, rawString);

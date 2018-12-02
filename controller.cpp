@@ -9,6 +9,7 @@ namespace cforum
 		defaultBoard(new Board(-1, "DefaultBoard")),
 		defaultPost(new Post(-1, "DefaultPost", -1, "DefaultContent"))
 	{
+		// 设置缺省值，以供UI层使用
 		user = defaultUser;
 		board = defaultBoard;
 		post = defaultPost;
@@ -16,6 +17,10 @@ namespace cforum
 
     Controller::~Controller()
 	{
+		delete cforum;
+		delete defaultUser;
+		delete defaultBoard;
+		delete defaultPost;
 	}
 
     QString Controller::getGreeting() const
@@ -87,10 +92,12 @@ namespace cforum
 		}
 		else if (user->isAdmin())
 		{
+			// 用户是管理员，不能被设置为版主
 			emit messageSent(USER_IS_ADMIN_MESSAGE);
 		}
 		else if (user->isModerator(board->getID()))
 		{
+			// 用户已经是该版面的版主了
 			emit messageSent(USER_IS_MODERATOR_MESSAGE);
 		}
 		else
@@ -122,6 +129,7 @@ namespace cforum
 			}
 			else
 			{
+				// 用户不是该版面的版主
 				emit messageSent(ILLEGAL_OPERATION_MESSAGE);
 			}
 		}
@@ -179,6 +187,7 @@ namespace cforum
 		}
 		else
 		{
+			// 非法操作，即用户不能发主题帖
 			refreshViews();
 			emit messageSent(ILLEGAL_OPERATION_MESSAGE);
 		}
@@ -204,6 +213,7 @@ namespace cforum
 		}
 		else
 		{
+			// 非法操作，即用户不能删该主题贴
 			qDebug() << DELETE_FAILED_MESSAGE << postID;
 			refreshViews();
 			emit messageSent(DELETE_FAILED_MESSAGE);
@@ -222,6 +232,7 @@ namespace cforum
 		}
 		else
 		{
+			// 非法操作，即用户发回复贴
 			refreshViews();
 			emit messageSent(ILLEGAL_OPERATION_MESSAGE);
 		}
@@ -239,6 +250,7 @@ namespace cforum
 		}
 		else
 		{
+			// 非法操作，即用户不能删该回复帖
 			qDebug() << DELETE_FAILED_MESSAGE << commentID;
 			refreshViews();
 			emit messageSent(DELETE_FAILED_MESSAGE);
@@ -267,6 +279,7 @@ namespace cforum
 
     void Controller::refreshViews()
 	{
+		// 刷新UI
 		QQmlContext *ctxt = engine.rootContext();
 		ctxt->setContextProperty("postListModel", QVariant::fromValue(*defaultBoard->getPosts()));
 		ctxt->setContextProperty("commentListModel", QVariant::fromValue(*defaultPost->getComments()));

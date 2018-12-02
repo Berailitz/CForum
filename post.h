@@ -23,8 +23,8 @@ namespace cforum
 		QString getTitle() const;
 		CommentList* getComments();
         bool post(const QString content, const int userID); // newComment is in heap
-		bool canDelete() const;
-        bool remove(const int commentID); // commentID < comments->size()
+		bool canDelete() const; // 没有回复、且没有被删除的主题帖可以被删除
+        bool remove(const int commentID); // commentID < comments->size()，删除回复贴
 		Comment *getCommentByID(const int commentID);
         bool load(const fs::path path);
         bool save(const fs::path path) const;
@@ -32,9 +32,9 @@ namespace cforum
 	Q_SIGNALS:
 		void commentsChanged();
 	private:
-		int visibleCommentCounter = 0;
+		int visibleCommentCounter = 0; // 没有被删除的回复贴的数量
 		QString title; // without `\n`
-		CommentList* comments;
+		CommentList* comments; // 回复帖列表
     };
 }
 

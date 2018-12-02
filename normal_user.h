@@ -14,7 +14,7 @@ namespace cforum
 		NormalUser(const User *oldUser);
 		NormalUser(const int id, const QString userName, const QString password, UserType type = NormalUserType);
 		NormalUser(ifstream &stream, UserType type);
-		Moderator *toModerator() const;
+		Moderator *toModerator() const; // 升级为版主
 		virtual QString getInfo() const;
 	};
 }

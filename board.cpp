@@ -46,6 +46,7 @@ namespace cforum
 		}
 		else
 		{
+			// 该主题帖不存在
 			return nullptr;
 		}
 	}
@@ -85,6 +86,7 @@ namespace cforum
 		}
 		else
 		{
+			// 不存在该版主
 			return false;
 		}
     }
@@ -98,7 +100,7 @@ namespace cforum
             string nameTemp;
             int postsCounter;
             stream >> id;
-            stream.get();
+            stream.get(); // 处理行末换行符
 			getline(stream, nameTemp);
             name = QString::fromStdString(nameTemp);
             stream >> postsCounter;
