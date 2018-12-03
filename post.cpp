@@ -38,6 +38,11 @@ namespace cforum
 		return title;
 	}
 
+	bool Post::canRemove(const bool isModerator) const
+	{
+		return Comment::canRemove() && (isModerator || visibleCommentCounter == 0);
+	}
+
 	CommentList * Post::getComments()
 	{
 		return comments;
@@ -52,9 +57,18 @@ namespace cforum
         return true;
     }
 
-	bool Post::canDelete() const
+	void Post::deleteContent()
 	{
-		return !isDeleted && visibleCommentCounter == 0;
+		Comment::deleteContent();
+		for (QObject* &qit : *comments)
+		{
+			Comment *cit;
+			cit = static_cast<Comment*>(qit);
+			delete cit;
+		}
+		delete comments;
+		comments = nullptr;
+		visibleCommentCounter = 0;
 	}
 
     bool Post::remove(const int commentID)
@@ -91,7 +105,7 @@ namespace cforum
             int commentCounter;
             stream >> id;
             stream >> commentCounter;
-			stream >> isDeleted;
+			stream >> isRemoved;
 			stream >> authorID;
 			stream.get(); // 处理行末换行符
 			getline(stream, rawString);
@@ -121,7 +135,7 @@ namespace cforum
         {
             stream << id << endl;
             stream << comments->size() << endl;
-			stream << isDeleted << endl;
+			stream << isRemoved << endl;
 			stream << authorID << endl;
 			stream << time.toString(BACK_END_DATETIME_FORMAT).toStdString() << endl;
             stream << title.toStdString() << endl;

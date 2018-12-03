@@ -13,7 +13,7 @@ namespace cforum
     {
         Q_OBJECT
         Q_PROPERTY(QString title MEMBER title CONSTANT)
-		Q_PROPERTY(bool canDelete READ canDelete NOTIFY commentsChanged)
+		Q_PROPERTY(bool canRemove READ canRemove NOTIFY commentsChanged)
     public:
         Post(const int id, QString content, const int authorID, QString title);
         Post(const fs::path path);
@@ -21,9 +21,10 @@ namespace cforum
         Post(const Post &oldPost);
         virtual ~Post();
 		QString getTitle() const;
+		bool canRemove(const bool isModerator = false) const;
 		CommentList* getComments();
         bool post(const QString content, const int userID); // newComment is in heap
-		bool canDelete() const; // 没有回复、且没有被删除的主题帖可以被删除
+		void deleteContent();
         bool remove(const int commentID); // commentID < comments->size()，删除回复贴
 		Comment *getCommentByID(const int commentID);
         bool load(const fs::path path);

@@ -25,7 +25,7 @@ namespace cforum
         Q_PROPERTY(int authorID MEMBER authorID CONSTANT)
         Q_PROPERTY(QString content MEMBER content NOTIFY contentChanged)
 		Q_PROPERTY(QString time READ getTimeString NOTIFY contentChanged)
-		Q_PROPERTY(bool isDeleted MEMBER isDeleted NOTIFY contentChanged)
+		Q_PROPERTY(bool isRemoved MEMBER isRemoved NOTIFY contentChanged)
     public:
         Comment(const int id, QString content, const int authorID);
         Comment(const fs::path filename);
@@ -35,10 +35,10 @@ namespace cforum
 		int getID() const;
 		QString getContent() const;
 		int getAuthorID() const;
-		void deleteContent();
+		virtual void deleteContent();
         void initialize(const Comment *oldComment);
 		QString getTimeString() const;
-		virtual bool canDelete() const; // 对回复帖而言，未被删除的（回复帖）都能被（某些用户）删除
+		virtual bool canRemove() const; // 对回复帖而言，未被删除的（回复帖）都能被（某些用户）删除
         virtual bool load(const fs::path filename);
         virtual bool save(const fs::path filename) const;
 	Q_SIGNALS:
@@ -48,7 +48,7 @@ namespace cforum
 		QString content;
 		QDateTime time;
         int authorID;
-		bool isDeleted;
+		bool isRemoved;
     };
 }
 

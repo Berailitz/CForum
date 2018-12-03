@@ -223,22 +223,25 @@ namespace cforum
 		}
 	}
 
-	bool CForum::removePost(const int boardID, const int postID, const int userID)
+	bool CForum::canRemovePost(const int boardID, const int postID, const int userID) const
 	{
 		Board *board = getBoardByID(boardID);
 		User *user = getUserByID(userID);
-		if (board && user)
+		if (board && user && !user->isAdmin()) // 管理员不可删帖
 		{
-			Post *post = board->getPostByID(postID);
-			if (post && post->canDelete() && (user->isAdmin() || user->isModerator(board->getID()) || post->getAuthorID() == userID))
-			{
-				board->remove(postID);
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			return board->canRemovePost(postID, userID);
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	bool CForum::removePost(const int boardID, const int postID, const int userID)
+	{
+		if (canRemovePost(boardID, postID, userID))
+		{
+			getBoardByID(boardID)->remove(postID);
 		}
 		else
 		{
@@ -250,7 +253,7 @@ namespace cforum
 	{
 		Board *board = getBoardByID(boardID);
 		User *user = getUserByID(userID);
-		if (board && user && !user->isAdmin())
+		if (board && user && !user->isAdmin()) // 管理员不可删帖
 		{
 			Post *post = board->getPostByID(postID);
 			if (post)
@@ -279,7 +282,7 @@ namespace cforum
 			if (post)
 			{
 				Comment *comment = post->getCommentByID(commentID);
-				if (comment && comment->canDelete() && (user->isAdmin() || user->isModerator(board->getID()) || post->getAuthorID() == userID))
+				if (comment && comment->canRemove() && (user->isAdmin() || user->isModerator(board->getID()) || post->getAuthorID() == userID))
 				{
 					post->remove(commentID);
 					return true;

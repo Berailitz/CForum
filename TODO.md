@@ -196,8 +196,8 @@ Controller
 - 内容表
     - 存储至一个文件夹: `/content`
     - 每个板块存储至一个子文件夹: `/content/{boardID}`，及其下的一个文本文件`board.cfdata`: `{boardID}\n{boardName}\n{postCounter}`
-    - 每个主题帖存储至一个二级子文件夹`/content/{boardID}/{postID}`，及其下的一个文本文件`post.cfdata`: `{postID}\n{commentCounter}\n{isDeleted}\n{authorID}\n{time}\n{title}\n{content}`
-    - 每个回复贴存储至一个文本文件`/content/{boardID}/{postID}/{commentID}.cfdata`: `{commentID}\n{authorID}\n{isDeleted}\n{time}\n{content}`
+    - 每个主题帖存储至一个二级子文件夹`/content/{boardID}/{postID}`，及其下的一个文本文件`post.cfdata`: `{postID}\n{commentCounter}\n{isRemoved}\n{authorID}\n{time}\n{title}\n{content}`
+    - 每个回复贴存储至一个文本文件`/content/{boardID}/{postID}/{commentID}.cfdata`: `{commentID}\n{authorID}\n{isRemoved}\n{time}\n{content}`
 - 元数据
     - 存储至一个文件夹: `/matedata`
     - 版主数据存储至一个文本文件`moderator.cfdata`，每个版面-版主关系存储至一行: `{boardID} {userID}`

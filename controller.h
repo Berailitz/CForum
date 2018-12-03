@@ -57,6 +57,7 @@ namespace cforum
 		void viewForum(); // 控制UI转向论坛界面
         void addBoard(const QString boardName);
         void viewBoard(const int boardID = -1); // 控制UI转向版面界面
+		bool canRemovePost(const int postID) const;
         void addPost(const QString title, const QString content); // 发主题帖
 		void viewPost(const int postID); // 控制UI转向主题帖界面
         void removePost(const int postID); // 删除主题帖
@@ -70,7 +71,6 @@ namespace cforum
 		User *user;
 		Board *board;
 		Post *post;
-		bool canDeletePost(Post *target) const;
 		void openForum();
         void openBoard(const int boardID);
         void openPost(const int postID);

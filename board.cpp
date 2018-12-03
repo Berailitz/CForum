@@ -36,7 +36,7 @@ namespace cforum
 		return posts;
 	}
 
-	Post * Board::getPostByID(const int postID)
+	Post * Board::getPostByID(const int postID) const
 	{
         if (postID > 0 && postID <= posts->size())
 		{
@@ -57,12 +57,32 @@ namespace cforum
         return true;
     }
 
+	bool Board::canRemovePost(const int postID, const int userID) const
+	{
+		Post *post = getPostByID(postID);
+		if (post)
+		{
+			return post->canRemove(isModerator(userID));
+		}
+		else
+		{
+			return false;
+		}
+	}
+
     bool Board::remove(const int postID)
     {
-        PostList::iterator it = posts->begin();
-        advance(it, postID - 1);
-		static_cast<Post*>(*it)->deleteContent();
-        return true;
+		Post *post = getPostByID(postID);
+		if (post)
+		{
+			// 存在该主题帖
+			post->deleteContent();
+			return true;
+		}
+		else
+		{
+			return false;
+		}
     }
 
     bool Board::isModerator(const int userID) const

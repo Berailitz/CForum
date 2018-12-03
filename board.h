@@ -38,9 +38,10 @@ namespace cforum
 		int getID() const;
 		QString getName() const;
 		PostList* getPosts() const;
-		Post *getPostByID(const int postID);
+		Post *getPostByID(const int postID) const;
         bool post(Post *newPost); // newPost is in heap
-        bool remove(const int postID); // postID < posts->size()
+		bool canRemovePost(const int postID, const int userID) const; // 普通用户可以删除没有回复的主题帖，版主可以删除任意主题帖
+        bool remove(const int postID); // 不检查能否删除，主题帖存在即删除，删帖成功返回真，否则返回假
         bool isModerator(const int userID) const;
         bool setModerator(const int userID);
         bool removeModerator(const int userID);

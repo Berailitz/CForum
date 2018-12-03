@@ -173,6 +173,11 @@ namespace cforum
 		openBoard(boardID);
     }
 
+	bool Controller::canRemovePost(const int postID) const
+	{
+		return cforum->canRemovePost(board->getID(), postID, user->getID());
+	}
+
     void Controller::addPost(const QString title, const QString content)
 	{
 		QQmlContext *ctxt = engine.rootContext();
@@ -288,11 +293,6 @@ namespace cforum
         ctxt->setContextProperty("postListModel", QVariant::fromValue(*board->getPosts()));
 		ctxt->setContextProperty("commentListModel", QVariant::fromValue(*post->getComments()));
         qDebug() << "Refresh: " << cforum->getBoards()->size() << " (ALL) Boards ";
-	}
-
-	bool Controller::canDeletePost(Post * target) const
-	{
-		return target->canDelete();
 	}
 
 	void Controller::openForum()

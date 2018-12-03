@@ -3,7 +3,7 @@
 
 namespace cforum
 {
-    Comment::Comment(const int id, QString content, const int authorID) : QObject(), id(id), content(content), authorID(authorID), isDeleted(false)
+    Comment::Comment(const int id, QString content, const int authorID) : QObject(), id(id), content(content), authorID(authorID), isRemoved(false)
     {
 		time = QDateTime::currentDateTime();
     }
@@ -45,7 +45,7 @@ namespace cforum
 	void Comment::deleteContent()
 	{
 		content = DELETED_MESSAGE;
-		isDeleted = true;
+		isRemoved = true;
 		emit contentChanged();
 	}
 
@@ -55,7 +55,7 @@ namespace cforum
 		content = oldComment->content;
 		time = oldComment->time;
 		authorID = oldComment->authorID;
-		isDeleted = oldComment->isDeleted;
+		isRemoved = oldComment->isRemoved;
 	}
 
 	QString Comment::getTimeString() const
@@ -63,9 +63,9 @@ namespace cforum
 		return time.toString(FRONT_END_DATETIME_FORMAT);
 	}
 
-	bool Comment::canDelete() const
+	bool Comment::canRemove() const
 	{
-		return !isDeleted;
+		return !isRemoved;
 	}
 
 	bool Comment::load(const fs::path filename)
@@ -76,7 +76,7 @@ namespace cforum
 			string rawString;
             stream >> id;
             stream >> authorID;
-			stream >> isDeleted;
+			stream >> isRemoved;
 			stream.get(); // 处理行末换行符
 			getline(stream, rawString);
 			time = QDateTime::fromString(QString::fromStdString(rawString), BACK_END_DATETIME_FORMAT);
@@ -96,7 +96,7 @@ namespace cforum
         {
             stream << id << endl;
             stream << authorID << endl;
-			stream << isDeleted << endl;
+			stream << isRemoved << endl;
             stream << time.toString(BACK_END_DATETIME_FORMAT).toStdString() << endl;
             stream << content.toStdString();
             stream.close();

@@ -5,8 +5,8 @@ import QtQuick.Layouts 1.3
 RowLayout {
     width: 1080
     Layout.preferredWidth: 1080
-    visible: !model.isDeleted
-    height: model.isDeleted ? 0 : implicitHeight
+    visible: !model.isRemoved
+    height: model.isRemoved ? 0 : implicitHeight
     Text {
         text: qsTr("#") + model.id + " " + model.title + qsTr(" -- by: ") + forumController.getUsername(model.authorID) + ", " + model.time
         Layout.preferredWidth: 850
@@ -15,7 +15,7 @@ RowLayout {
     }
 
     Button {
-        visible: model.canDelete && (forumController.isModerator || model.authorID === forumController.userID)
+        visible: forumController.canRemovePost(model.id) && (forumController.isModerator || model.authorID === forumController.userID)
         text: qsTr("❌")
         Layout.preferredWidth: 100
         font.family: "dengxian"
