@@ -21,6 +21,10 @@ namespace cforum
         initialize(&oldUser);
     }
 
+	User::~User()
+	{
+	}
+
 	QString User::getName() const
 	{
 		return userName;

@@ -31,7 +31,7 @@ namespace cforum
         Comment(const fs::path filename);
         Comment(const Comment *oldComment);
         Comment(const Comment &oldComment);
-		~Comment();
+		virtual ~Comment();
 		int getID() const;
 		QString getContent() const;
 		int getAuthorID() const;

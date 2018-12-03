@@ -14,6 +14,10 @@ namespace cforum
 	{
 	}
 
+	NormalUser::~NormalUser()
+	{
+	}
+
 	Moderator * NormalUser::toModerator() const
 	{
 		return new Moderator(this);

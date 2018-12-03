@@ -19,7 +19,7 @@ namespace cforum
         Post(const fs::path path);
         Post(const Post *oldPost);
         Post(const Post &oldPost);
-        virtual ~Post();
+        ~Post();
 		QString getTitle() const;
 		bool canRemove(const bool isModerator = false) const;
 		CommentList* getComments();

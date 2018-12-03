@@ -41,6 +41,7 @@ namespace cforum
 		User(ifstream &stream, UserType type);
         User(const User *oldUser);
         User(const User &oldUser);
+		virtual ~User();
 		int getID() const;
 		QString getName() const;
 		bool login(const QString testPassword); // 登录
