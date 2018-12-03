@@ -76,7 +76,7 @@ namespace cforum
 		if (post)
 		{
 			// 存在该主题帖
-			post->deleteContent();
+			post->removeContent();
 			return true;
 		}
 		else

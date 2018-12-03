@@ -241,7 +241,7 @@ namespace cforum
 	{
 		if (canRemovePost(boardID, postID, userID))
 		{
-			getBoardByID(boardID)->remove(postID);
+			return getBoardByID(boardID)->remove(postID);
 		}
 		else
 		{

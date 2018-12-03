@@ -57,9 +57,9 @@ namespace cforum
         return true;
     }
 
-	void Post::deleteContent()
+	void Post::removeContent()
 	{
-		Comment::deleteContent();
+		Comment::removeContent();
 		for (QObject* &qit : *comments)
 		{
 			Comment *cit;
@@ -75,7 +75,7 @@ namespace cforum
     {
         CommentList::iterator it = comments->begin();
         advance(it, commentID - 1);
-		static_cast<Comment*>(*it)->deleteContent();
+		static_cast<Comment*>(*it)->removeContent();
 		visibleCommentCounter--;
 		emit commentsChanged();
         return true;

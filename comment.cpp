@@ -42,7 +42,7 @@ namespace cforum
 		return authorID;
 	}
 
-	void Comment::deleteContent()
+	void Comment::removeContent()
 	{
 		content = DELETED_MESSAGE;
 		isRemoved = true;

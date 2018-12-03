@@ -35,7 +35,7 @@ namespace cforum
 		int getID() const;
 		QString getContent() const;
 		int getAuthorID() const;
-		virtual void deleteContent();
+		virtual void removeContent();
         void initialize(const Comment *oldComment);
 		QString getTimeString() const;
 		virtual bool canRemove() const; // 对回复帖而言，未被删除的（回复帖）都能被（某些用户）删除
