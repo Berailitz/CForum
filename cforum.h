@@ -35,6 +35,7 @@ namespace cforum
         CForum();
         CForum(const fs::path path);
         ~CForum();
+		void initializeDatabase();
 		NormalUser *addNormalUser(const QString userName, const QString password);
 		User *getUserByName(const QString userName) const;
 		User *login(const QString userName, const QString password);
@@ -55,10 +56,9 @@ namespace cforum
         bool load(const fs::path path);
         bool save(const fs::path path) const;
     private:
-		UserSet* admins;
-		BoardList* boards;
-		UserList* users;
-        User *guest = new Guest();
+		UserSet* admins = nullptr;
+		BoardList* boards = nullptr;
+		UserList* users = nullptr;
     };
 }
 

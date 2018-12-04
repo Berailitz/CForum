@@ -3,8 +3,9 @@
 
 namespace cforum
 {
-    CForum::CForum() : QObject(), boards(new BoardList), users(new UserList), admins(new UserSet)
+    CForum::CForum() : QObject()
 	{
+		initializeDatabase();
 	}
 
     CForum::CForum(const fs::path path) : QObject()
@@ -12,16 +13,41 @@ namespace cforum
 		load(path);
 	}
 
-
 	CForum::~CForum()
 	{
-        for (QObject *&board : *boards)
+        for (QObject *&qit : *boards)
 		{
-			delete board;
+			delete static_cast<Board*>(qit);
 		}
 		delete boards;
 		delete users;
 		delete admins;
+	}
+
+	void CForum::initializeDatabase()
+	{
+		if (admins)
+		{
+			delete admins;
+			admins = nullptr;
+		}
+		if (boards)
+		{
+			delete boards;
+			boards = nullptr;
+		}
+		if (users)
+		{
+			for (User *&uit : *users)
+			{
+				delete uit;
+			}
+			delete users;
+			users = nullptr;
+		}
+		boards = new BoardList;
+		users = new UserList;
+		admins = new UserSet;
 	}
 
 	NormalUser *CForum::addNormalUser(const QString userName, const QString password)
@@ -319,11 +345,7 @@ namespace cforum
 
     User * CForum::getUserByID(const int userID) const
     {
-        if (userID == 0)
-        {
-            return guest;
-        }
-        else if (userID > 0 && userID <= users->size())
+        if (userID > 0 && userID <= users->size())
         {
             UserList::iterator it = users->begin();
             advance(it, userID - 1);
