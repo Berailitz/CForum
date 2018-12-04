@@ -6,7 +6,7 @@
 
 using namespace std;
 
-const QString FRONT_END_DATETIME_FORMAT = QString::fromUtf8("M月d日 H:m:s");
+const QString FRONT_END_DATETIME_FORMAT = QString::fromUtf8("M月d日 HH:mm:ss");
 
 
 bool matchRegular(const QString text, const QString regularExpression);

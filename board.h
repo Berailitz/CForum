@@ -22,7 +22,6 @@ namespace cforum
 	using PostList = QList<QObject*>;
 	using ModeratorSet = unordered_set<int>;
 
-
 	class Comment;
 	class Post;
 
@@ -48,6 +47,7 @@ namespace cforum
         bool load(const fs::path path);
         bool save(const fs::path path) const;
 		void saveModerators(ostream &stream) const;
+		ModeratorSet* getModerators() const;
 	private:
 		int id; // primary_kay in a post, start from 1
 		QString name;

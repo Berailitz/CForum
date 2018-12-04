@@ -28,9 +28,32 @@ namespace cforum
         return WELCOME_MESSAGE + user->getInfo() + QString::fromUtf8("。");
     }
 
-    QString Controller::getBoardName() const
+    QString Controller::getBoardTitle() const
 	{
-        return board->getName();
+		QString boardTitle = board->getName() + (isModerator() ? MODERATOR_NOTE_MESSAGE : "");
+		ModeratorSet* moderators = board->getModerators();
+		if (moderators->size() == 0)
+		{
+			boardTitle += NO_MODERATOR_MESSGAE;
+		}
+		else
+		{
+			boardTitle += MODERATOR_LIST_PREFIX_MESSAGE;
+			int moderatorIndex = 1;
+			for (ModeratorSet::iterator mit = moderators->begin(); mit != moderators->end(); mit++)
+			{
+				if (moderatorIndex == moderators->size())
+				{
+					boardTitle += cforum->getUserByID(*mit)->getName();
+				}
+				else
+				{
+					boardTitle += (cforum->getUserByID(*mit)->getName() + LIST_SEPARATER);
+				}
+				moderatorIndex++;
+			}
+		}
+        return boardTitle;
 	}
 
 	QString Controller::getPostTitle() const
@@ -292,7 +315,7 @@ namespace cforum
 
     bool Controller::isModerator() const
     {
-        return cforum->isAdmin(user->getID()) || board->isModerator(user->getID());
+        return board->isModerator(user->getID());
     }
 
     void Controller::refreshViews()

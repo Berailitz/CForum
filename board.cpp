@@ -167,4 +167,9 @@ namespace cforum
 			stream << id << " " << moderatorID << endl;
 		}
 	}
+
+	ModeratorSet* Board::getModerators() const
+	{
+		return moderators;
+	}
 }

@@ -20,7 +20,7 @@ Page {
             anchors.topMargin: 200
             anchors.horizontalCenter: parent.horizontalCenter
             Text {
-                text: forumController.boardName
+                text: forumController.boardTitle
                 font.pointSize: 20
                 font.family: "dengxian"
                 height: 60

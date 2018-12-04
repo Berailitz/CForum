@@ -21,12 +21,16 @@ namespace cforum
 	const QString USER_IS_ADMIN_MESSAGE = QString::fromUtf8("用户是管理员");
 	const QString USER_IS_MODERATOR_MESSAGE = QString::fromUtf8("用户是版主");
 	const QString ILLEGAL_OPERATION_MESSAGE = QString::fromUtf8("非法操作");
+	const QString MODERATOR_NOTE_MESSAGE = QString::fromUtf8("（我管理的版面）");
+	const QString MODERATOR_LIST_PREFIX_MESSAGE = QString::fromUtf8("，版主为：");
+	const QString NO_MODERATOR_MESSGAE = QString::fromUtf8("，本版面没有版主");
+	const QString LIST_SEPARATER = QString::fromUtf8(", ");
 
     class Controller : public QObject
     {
         Q_OBJECT
         Q_PROPERTY(QString greeting READ getGreeting NOTIFY forumOpened)
-        Q_PROPERTY(QString boardName READ getBoardName NOTIFY boardOpened)
+        Q_PROPERTY(QString boardTitle READ getBoardTitle NOTIFY boardOpened)
         Q_PROPERTY(QString postTitle READ getPostTitle NOTIFY postOpened)
         Q_PROPERTY(QString postContent READ getPostContent NOTIFY postOpened)
         Q_PROPERTY(bool isAdmin READ isAdmin NOTIFY forumOpened)
@@ -36,7 +40,7 @@ namespace cforum
         Controller(QQmlApplicationEngine &engine);
 		~Controller();
         QString getGreeting() const;
-        QString getBoardName() const;
+        QString getBoardTitle() const;
 		QString getPostTitle() const;
         QString getPostContent() const;
 		int getUserID() const;
