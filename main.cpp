@@ -17,6 +17,8 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     cforum::Controller forumController(engine);
 	doLoad = forumController.load("data");
+	/*forumController.initializeDatabase();
+	doLoad = true;*/
     //forumController.addUser("admin", "admin");
     //forumController.addBoard("TestBoard");
     //forumController.addPost("Test post", "This is content.");

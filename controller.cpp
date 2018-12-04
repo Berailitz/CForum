@@ -48,12 +48,25 @@ namespace cforum
 		return user->getID();
 	}
 
+	void Controller::initializeDatabase()
+	{
+		cforum->initializeDatabase();
+	}
+
     void Controller::addUser(const QString newUserName, const QString newPassword)
     {
 		user = cforum->addNormalUser(newUserName, newPassword);
-		qDebug() << REGISTER_SUCCESS_MESSAGE << newUserName << ":" << newPassword;
-		emit messageSent(REGISTER_SUCCESS_MESSAGE);
-        login(newUserName, newPassword);
+		if (user)
+		{
+			qDebug() << REGISTER_SUCCESS_MESSAGE << newUserName << ":" << newPassword;
+			emit messageSent(REGISTER_SUCCESS_MESSAGE);
+			//login(newUserName, newPassword); 不自动登录
+		}
+		else
+		{
+			qDebug() << REGISTER_FAILED_MESSAGE << newUserName << ":" << newPassword;
+			emit messageSent(REGISTER_FAILED_MESSAGE);
+		}
 	}
 
     void Controller::login(const QString userName, const QString password)

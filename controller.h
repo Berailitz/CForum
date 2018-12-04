@@ -9,6 +9,7 @@ namespace cforum
 {
 	const QString WELCOME_MESSAGE = QString::fromUtf8("欢迎 ");
 	const QString REGISTER_SUCCESS_MESSAGE = QString::fromUtf8("注册成功");
+	const QString REGISTER_FAILED_MESSAGE = QString::fromUtf8("注册失败");
 	const QString LOGIN_SUCCESS_MESSAGE = QString::fromUtf8("登录成功");
 	const QString LOGIN_FAILED_MESSAGE = QString::fromUtf8("登录失败：用户名或密码错误");
 	const QString LOGOUT_SUCCESS_MESSAGE = QString::fromUtf8("注销成功");
@@ -48,6 +49,7 @@ namespace cforum
         void postOpened();
         void messageSent(QString message);
     public Q_SLOTS:
+		void initializeDatabase();
         void addUser(const QString userName, const QString password); // 注册
         void login(const QString userName, const QString password);
 		void logout();

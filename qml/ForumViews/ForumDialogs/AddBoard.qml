@@ -9,7 +9,7 @@ Dialog {
     TextField {
         id: boardNameTextField
         font.family: "dengxian"
-        placeholderText: qsTr("版主名")
+        placeholderText: qsTr("版面名")
         font.pointSize: 20
     }
 

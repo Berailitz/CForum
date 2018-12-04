@@ -27,8 +27,8 @@ namespace cforum
 	const int UserTypeMax = 2;
 	const QString DATETIME_FORMAT = QString::fromUtf8("yyyyMMddHHmmss");
 
-	const QString LAST_LOGIN_MESSAGE = QString::fromUtf8("上次登录时间");
-	const QString LAST_LOGOUT_MESSAGE = QString::fromUtf8("上次注销时间");
+	const QString LAST_LOGIN_MESSAGE = QString::fromUtf8("最近登录时间");
+	const QString LAST_LOGOUT_MESSAGE = QString::fromUtf8("最近注销时间");
 
 	class User;
 	class Moderator;

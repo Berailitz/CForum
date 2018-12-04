@@ -481,9 +481,19 @@ namespace cforum
 				return false;
 			}
 		}
+		fs::create_directory(path / "content");
+		stream.open(path / "content" / "forum.cfdata");
+		if (stream.is_open())
+		{
+			stream << boards->size();
+			stream.close();
+		}
+		else
+		{
+			return false;
+		}
 		fs::create_directory(path / "matedata");
 		stream.open(path / "matedata" / "moderator.cfdata");
-		fs::create_directory(path / "content");
 		for (QObject *&qit : *boards)
 		{
 			// 保存版面信息
