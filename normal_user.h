@@ -11,6 +11,7 @@ namespace cforum
 	{
         Q_OBJECT
 	public:
+		NormalUser();
 		NormalUser(const User *oldUser);
 		NormalUser(const int id, const QString userName, const QString password, UserType type = NormalUserType);
 		NormalUser(ifstream &stream, UserType type);

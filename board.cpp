@@ -3,15 +3,13 @@
 
 namespace cforum
 {
+	Board::Board() : QObject(), posts(new PostList)
+	{
+	}
+
     Board::Board(const int id, const QString name) : QObject(), id(id), name(name), posts(new PostList)
     {
     }
-
-    Board::Board(const fs::path path) : QObject()
-    {
-        load(path);
-    }
-
 
     Board::~Board()
     {
@@ -113,65 +111,95 @@ namespace cforum
 		}
     }
 
-    bool Board::load(const fs::path path)
+    void Board::load(istream & in)
     {
-        ifstream stream(path / "board.cfdata");
-        posts = new PostList;
-        if (stream.is_open())
-        {
-            string nameTemp;
-            int postsCounter;
-            stream >> id;
-            stream.get(); // 处理行末换行符
-			getline(stream, nameTemp);
-            name = QString::fromStdString(nameTemp);
-            stream >> postsCounter;
-            stream.close();
-            for (int i = 1; i <= postsCounter; i++)
-            {
-                posts->push_back(new Post(path / to_string(i)));
-            }
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    bool Board::save(const fs::path path) const
-    {
-        fs::create_directory(path);
-        ofstream stream(path / "board.cfdata");
-        if (stream.is_open())
-        {
-            stream << id << endl;
-            stream << name.toStdString() << endl;
-            stream << posts->size() << endl;
-            stream.close();
-            for (QObject *&qit : *posts)
-            {
-                Post *it = static_cast<Post*>(qit);
-                it->save(path / to_string(it->getID()));
-            }
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-	void Board::saveModerators(ostream & stream) const
-	{
-		for (const int moderatorID : *moderators)
+		string nameTemp;
+		string rawString;
+		int postsCounter;
+		in >> id;
+		in.get(); // 处理行末换行符
+		getline(in, nameTemp);
+		name = QString::fromStdString(nameTemp);
+		in >> postsCounter;
+		in.get(); // 处理行末换行符
+		// 读取版主信息
+		getline(in, rawString);
+		while (rawString.size() > 0)
 		{
-			stream << id << " " << moderatorID << endl;
+			setModerator(stoi(rawString));
+			getline(in, rawString);
 		}
+    }
+
+	void Board::save(ostream & out) const
+	{
+		out << id << endl;
+		out << name.toStdString() << endl;
+		out << posts->size() << endl;
+		for (int moderatorID: *moderators)
+		{
+			out << moderatorID << endl;
+		}
+	}
+
+	bool Board::loadPosts(const fs::path path)
+	{
+		int postsCounter = count_files(path) - 1; // 除去board.cfdata
+		for (int i = 1; i <= postsCounter; i++)
+		{
+			fs::path boardPath = path / to_string(i);
+			ifstream postStream(boardPath / "post.cfdata");
+			if (postStream.is_open())
+			{
+				Post *newPost = new Post();
+				postStream >> *newPost;
+				newPost->loadComments(boardPath);
+				posts->push_back(newPost);
+				postStream.close();
+			}
+			else
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
+	bool Board::savePosts(const fs::path path) const
+	{
+		for (QObject *&qit : *posts)
+		{
+			Post *pit = static_cast<Post*>(qit);
+			fs::path boardPath = path / to_string(pit->getID());
+			ofstream postStream(boardPath / "post.cfdata");
+			if (postStream.is_open())
+			{
+				postStream << *pit;
+				pit->saveComments(boardPath);
+				postStream.close();
+			}
+			else
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 
 	ModeratorSet* Board::getModerators() const
 	{
 		return moderators;
+	}
+
+	ostream & operator<<(ostream & out, const Board & board)
+	{
+		board.save(out);
+		return out;
+	}
+
+	istream & operator>>(istream & in, Board & board)
+	{
+		board.load(in);
+		return in;
 	}
 }

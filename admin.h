@@ -11,6 +11,7 @@ namespace cforum
 	{
         Q_OBJECT
 	public:
+		Admin();
 		Admin(ifstream &stream);
 		bool isAdmin() const;
 		virtual QString getInfo() const;

@@ -66,7 +66,7 @@ namespace cforum
 			}
 			else
 			{
-				NormalUser *user = new NormalUser(users->size() + 1, userName, password);
+				NormalUser *user = new NormalUser(static_cast<int>(users->size()) + 1, userName, password);
 				// 用户ID为正数
 				users->push_back(user);
 				return user;
@@ -350,120 +350,85 @@ namespace cforum
 
 	bool CForum::load(const fs::path path)
 	{
-		ifstream stream;
 		string raw_string;
-		int userCounter = 0;
+		int userCounter = count_files(path / "user");
+		int boardCounter = count_files(path / "content");
 		users = new UserList;
 		boards = new BoardList;
-		stream.open(path / "user" / "user.cfdata");
-		if (stream.is_open())
+		for (int userID = 1; userID <= userCounter; userID++)
 		{
-			// 读取用户表结构
-			stream >> userCounter;
-			stream.close();
-			for (int userID = 1; userID <= userCounter; userID++)
+			// 读取用户信息
+			ifstream userStream(path / "user" / (to_string(userID) + ".cfdata"));
+			if (userStream.is_open())
 			{
-				// 读取用户信息
-				stream.open(path / "user" / (to_string(userID) + ".cfdata"));
-				if (stream.is_open())
+				int typeInt;
+				UserType type;
+				User *newUser;
+				userStream >> typeInt;
+				type = static_cast<UserType>(typeInt);
+				switch (type)
 				{
-					int typeInt;
-					UserType type;
-					User *newUser;
-					stream >> typeInt;
-					type = static_cast<UserType>(typeInt);
-					switch (type)
-					{
-					case AdminType:
-						newUser = new Admin(stream);
-						users->push_back(newUser);
-						break;
-					case GuestType:
-						// TODO throw exception
-						break;
-					case NormalUserType:
-						users->push_back(new NormalUser(stream, type));
-						break;
-					case ModeratorType:
-						users->push_back(new Moderator(stream));
-						break;
-					}
-					stream.close();
+				case AdminType:
+					newUser = new Admin();
+					userStream >> *newUser;
+					users->push_back(newUser);
+					break;
+				case GuestType:
+					// TODO throw exception
+					break;
+				case NormalUserType:
+					newUser = new NormalUser();
+					userStream >> *newUser;
+					users->push_back(newUser);
+					break;
+				case ModeratorType:
+					newUser = new Moderator();
+					userStream >> *newUser;
+					users->push_back(newUser);
+					break;
 				}
-				else
-				{
-					return false;
-				}
-			}
-			stream.open(path / "content" / "forum.cfdata");
-			if (stream.is_open())
-			{
-				// 读取版面表结构
-				int boardCounter;
-				stream >> boardCounter;
-				for (int boardID = 1; boardID <= boardCounter; boardID++)
-				{
-					// 读取版面
-					boards->push_back(new Board(path / "content" / to_string(boardID)));
-				}
-				stream.close();
-			}
-			else
-			{
-				return false;
-			}
-			stream.open(path / "matedata" / "moderator.cfdata");
-			if (stream.is_open())
-			{
-				// 读取版主信息
-				getline(stream, raw_string);
-				while (raw_string.size() > 1)
-				{
-					istringstream iss(raw_string);
-					int boardID, userID;
-					iss >> boardID;
-					iss >> userID;
-					setModerator(boardID, userID);
-					getline(stream, raw_string);
-				}
-				stream.close();
-				return true;
+				userStream.close();
 			}
 			else
 			{
 				return false;
 			}
 		}
-		else
+		for (int boardID = 1; boardID <= boardCounter; boardID++)
 		{
-			return false;
+			// 读取版面
+			fs::path boardPath = path / "content" / to_string(boardID);
+			ifstream boardStream(boardPath / "board.cfdata");
+			if (boardStream.is_open())
+			{
+				Board *newBoard = new Board();
+				boardStream >> *newBoard;
+				boards->push_back(newBoard);
+				newBoard->loadPosts(boardPath);
+				boardStream.close();
+			}
+			else
+			{
+				return false;
+			}
 		}
+		return true;
 	}
 
 	bool CForum::save(const fs::path path) const
 	{
-		ofstream stream;
+		ofstream userStream;
+		ofstream boardStream;
 		fs::create_directory(path);
 		fs::create_directory(path / "user");
-		stream.open(path / "user" / "user.cfdata");
-		if (stream.is_open())
-		{
-			// 保存用户表结构
-			stream << users->size();
-			stream.close();
-		}
-		else
-		{
-			return false;
-		}
 		for (const User *uit : *users)
 		{
 			// 保存用户信息
-			stream.open(path / "user" / (to_string(uit->getID()) + ".cfdata"));
-			if (stream.is_open())
+			userStream.open(path / "user" / (to_string(uit->getID()) + ".cfdata"));
+			if (userStream.is_open())
 			{
-				uit->dump(stream);
-				stream.close();
+				userStream << *uit;
+				userStream.close();
 			}
 			else
 			{
@@ -471,37 +436,25 @@ namespace cforum
 			}
 		}
 		fs::create_directory(path / "content");
-		stream.open(path / "content" / "forum.cfdata");
-		if (stream.is_open())
-		{
-			stream << boards->size();
-			stream.close();
-		}
-		else
-		{
-			return false;
-		}
-		fs::create_directory(path / "matedata");
-		stream.open(path / "matedata" / "moderator.cfdata");
 		for (QObject *&qit : *boards)
 		{
 			// 保存版面信息
 			Board *bit = static_cast<Board*>(qit);
-			bit->save(path / "content" / to_string(bit->getID()));
-			if (stream.is_open())
+			fs::path boardPath = path / "content" / to_string(bit->getID());
+			fs::create_directory(boardPath);
+			boardStream.open(boardPath / "board.cfdata");
+			if (boardStream.is_open())
 			{
-				// 保存版主信息
-				bit->saveModerators(stream);
+				// 保存帖子信息
+				boardStream << *bit;
+				bit->savePosts(boardPath);
+				boardStream.close();
+			}
+			else
+			{
+				return false;
 			}
 		}
-		if (stream.is_open())
-		{
-			stream.close();
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return true;
 	}
 }
