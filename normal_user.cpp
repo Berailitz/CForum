@@ -4,6 +4,7 @@ namespace cforum
 {
 	NormalUser::NormalUser() : User()
 	{
+		type = NormalUserType;
 	}
 
 	NormalUser::NormalUser(const User *oldUser) : User(oldUser)
