@@ -420,8 +420,8 @@ namespace cforum
 	{
 		ofstream userStream;
 		ofstream boardStream;
-		fs::create_directory(path);
-		fs::create_directory(path / "user");
+		fs::remove_all(path);
+		fs::create_directories(path / "user");
 		for (const User *uit : *users)
 		{
 			// 保存用户信息
@@ -436,13 +436,13 @@ namespace cforum
 				return false;
 			}
 		}
-		fs::create_directory(path / "content");
+		fs::create_directories(path / "content");
 		for (QObject *&qit : *boards)
 		{
 			// 保存版面信息
 			Board *bit = static_cast<Board*>(qit);
 			fs::path boardPath = path / "content" / to_string(bit->getID());
-			fs::create_directory(boardPath);
+			fs::create_directories(boardPath);
 			boardStream.open(boardPath / "board.cfdata");
 			if (boardStream.is_open())
 			{

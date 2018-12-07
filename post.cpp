@@ -140,6 +140,7 @@ namespace cforum
 
 	bool Post::saveComments(const fs::path path) const
 	{
+		fs::create_directories(path);
 		for (QObject *&qit : *comments)
 		{
 			Comment *pit = static_cast<Comment*>(qit);
