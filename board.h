@@ -31,8 +31,8 @@ namespace cforum
         Q_PROPERTY(int id MEMBER id CONSTANT)
         Q_PROPERTY(QString name MEMBER name CONSTANT)
     public:
-        Board(const int id, const QString name);
-        Board(const fs::path path);
+		Board();
+		Board(const int id, const QString name);
         ~Board();
 		int getID() const;
 		QString getName() const;
@@ -44,10 +44,13 @@ namespace cforum
         bool isModerator(const int userID) const;
         bool setModerator(const int userID);
         bool removeModerator(const int userID);
-        bool load(const fs::path path);
-        bool save(const fs::path path) const;
-		void saveModerators(ostream &stream) const;
+		void load(istream &in);
+		void save(ostream &out) const;
+        bool loadPosts(const fs::path path);
+		bool savePosts(const fs::path path) const;
 		ModeratorSet* getModerators() const;
+		friend ostream & operator << (ostream &out, const Board &board);
+		friend istream & operator >> (istream &in, Board &board);
 	private:
 		int id; // primary_kay in a post, start from 1
 		QString name;

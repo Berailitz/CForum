@@ -2,6 +2,10 @@
 
 namespace cforum
 {
+	Moderator::Moderator() : NormalUser()
+	{
+	}
+
 	Moderator::Moderator(const NormalUser &oldNormalUser) : NormalUser(oldNormalUser)
 	{
 	}
@@ -43,7 +47,7 @@ namespace cforum
 
 	int Moderator::getBoardCounter() const
 	{
-		return boards->size();
+		return static_cast<int>(boards->size());
 	}
 
 	QString Moderator::getInfo() const
