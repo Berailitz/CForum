@@ -6,6 +6,11 @@ namespace cforum
     {
     }
 
+	bool Guest::isGuest() const
+	{
+		return true;
+	}
+
 	QString Guest::getInfo() const
 	{
 		return INFO_MESSAGE_GUEST;
