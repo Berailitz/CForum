@@ -7,6 +7,7 @@ Page {
     ColumnLayout {
         anchors.verticalCenter: parent.verticalCenter
         anchors.horizontalCenter: parent.horizontalCenter
+        width: 1080
         Text {
             text: qsTr("CForum")
             Layout.preferredWidth: 600
@@ -39,44 +40,45 @@ Page {
             echoMode: TextInput.Password
         }
 
-        Row {
-            id: row
-            Layout.fillWidth: true
+        RowLayout {
+            width: usernameTextField.width
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
-            RowLayout {
-                id: rowLayout
-                width: parent.width
-
-                Button {
-                    id: registerButton
-                    text: qsTr("注册")
-                    Layout.preferredWidth: 250
-                    font.family: "dengxian"
-                    font.pointSize: 40
-                    focusPolicy: Qt.NoFocus
-                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    onClicked: {
-                        forumController.addUser(usernameTextField.text, passwordTextField.text)
-                        usernameTextField.text = ""
-                        passwordTextField.text = ""
-                    }
-                }
-
-                Button {
-                    id: loginButton
-                    text: qsTr("登录")
-                    Layout.preferredWidth: 250
-                    font.family: "dengxian"
-                    font.pointSize: 40
-                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    onClicked: {
-                        forumController.login(usernameTextField.text, passwordTextField.text)
-                        usernameTextField.text = ""
-                        passwordTextField.text = ""
-                    }
+            Button {
+                text: qsTr("注册")
+                Layout.preferredWidth: 240
+                font.family: "dengxian"
+                font.pointSize: 40
+                focusPolicy: Qt.NoFocus
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                onClicked: {
+                    forumController.addUser(usernameTextField.text, passwordTextField.text)
+                    usernameTextField.text = ""
+                    passwordTextField.text = ""
                 }
             }
 
+            Button {
+                text: qsTr("匿名用户登录")
+                Layout.preferredWidth: 600
+                font.family: "dengxian"
+                font.pointSize: 40
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                onClicked: forumController.guestLogin()
+            }
+
+            Button {
+                text: qsTr("登录")
+                Layout.preferredWidth: 240
+                font.family: "dengxian"
+                font.pointSize: 40
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                onClicked: {
+                    forumController.login(usernameTextField.text, passwordTextField.text)
+                    usernameTextField.text = ""
+                    passwordTextField.text = ""
+                }
+            }
         }
     }
 }
