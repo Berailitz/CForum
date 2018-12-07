@@ -4,7 +4,7 @@ namespace cforum
 {
 	Admin::Admin() : User()
 	{
-
+		type = AdminType;
 	}
 
 	Admin::Admin(ifstream &stream) : User(stream, AdminType)

@@ -4,6 +4,7 @@ namespace cforum
 {
 	Moderator::Moderator() : NormalUser()
 	{
+		type = ModeratorType;
 	}
 
 	Moderator::Moderator(const NormalUser &oldNormalUser) : NormalUser(oldNormalUser)
