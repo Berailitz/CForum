@@ -7,11 +7,6 @@ namespace cforum
     {
     }
 
-    Post::Post(const fs::path path) : Comment(-1, "", -1)
-    {
-        load(path);
-    }
-
     Post::Post(const Post * oldPost) : Comment(*oldPost)
     {
         initialize(oldPost);
@@ -95,64 +90,72 @@ namespace cforum
 		}
 	}
 
-    bool Post::load(const fs::path path)
-    {
-        ifstream stream(path / "post.cfdata");
-        comments = new CommentList;
-        if (stream.is_open())
-        {
-			string rawString;
-            int commentCounter;
-            stream >> id;
-            stream >> commentCounter;
-			stream >> isRemoved;
-			stream >> authorID;
-			stream.get(); // 处理行末换行符
-			getline(stream, rawString);
-			time = QDateTime::fromString(QString::fromStdString(rawString), BACK_END_DATETIME_FORMAT);
-            getline(stream, rawString);
-			title = QString::fromStdString(rawString);
-            content = QString::fromStdString(string((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>()));
-            stream.close();
-            for (int i = 1; i <= commentCounter; i++)
-            {
-                comments->push_back(new Comment(path / (to_string(i) + ".cfdata")));
-				visibleCommentCounter++;
-            }
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
+	void Post::load(istream &in)
+	{
+		string rawString;
+		int commentCounter;
+		in >> id;
+		in >> commentCounter;
+		in >> isRemoved;
+		in >> authorID;
+		in.get(); // 处理行末换行符
+		getline(in, rawString);
+		time = QDateTime::fromString(QString::fromStdString(rawString), BACK_END_DATETIME_FORMAT);
+		getline(in, rawString);
+		title = QString::fromStdString(rawString);
+		content = QString::fromStdString(string(istreambuf_iterator<char>(in), {}));
+	}
 
-    bool Post::save(const fs::path path) const
-    {
-        fs::create_directory(path);
-        ofstream stream(path / "post.cfdata");
-        if (stream.is_open())
-        {
-            stream << id << endl;
-            stream << comments->size() << endl;
-			stream << isRemoved << endl;
-			stream << authorID << endl;
-			stream << time.toString(BACK_END_DATETIME_FORMAT).toStdString() << endl;
-            stream << title.toStdString() << endl;
-            stream << content.toStdString();
-            stream.close();
-            for (QObject *&qit : *comments)
-            {
-                Comment *it = static_cast<Post*>(qit);
-                it->save(path / (to_string(it->getID()) + ".cfdata"));
-            }
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
+	void Post::save(ostream & out) const
+	{
+		out << id << endl;
+		out << comments->size() << endl;
+		out << isRemoved << endl;
+		out << authorID << endl;
+		out << time.toString(BACK_END_DATETIME_FORMAT).toStdString() << endl;
+		out << title.toStdString() << endl;
+		out << content.toStdString();
+	}
+
+	bool Post::loadComments(const fs::path path)
+	{
+		int commentsCounter = count_files(path) - 1; // 除去post.cfdata
+		for (int i = 1; i <= commentsCounter; i++)
+		{
+			ifstream commentStream(path / (to_string(i) + ".cfdata"));
+			if (commentStream.is_open())
+			{
+				Comment *newComment = new Comment();
+				commentStream >> *newComment;
+				comments->push_back(newComment);
+				commentStream.close();
+			}
+			else
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
+	bool Post::saveComments(const fs::path path) const
+	{
+		for (QObject *&qit : *comments)
+		{
+			Comment *pit = static_cast<Comment*>(qit);
+			ofstream commentStream(path / (to_string(pit->getID()) + ".cfdata"));
+			if (commentStream.is_open())
+			{
+				commentStream << *pit;
+				commentStream.close();
+			}
+			else
+			{
+				return false;
+			}
+		}
+		return true;
+	}
 
     void Post::initialize(const Post * oldPost)
     {
@@ -165,4 +168,16 @@ namespace cforum
             comments->push_back(comment);
         }
     }
+
+	ostream & operator<<(ostream & out, const Post & post)
+	{
+		post.save(out);
+		return out;
+	}
+
+	istream & operator>>(istream & in, Post & post)
+	{
+		post.load(in);
+		return in;
+	}
 }

@@ -11,6 +11,7 @@ namespace cforum
 	{
         Q_OBJECT
 	public:
+		Moderator();
 		Moderator(const NormalUser &oldNormalUser);
 		Moderator(ifstream &stream);
 		void setModerator(const int boardID); // 设置为某个版面的版主
