@@ -109,6 +109,13 @@ namespace cforum
         }
 	}
 
+	void Controller::guestLogin()
+	{
+		qDebug() << LOGIN_SUCCESS_MESSAGE;
+		emit messageSent(LOGIN_SUCCESS_MESSAGE);
+		openForum();
+	}
+
 	void Controller::logout()
 	{
 		cforum->logout(user->getName());
@@ -311,6 +318,11 @@ namespace cforum
 	bool Controller::isAdmin() const
 	{
 		return user->isAdmin();
+	}
+
+	bool Controller::isGuest() const
+	{
+		return user->isGuest();
 	}
 
     bool Controller::isModerator() const
