@@ -7,8 +7,8 @@ import "ForumDialogs"
 
 Page {
     Layout.fillWidth: true
-    Layout.preferredWidth: 1080
-    Layout.preferredHeight: 720
+    Layout.preferredWidth: 1920
+    Layout.preferredHeight: 1080
     ColumnLayout{
         x: 0
         y: 0
@@ -21,6 +21,12 @@ Page {
             font.family: "dengxian"
             Layout.preferredHeight: 80
             Layout.fillWidth: true
+            Layout.preferredWidth: 1080
+            width: 1080
+            onTextChanged: {
+                width = 1080
+                wrapMode = Text.Wrap
+            }
         }
 
         Text {

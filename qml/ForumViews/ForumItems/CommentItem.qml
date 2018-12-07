@@ -8,9 +8,14 @@ RowLayout {
     height: model.isRemoved ? 0 : implicitHeight
     Text {
         text: qsTr("#") + model.id + " " + model.content + qsTr(" -- by: ") + forumController.getUsername(model.authorID) + ", " + model.time
-        Layout.preferredWidth: 960
         font.family: "dengxian"
         font.pointSize: 20
+        Layout.preferredWidth: 960
+        width: 960
+        onTextChanged: {
+            width = 960
+            wrapMode = Text.Wrap
+        }
     }
 
     Button {

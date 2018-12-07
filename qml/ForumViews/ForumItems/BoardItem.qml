@@ -7,9 +7,14 @@ RowLayout {
     Layout.preferredWidth: 1080
     Text {
         text: model.name
-        Layout.preferredWidth: 800
         font.family: "dengxian"
         font.pointSize: 20
+        Layout.preferredWidth: 800
+        width: 800
+        onTextChanged: {
+            width = 800
+            wrapMode = Text.Wrap
+        }
     }
 
     Button {

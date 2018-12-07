@@ -7,10 +7,10 @@ import "ForumDialogs"
 
 Page {
     Layout.fillWidth: true
-    Layout.preferredWidth: 1080
-    Layout.preferredHeight: 720
+    Layout.preferredWidth: 1920
+    Layout.preferredHeight: 1080
     Flickable {
-        width: parent.width
+        width: 1080
         height: parent.height
         anchors.top: parent.top
         anchors.topMargin: 0
@@ -24,8 +24,13 @@ Page {
                 font.pointSize: 20
                 font.family: "dengxian"
                 height: 60
-                width: 1080
                 Layout.fillWidth: true
+                Layout.preferredWidth: 1080
+                width: 1080
+                onTextChanged: {
+                    width = 1080
+                    wrapMode = Text.Wrap
+                }
             }
 
             ListView {
