@@ -4,6 +4,8 @@ import QtQuick.Layouts 1.3
 
 Page {
     Layout.fillWidth: true
+    Layout.preferredWidth: 1920
+    Layout.preferredHeight: 1080
     ColumnLayout {
         anchors.verticalCenter: parent.verticalCenter
         anchors.horizontalCenter: parent.horizontalCenter

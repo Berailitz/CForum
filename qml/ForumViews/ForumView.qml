@@ -7,11 +7,10 @@ import "ForumDialogs"
 
 Page {
     Layout.fillWidth: true
-    Layout.preferredWidth: 1080
-    Layout.preferredHeight: 720
+    Layout.preferredWidth: 1920
+    Layout.preferredHeight: 1080
     Flickable {
-        width: parent.width
-        height: parent.height
+        width: 1280
         anchors.top: parent.top
         anchors.topMargin: 0
         anchors.horizontalCenter: parent.horizontalCenter
@@ -21,12 +20,14 @@ Page {
             anchors.horizontalCenter: parent.horizontalCenter
             Text {
                 text: forumController.greeting
-                Layout.alignment: Qt.AlignLeft
                 font.pointSize: 20
                 font.family: "dengxian"
-                height: 80
-                width: 720
-                Layout.fillWidth: true
+                Layout.preferredWidth: 1080
+                width: 1080
+                onTextChanged: {
+                    width = 1080
+                    wrapMode = Text.Wrap
+                }
             }
 
             ListView {
