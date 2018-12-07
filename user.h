@@ -38,7 +38,7 @@ namespace cforum
         Q_OBJECT
 	public:
 		User(const int id = -1, const QString userName = "", const QString password = "", UserType type = GuestType);
-		User(ifstream &stream, UserType type);
+		User(istream &stream, UserType type);
         User(const User *oldUser);
         User(const User &oldUser);
 		virtual ~User();
@@ -49,9 +49,11 @@ namespace cforum
 		virtual bool isAdmin() const;
 		virtual bool isModerator(const int boardID = -1) const;
 		virtual QString getInfo() const = 0; // 获取个人信息，纯虚函数
-		void dump(ofstream &stream) const;
-        void load(ifstream &stream);
+		void dump(ostream &stream) const;
+		void load(istream &stream);
         void initialize(const User *oldUser);
+		friend ostream & operator << (ostream &out, const User &user);
+		friend istream & operator >> (istream &in, User &user);
 	protected:
 		int id; // primary_kay, ai, positive integer for typical user
 		UserType type;
