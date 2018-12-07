@@ -2,6 +2,10 @@
 
 namespace cforum
 {
+	NormalUser::NormalUser() : User()
+	{
+	}
+
 	NormalUser::NormalUser(const User *oldUser) : User(oldUser)
 	{
 	}
