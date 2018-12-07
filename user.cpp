@@ -35,6 +35,11 @@ namespace cforum
 		return false;
 	}
 
+	bool User::isGuest() const
+	{
+		return false;
+	}
+
 	bool User::isModerator(const int boardID) const
 	{
 		return false;

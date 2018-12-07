@@ -47,6 +47,7 @@ namespace cforum
 		bool login(const QString testPassword); // 登录
 		void logout(); // 注销
 		virtual bool isAdmin() const;
+		virtual bool isGuest() const;
 		virtual bool isModerator(const int boardID = -1) const;
 		virtual QString getInfo() const = 0; // 获取个人信息，纯虚函数
 		void dump(ostream &stream) const;
