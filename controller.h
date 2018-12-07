@@ -34,6 +34,7 @@ namespace cforum
         Q_PROPERTY(QString postTitle READ getPostTitle NOTIFY postOpened)
         Q_PROPERTY(QString postContent READ getPostContent NOTIFY postOpened)
         Q_PROPERTY(bool isAdmin READ isAdmin NOTIFY forumOpened)
+		Q_PROPERTY(bool isGuest READ isGuest NOTIFY boardOpened)
 		Q_PROPERTY(bool isModerator READ isModerator NOTIFY boardOpened)
 		Q_PROPERTY(int userID READ getUserID NOTIFY forumOpened)
 	public:
@@ -44,7 +45,8 @@ namespace cforum
 		QString getPostTitle() const;
         QString getPostContent() const;
 		int getUserID() const;
-        bool isAdmin() const;
+		bool isAdmin() const;
+		bool isGuest() const;
 		bool isModerator() const;
         void refreshViews(); // 刷新UI
     Q_SIGNALS:
@@ -56,6 +58,7 @@ namespace cforum
 		void initializeDatabase();
         void addUser(const QString userName, const QString password); // 注册
         void login(const QString userName, const QString password);
+		void guestLogin();
 		void logout();
         void setModerator(const QString userName); // 将用户设为当前版面的版主之一
 		void removeModerator(const QString userName); // 将用户从当前版面的版主列表中移除
