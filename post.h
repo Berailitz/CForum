@@ -15,8 +15,7 @@ namespace cforum
         Q_PROPERTY(QString title MEMBER title CONSTANT)
 		Q_PROPERTY(bool canRemove READ canRemove NOTIFY commentsChanged)
     public:
-        Post(const int id, QString content, const int authorID, QString title);
-        Post(const fs::path path);
+        Post(const int id = -1, QString content = "", const int authorID = -1, QString title = "");
         Post(const Post *oldPost);
         Post(const Post &oldPost);
         ~Post();
@@ -27,9 +26,13 @@ namespace cforum
 		void removeContent();
         bool remove(const int commentID); // commentID < comments->size()，删除回复贴
 		Comment *getCommentByID(const int commentID);
-        bool load(const fs::path path);
-        bool save(const fs::path path) const;
-        void initialize(const Post *oldPost);
+		void load(istream &in);
+		void save(ostream &out) const;
+		bool loadComments(const fs::path path);
+		bool saveComments(const fs::path path) const;
+		void initialize(const Post *oldPost);
+		friend ostream & operator << (ostream &out, const Post &post);
+		friend istream & operator >> (istream &in, Post &post);
 	Q_SIGNALS:
 		void commentsChanged();
 	private:

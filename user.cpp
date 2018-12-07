@@ -6,7 +6,7 @@ namespace cforum
 	{
 	}
 
-    User::User(ifstream &stream, UserType type) : QObject(), type(type)
+	User::User(istream &stream, UserType type) : QObject(), type(type)
 	{
 		load(stream);
 	}
@@ -64,7 +64,7 @@ namespace cforum
 		lastLogoutTime = QDateTime::currentDateTime();
 	}
 
-	void User::load(ifstream &stream)
+	void User::load(istream &stream)
 	{
 		string tempString;
 		stream >> id;
@@ -94,7 +94,7 @@ namespace cforum
 		return text;
 	}
 
-	void User::dump(ofstream &stream) const
+	void User::dump(ostream &stream) const
 	{
 		stream << type << endl;
 		stream << id << endl;
@@ -102,5 +102,17 @@ namespace cforum
 		stream << lastLogoutTime.toString(DATETIME_FORMAT).toStdString() << endl;
 		stream << userName.toStdString() << endl;
 		stream << password.toStdString() << endl;
+	}
+
+	ostream & operator<<(ostream & out, const User & user)
+	{
+		user.dump(out);
+		return out;
+	}
+
+	istream & operator>>(istream & in, User & user)
+	{
+		user.load(in);
+		return in;
 	}
 }

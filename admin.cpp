@@ -2,6 +2,11 @@
 
 namespace cforum
 {
+	Admin::Admin() : User()
+	{
+
+	}
+
 	Admin::Admin(ifstream &stream) : User(stream, AdminType)
 	{
 	}
