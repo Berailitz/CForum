@@ -140,18 +140,18 @@ namespace cforum
 		}
 	}
 
-	bool Board::loadPosts(const fs::path path)
+	bool Board::loadPosts(const fs::path boardPath)
 	{
-		int postsCounter = count_files(path) - 1; // 除去board.cfdata
+		int postsCounter = count_files(boardPath) - 1; // 除去post.cfdata
 		for (int i = 1; i <= postsCounter; i++)
 		{
-			fs::path boardPath = path / to_string(i);
-			ifstream postStream(boardPath / "post.cfdata");
+			fs::path postPath = boardPath / to_string(i);
+			ifstream postStream(postPath / "post.cfdata");
 			if (postStream.is_open())
 			{
 				Post *newPost = new Post();
 				postStream >> *newPost;
-				newPost->loadComments(boardPath);
+				newPost->loadComments(postPath);
 				posts->push_back(newPost);
 				postStream.close();
 			}
@@ -163,17 +163,19 @@ namespace cforum
 		return true;
 	}
 
-	bool Board::savePosts(const fs::path path) const
+	bool Board::savePosts(const fs::path boardPath) const
 	{
+		fs::create_directories(boardPath);
 		for (QObject *&qit : *posts)
 		{
 			Post *pit = static_cast<Post*>(qit);
-			fs::path boardPath = path / to_string(pit->getID());
-			ofstream postStream(boardPath / "post.cfdata");
+			fs::path postPath = boardPath / to_string(pit->getID());
+			fs::create_directories(postPath);
+			ofstream postStream(postPath / "post.cfdata");
 			if (postStream.is_open())
 			{
 				postStream << *pit;
-				pit->saveComments(boardPath);
+				pit->saveComments(postPath);
 				postStream.close();
 			}
 			else

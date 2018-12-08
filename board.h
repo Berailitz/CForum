@@ -46,8 +46,8 @@ namespace cforum
         bool removeModerator(const int userID);
 		void load(istream &in);
 		void save(ostream &out) const;
-        bool loadPosts(const fs::path path);
-		bool savePosts(const fs::path path) const;
+        bool loadPosts(const fs::path boardPath);
+		bool savePosts(const fs::path boardPath) const;
 		ModeratorSet* getModerators() const;
 		friend ostream & operator << (ostream &out, const Board &board);
 		friend istream & operator >> (istream &in, Board &board);
