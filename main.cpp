@@ -17,21 +17,13 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_UseOpenGLES);
     QCoreApplication::setAttribute(Qt::AA_DisableHighDpiScaling);
     QQmlApplicationEngine engine;
-	cforum::Controller *forumController;
-	forumController = new cforum::Controller(engine);
+	cforum::Controller *forumController = new cforum::Controller(engine);
+	engine.rootContext()->setContextProperty("forumController", QVariant::fromValue(&*forumController));
 	QObject::connect(&*errorHandler, &cforum::ErrorHandler::errorRaised, &*forumController, &cforum::Controller::errorRaised);
+	engine.load(QUrl(QString::fromUtf8("qrc:/qml/main.qml")));
 	doLoad = forumController->load("data");
-	if (doLoad)
-	{
-		forumController->refreshViews();
-		engine.load(QUrl(QString::fromUtf8("qrc:/qml/main.qml")));
-		returnValue = app.exec();
-		forumController->save("data");
-	}
-	else
-	{
-		qDebug() << "Cannot load data";
-		returnValue = 1;
-	}
+	forumController->refreshViews();
+	returnValue = app.exec();
+	forumController->save("data");
 	return returnValue;
 }
