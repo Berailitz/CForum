@@ -49,13 +49,13 @@ namespace cforum
 		bool isGuest() const;
 		bool isModerator() const;
         void refreshViews(); // 刷新UI
-		void raiseError(const QString message);
     Q_SIGNALS:
         void forumOpened();
         void boardOpened();
         void postOpened();
         void messageSent(QString message);
     public Q_SLOTS:
+		void errorRaised(const QString message);
 		void initializeDatabase();
         void addUser(const QString userName, const QString password); // 注册
         void login(const QString userName, const QString password);
