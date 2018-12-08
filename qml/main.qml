@@ -32,8 +32,16 @@ ApplicationWindow {
             target: forumController
             onMessageSent: {
                 console.log(message)
-                messageText.text = message
-                messagePopupAnimation.stop()
+                if (messageText.text === "")
+                {
+                    messageText.text = message
+                }
+                else
+                {
+                    var oldMessage = messageText.text
+                    messagePopupAnimation.stop()
+                    messageText.text = oldMessage + "\n" + message
+                }
                 messagePopup.opacity = 1
                 messagePopup.open()
             }
@@ -64,6 +72,10 @@ ApplicationWindow {
             to: 0
             duration: 1500
             onStopped: messagePopup.close()
+        }
+
+        onClosed: {
+            messageText.text = ""
         }
     }
 }
