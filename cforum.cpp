@@ -376,6 +376,7 @@ namespace cforum
 					break;
 				case GuestType:
 					// TODO throw exception
+					raiseError(INVALID_USER_TYPE_MESSAGE);
 					break;
 				case NormalUserType:
 					newUser = new NormalUser();
