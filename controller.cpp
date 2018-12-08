@@ -307,15 +307,19 @@ namespace cforum
 
     bool Controller::load(const QString path)
 	{
+		BoardList emptyBoardList;
+		engine.rootContext()->setContextProperty("boardListModel", QVariant::fromValue(emptyBoardList));
 		emit messageSent(LOADING_DATABASE_MESSAGE);
 		if (cforum->load(path.toStdString()))
 		{
 			emit messageSent(LOADING_DATA_SUCCESS_MESSAGE);
+			refreshViews();
 			return true;
 		}
 		else
 		{
 			errorRaised(ERROR_LOADING_DATA_MESSAGE);
+			refreshViews();
 			return false;
 		}
 	}
