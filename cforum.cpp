@@ -32,8 +32,11 @@ namespace cforum
 	{
 		if (admins)
 		{
-			delete admins;
-			admins = nullptr;
+			admins->clear();
+		}
+		else
+		{
+			admins = new UserSet;
 		}
 		if (boards)
 		{
@@ -41,8 +44,11 @@ namespace cforum
 			{
 				delete static_cast<Board*>(qit);
 			}
-			delete boards;
-			boards = nullptr;
+			boards->clear();
+		}
+		else
+		{
+			boards = new BoardList;
 		}
 		if (users)
 		{
@@ -50,12 +56,12 @@ namespace cforum
 			{
 				delete uit;
 			}
-			delete users;
-			users = nullptr;
+			users->clear();
 		}
-		boards = new BoardList;
-		users = new UserList;
-		admins = new UserSet;
+		else
+		{
+			users = new UserList;
+		}
 	}
 
 	NormalUser *CForum::addNormalUser(const QString userName, const QString password)
