@@ -4,8 +4,6 @@
 #include <QObject>
 #include <QString>
 
-#include "cfcommon.h"
-
 namespace cforum
 {
 	class ErrorHandler : public QObject
@@ -19,6 +17,6 @@ namespace cforum
 	};
 }
 
-extern cforum::ErrorHandler errorHandler;
+extern cforum::ErrorHandler *errorHandler;
 
 #endif // CFORUM_ERROR_HANDLER_H
