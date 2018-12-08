@@ -307,6 +307,7 @@ namespace cforum
 
     bool Controller::load(const QString path)
 	{
+		emit messageSent(LOADING_DATABASE_MESSAGE);
 		if (cforum->load(path.toStdString()))
 		{
 			emit messageSent(LOADING_DATA_SUCCESS_MESSAGE);
@@ -321,6 +322,7 @@ namespace cforum
 
 	bool Controller::save(const QString path)
 	{
+		emit messageSent(SAVING_DATABASE_MESSAGE);
 		if (cforum->save(path.toStdString()))
 		{
 			emit messageSent(SAVING_DATA_SUCCESS_MESSAGE);
