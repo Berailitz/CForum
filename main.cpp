@@ -8,8 +8,6 @@
 
 using namespace std;
 
-cforum::ErrorHandler errorHandler;
-
 int main(int argc, char *argv[])
 {
 	// _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF | _CRTDBG_LEAK_CHECK_DF);
@@ -21,7 +19,7 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
 	cforum::Controller *forumController;
 	forumController = new cforum::Controller(engine);
-	QObject::connect(&errorHandler, &cforum::ErrorHandler::errorRaised, &*forumController, &cforum::Controller::errorRaised);
+	QObject::connect(&*errorHandler, &cforum::ErrorHandler::errorRaised, &*forumController, &cforum::Controller::errorRaised);
 	doLoad = forumController->load("data");
 	if (doLoad)
 	{

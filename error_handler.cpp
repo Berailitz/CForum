@@ -11,3 +11,5 @@ namespace cforum
 		emit errorRaised(message);
 	}
 }
+
+cforum::ErrorHandler *errorHandler = new cforum::ErrorHandler();
