@@ -17,6 +17,7 @@
 #include "moderator.h"
 #include "guest.h"
 #include "admin.h"
+#include "error_handler.h"
 
 
 namespace cforum
@@ -27,6 +28,7 @@ namespace cforum
 
 	const QString standardRegular = "^[ \\w]+$";
 	const QString inlineRegular = "^[^\\n]+$";
+	const QString INVALID_USER_TYPE_MESSAGE = QString::fromUtf8("用户类型不合法");
 
     class CForum : public QObject
     {

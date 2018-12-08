@@ -341,6 +341,11 @@ namespace cforum
         qDebug() << "Refresh: " << cforum->getBoards()->size() << " (ALL) Boards ";
 	}
 
+	void Controller::raiseError(const QString message)
+	{
+		emit messageSent(message);
+	}
+
 	void Controller::openForum()
 	{
 		emit forumOpened();
