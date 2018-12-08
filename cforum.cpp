@@ -375,7 +375,6 @@ namespace cforum
 					users->push_back(newUser);
 					break;
 				case GuestType:
-					// TODO throw exception
 					errorHandler->raiseError(INVALID_USER_TYPE_MESSAGE);
 					break;
 				case NormalUserType:
@@ -393,6 +392,7 @@ namespace cforum
 			}
 			else
 			{
+				errorHandler->raiseError(DATABASE_ERROR_READING_MESSAGE);
 				return false;
 			}
 		}
@@ -411,10 +411,19 @@ namespace cforum
 			}
 			else
 			{
+				errorHandler->raiseError(DATABASE_ERROR_READING_MESSAGE);
 				return false;
 			}
 		}
-		return true;
+		// 检查论坛数据有效性
+		if (!checkData())
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
 	}
 
 	bool CForum::save(const fs::path path) const
@@ -434,6 +443,7 @@ namespace cforum
 			}
 			else
 			{
+				errorHandler->raiseError(DATABASE_ERROR_WRITING_MESSAGE);
 				return false;
 			}
 		}
@@ -454,7 +464,50 @@ namespace cforum
 			}
 			else
 			{
+				errorHandler->raiseError(DATABASE_ERROR_WRITING_MESSAGE);
 				return false;
+			}
+		}
+		return true;
+	}
+
+	bool CForum::checkData()
+	{
+		for (QObject *&qit : *boards)
+		{
+			// 检查版面信息
+			Board *bit = static_cast<Board*>(qit);
+			// 检查版主信息
+			for (int moderatorID : *bit->getModerators())
+			{
+				User *user = getUserByID(moderatorID);
+				if (!user || !user->isModerator())
+				{
+					errorHandler->raiseError(INVALID_MODERATOR_ID_MESSAGE);
+					return false;
+				}
+			}
+			for (QObject *&qit : *bit->getPosts())
+			{
+				Post *pit = static_cast<Post*>(qit);
+				// 检查主题帖作者
+				User *postAuthor = getUserByID(pit->getAuthorID());
+				if (!postAuthor || postAuthor->isAdmin())
+				{
+					errorHandler->raiseError(INVALID_POST_AUTHOR_ID_MESSAGE);
+					return false;
+				}
+				// 检查回复帖作者
+				for (QObject *&qit : *pit->getComments())
+				{
+					Comment *cit = static_cast<Comment*>(qit);
+					User *commentAuthor = getUserByID(cit->getAuthorID());
+					if (!commentAuthor || commentAuthor->isAdmin())
+					{
+						errorHandler->raiseError(INVALID_COMMENT_AUTHOR_ID_MESSAGE);
+						return false;
+					}
+				}
 			}
 		}
 		return true;
