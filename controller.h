@@ -25,6 +25,10 @@ namespace cforum
 	const QString MODERATOR_LIST_PREFIX_MESSAGE = QString::fromUtf8("，版主为：");
 	const QString NO_MODERATOR_MESSGAE = QString::fromUtf8("，本版面没有版主");
 	const QString LIST_SEPARATER = QString::fromUtf8(", ");
+	const QString ERROR_LOADING_DATA_MESSAGE = QString::fromUtf8("数据库加载异常");
+	const QString LOADING_DATA_SUCCESS_MESSAGE = QString::fromUtf8("数据库加载成功");
+	const QString ERROR_SAVING_DATA_MESSAGE = QString::fromUtf8("数据库保存异常");
+	const QString SAVING_DATA_SUCCESS_MESSAGE = QString::fromUtf8("数据库保存成功");
 
     class Controller : public QObject
     {
@@ -74,7 +78,7 @@ namespace cforum
         void addComment(const QString content); // 发回复帖
         void removeComment(const int commentID); // 删除回复帖
 		bool load(const QString path);
-		bool save(const QString path) const;
+		bool save(const QString path);
 	private:
         QQmlApplicationEngine &engine;
 		CForum *cforum;
