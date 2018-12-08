@@ -21,9 +21,9 @@ int main(int argc, char *argv[])
 	engine.rootContext()->setContextProperty("forumController", QVariant::fromValue(&*forumController));
 	QObject::connect(&*errorHandler, &cforum::ErrorHandler::errorRaised, &*forumController, &cforum::Controller::errorRaised);
 	engine.load(QUrl(QString::fromUtf8("qrc:/qml/main.qml")));
-	doLoad = forumController->load("data");
+	doLoad = forumController->load();
 	forumController->refreshViews();
 	returnValue = app.exec();
-	forumController->save("data");
+	forumController->save();
 	return returnValue;
 }
