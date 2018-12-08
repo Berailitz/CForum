@@ -116,13 +116,13 @@ namespace cforum
 		out << content.toStdString();
 	}
 
-	bool Post::loadComments(const fs::path path)
+	bool Post::loadComments(const fs::path postPath)
 	{
 		visibleCommentCounter = 0;
-		int commentsCounter = count_files(path) - 1; // 除去post.cfdata
+		int commentsCounter = count_files(postPath) - 1; // 除去post.cfdata
 		for (int i = 1; i <= commentsCounter; i++)
 		{
-			ifstream commentStream(path / (to_string(i) + ".cfdata"));
+			ifstream commentStream(postPath / (to_string(i) + ".cfdata"));
 			if (commentStream.is_open())
 			{
 				Comment *newComment = new Comment();
@@ -142,13 +142,13 @@ namespace cforum
 		return true;
 	}
 
-	bool Post::saveComments(const fs::path path) const
+	bool Post::saveComments(const fs::path postPath) const
 	{
-		fs::create_directories(path);
+		fs::create_directories(postPath);
 		for (QObject *&qit : *comments)
 		{
 			Comment *pit = static_cast<Comment*>(qit);
-			ofstream commentStream(path / (to_string(pit->getID()) + ".cfdata"));
+			ofstream commentStream(postPath / (to_string(pit->getID()) + ".cfdata"));
 			if (commentStream.is_open())
 			{
 				commentStream << *pit;
