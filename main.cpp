@@ -8,7 +8,7 @@
 
 using namespace std;
 
-cforum::Controller *forumController;
+cforum::ErrorHandler errorHandler;
 
 int main(int argc, char *argv[])
 {
@@ -18,7 +18,9 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
     QCoreApplication::setAttribute(Qt::AA_UseOpenGLES);
     QQmlApplicationEngine engine;
+	cforum::Controller *forumController;
 	forumController = new cforum::Controller(engine);
+	QObject::connect(&errorHandler, &cforum::ErrorHandler::errorRaised, &*forumController, &cforum::Controller::errorRaised);
 	doLoad = forumController->load("data");
 	if (doLoad)
 	{
