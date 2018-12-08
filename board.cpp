@@ -19,6 +19,8 @@ namespace cforum
 		{
 			delete static_cast<Post*>(qit);
 		}
+		delete posts;
+		delete moderators;
     }
 
 	int Board::getID() const

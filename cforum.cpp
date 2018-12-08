@@ -20,6 +20,10 @@ namespace cforum
 			delete static_cast<Board*>(qit);
 		}
 		delete boards;
+		for (User *&uit : *users)
+		{
+			delete uit;
+		}
 		delete users;
 		delete admins;
 	}
@@ -33,6 +37,10 @@ namespace cforum
 		}
 		if (boards)
 		{
+			for (QObject *&qit : *boards)
+			{
+				delete static_cast<Board*>(qit);
+			}
 			delete boards;
 			boards = nullptr;
 		}
