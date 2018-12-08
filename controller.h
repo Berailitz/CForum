@@ -3,6 +3,7 @@
 
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QUrl>
 #include "cforum.h"
 
 namespace cforum
@@ -25,7 +26,7 @@ namespace cforum
 	const QString MODERATOR_LIST_PREFIX_MESSAGE = QString::fromUtf8("，版主为：");
 	const QString NO_MODERATOR_MESSGAE = QString::fromUtf8("，本版面没有版主");
 	const QString LIST_SEPARATER = QString::fromUtf8(", ");
-	const QString DATABASE_PATH = QString::fromUtf8("data");
+	const QUrl DATABASE_PATH = QUrl::fromLocalFile("data");
 	const QString LOADING_DATABASE_MESSAGE = QString::fromUtf8("加载中");
 	const QString SAVING_DATABASE_MESSAGE = QString::fromUtf8("保存中");
 	const QString ERROR_LOADING_DATA_MESSAGE = QString::fromUtf8("数据库加载异常");
@@ -80,8 +81,8 @@ namespace cforum
         void removePost(const int postID); // 删除主题帖
         void addComment(const QString content); // 发回复帖
         void removeComment(const int commentID); // 删除回复帖
-		bool load(const QString path = DATABASE_PATH);
-		bool save(const QString path = DATABASE_PATH);
+		bool load(const QUrl path = DATABASE_PATH);
+		bool save(const QUrl path = DATABASE_PATH);
 	private:
         QQmlApplicationEngine &engine;
 		CForum *cforum;
