@@ -43,7 +43,6 @@ namespace cforum
 		Board *addBoard(const QString boardName);
 		BoardList* getBoards() const;
         bool isAdmin(const int userID) const; // 用户不存在则返回假
-		bool setAdmin(const int userID); // 用户不存在则返回假
 		bool setModerator(const int boardID, const int userID); // 用户或版面不存在则返回假
 		bool removeModerator(const int boardID, const int userID); // 版主或版面不存在则返回假
 		Post *addPost(const int boardID, const QString title, const QString content, const int userID);
@@ -56,7 +55,6 @@ namespace cforum
         bool load(const fs::path path);
         bool save(const fs::path path) const;
     private:
-		UserSet* admins = nullptr;
 		BoardList* boards = nullptr;
 		UserList* users = nullptr;
     };

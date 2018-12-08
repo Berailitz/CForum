@@ -25,19 +25,10 @@ namespace cforum
 			delete uit;
 		}
 		delete users;
-		delete admins;
 	}
 
 	void CForum::initializeDatabase()
 	{
-		if (admins)
-		{
-			admins->clear();
-		}
-		else
-		{
-			admins = new UserSet;
-		}
 		if (boards)
 		{
 			for (QObject *&qit : *boards)
@@ -149,21 +140,8 @@ namespace cforum
 
 	bool CForum::isAdmin(const int userID) const
     {
-        return admins->find(userID) != admins->end();
+        return getUserByID(userID)->isAdmin();
     }
-
-	bool CForum::setAdmin(const int userID)
-	{
-		if (getUserByID(userID))
-		{
-			admins->insert(userID);
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
 
 	bool CForum::setModerator(const int boardID, const int userID)
 	{
@@ -378,7 +356,6 @@ namespace cforum
 		int userCounter = 0;
 		users = new UserList;
 		boards = new BoardList;
-		admins = new UserSet;
 		stream.open(path / "user" / "user.cfdata");
 		if (stream.is_open())
 		{
@@ -401,7 +378,6 @@ namespace cforum
 					case AdminType:
 						newUser = new Admin(stream);
 						users->push_back(newUser);
-						setAdmin(newUser->getID());
 						break;
 					case GuestType:
 						// TODO throw exception
