@@ -309,7 +309,7 @@ namespace cforum
 	{
 		if (cforum->load(path.toStdString()))
 		{
-			errorRaised(LOADING_DATA_SUCCESS_MESSAGE);
+			emit messageSent(LOADING_DATA_SUCCESS_MESSAGE);
 			return true;
 		}
 		else
@@ -323,7 +323,7 @@ namespace cforum
 	{
 		if (cforum->save(path.toStdString()))
 		{
-			errorRaised(SAVING_DATA_SUCCESS_MESSAGE);
+			emit messageSent(SAVING_DATA_SUCCESS_MESSAGE);
 			return true;
 		}
 		else
