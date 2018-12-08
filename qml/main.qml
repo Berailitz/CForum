@@ -71,7 +71,10 @@ ApplicationWindow {
             from: 1
             to: 0
             duration: 1500
-            onStopped: messageText.text = ""
+            onStopped: {
+                messagePopup.close()
+                messageText.text = ""
+            }
         }
     }
 }
