@@ -43,7 +43,6 @@ Page {
         }
 
         RowLayout {
-            width: usernameTextField.width
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
             Button {
@@ -80,6 +79,29 @@ Page {
                     usernameTextField.text = ""
                     passwordTextField.text = ""
                 }
+            }
+        }
+
+        RowLayout {
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+            Button {
+                text: qsTr("加载数据库")
+                Layout.preferredWidth: 400
+                font.family: "dengxian"
+                font.pointSize: 40
+                focusPolicy: Qt.NoFocus
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                onClicked: forumController.load()
+            }
+
+            Button {
+                text: qsTr("保存数据库")
+                Layout.preferredWidth: 400
+                font.family: "dengxian"
+                font.pointSize: 40
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                onClicked: forumController.save()
             }
         }
     }
