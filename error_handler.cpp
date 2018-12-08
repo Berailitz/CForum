@@ -2,8 +2,12 @@
 
 namespace cforum
 {
-	void cforum::raiseError(const QString message)
+	ErrorHandler::ErrorHandler() : QObject()
 	{
-		forumController->raiseError(message);
+	}
+
+	void ErrorHandler::raiseError(const QString message)
+	{
+		emit errorRaised(message);
 	}
 }
