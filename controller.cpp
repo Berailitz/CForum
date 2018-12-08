@@ -322,8 +322,6 @@ namespace cforum
 	{
 		// 刷新UI
 		QQmlContext *ctxt = engine.rootContext();
-		ctxt->setContextProperty("postListModel", QVariant::fromValue(*defaultBoard->getPosts()));
-		ctxt->setContextProperty("commentListModel", QVariant::fromValue(*defaultPost->getComments()));
         ctxt->setContextProperty("forumController", QVariant::fromValue(&*this));
 		ctxt->setContextProperty("boardListModel", QVariant::fromValue(*cforum->getBoards()));
         ctxt->setContextProperty("postListModel", QVariant::fromValue(*board->getPosts()));
