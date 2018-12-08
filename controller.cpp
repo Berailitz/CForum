@@ -307,12 +307,30 @@ namespace cforum
 
     bool Controller::load(const QString path)
 	{
-        return cforum->load(path.toStdString());
+		if (cforum->load(path.toStdString()))
+		{
+			errorRaised(LOADING_DATA_SUCCESS_MESSAGE);
+			return true;
+		}
+		else
+		{
+			errorRaised(ERROR_LOADING_DATA_MESSAGE);
+			return false;
+		}
 	}
 
-	bool Controller::save(const QString path) const
+	bool Controller::save(const QString path)
 	{
-        return cforum->save(path.toStdString());
+		if (cforum->save(path.toStdString()))
+		{
+			errorRaised(SAVING_DATA_SUCCESS_MESSAGE);
+			return true;
+		}
+		else
+		{
+			errorRaised(ERROR_SAVING_DATA_MESSAGE);
+			return false;
+		}
 	}
 
 	bool Controller::isAdmin() const
