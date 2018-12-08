@@ -4,8 +4,11 @@
 
 #include "controller.h"
 #include "cfcommon.h"
+#include "error_handler.h"
 
 using namespace std;
+
+cforum::Controller *forumController;
 
 int main(int argc, char *argv[])
 {
@@ -15,22 +18,14 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
     QCoreApplication::setAttribute(Qt::AA_UseOpenGLES);
     QQmlApplicationEngine engine;
-    cforum::Controller forumController(engine);
-	doLoad = forumController.load("data");
-	/*forumController.initializeDatabase();
-	doLoad = true;*/
-    //forumController.addUser("admin", "admin");
-    //forumController.addBoard("TestBoard");
-    //forumController.addPost("Test post", "This is content.");
-    //forumController.addComment("Comment 1");
-    //forumController.setModerator("admin");
-	//forumController.save("data");
+	forumController = new cforum::Controller(engine);
+	doLoad = forumController->load("data");
 	if (doLoad)
 	{
-		forumController.refreshViews();
+		forumController->refreshViews();
 		engine.load(QUrl(QString::fromUtf8("qrc:/qml/main.qml")));
 		returnValue = app.exec();
-		forumController.save("data");
+		forumController->save("data");
 	}
 	else
 	{

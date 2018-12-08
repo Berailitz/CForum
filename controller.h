@@ -49,6 +49,7 @@ namespace cforum
 		bool isGuest() const;
 		bool isModerator() const;
         void refreshViews(); // 刷新UI
+		void raiseError(const QString message);
     Q_SIGNALS:
         void forumOpened();
         void boardOpened();
