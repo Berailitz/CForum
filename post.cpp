@@ -119,6 +119,7 @@ namespace cforum
 
 	bool Post::loadComments(const fs::path path)
 	{
+		visibleCommentCounter = 0;
 		int commentsCounter = count_files(path) - 1; // 除去post.cfdata
 		for (int i = 1; i <= commentsCounter; i++)
 		{
@@ -128,6 +129,10 @@ namespace cforum
 				Comment *newComment = new Comment();
 				commentStream >> *newComment;
 				comments->push_back(newComment);
+				if (newComment->canRemove())
+				{
+					visibleCommentCounter++;
+				}
 				commentStream.close();
 			}
 			else
