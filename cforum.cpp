@@ -354,8 +354,7 @@ namespace cforum
 		string raw_string;
 		int userCounter = count_files(path / "user");
 		int boardCounter = count_files(path / "content");
-		users = new UserList;
-		boards = new BoardList;
+		initializeDatabase();
 		for (int userID = 1; userID <= userCounter; userID++)
 		{
 			// 读取用户信息
