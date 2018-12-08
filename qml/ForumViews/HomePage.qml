@@ -88,7 +88,7 @@ Page {
 
             Button {
                 text: qsTr("加载数据库")
-                Layout.preferredWidth: 400
+                Layout.preferredWidth: 500
                 font.family: "dengxian"
                 font.pointSize: 40
                 focusPolicy: Qt.NoFocus
@@ -98,7 +98,7 @@ Page {
 
             Button {
                 text: qsTr("保存数据库")
-                Layout.preferredWidth: 400
+                Layout.preferredWidth: 500
                 font.family: "dengxian"
                 font.pointSize: 40
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
