@@ -28,8 +28,8 @@ namespace cforum
 		Comment *getCommentByID(const int commentID);
 		void load(istream &in);
 		void save(ostream &out) const;
-		bool loadComments(const fs::path path);
-		bool saveComments(const fs::path path) const;
+		bool loadComments(const fs::path postPath);
+		bool saveComments(const fs::path postPath) const;
 		void initialize(const Post *oldPost);
 		friend ostream & operator << (ostream &out, const Post &post);
 		friend istream & operator >> (istream &in, Post &post);
