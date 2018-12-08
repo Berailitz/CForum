@@ -305,12 +305,12 @@ namespace cforum
 		}
 	}
 
-    bool Controller::load(const QString path)
+    bool Controller::load(const QUrl path)
 	{
 		BoardList emptyBoardList;
 		engine.rootContext()->setContextProperty("boardListModel", QVariant::fromValue(emptyBoardList));
 		emit messageSent(LOADING_DATABASE_MESSAGE);
-		if (cforum->load(path.toStdString()))
+		if (cforum->load(path.toLocalFile().toStdString()))
 		{
 			emit messageSent(LOADING_DATA_SUCCESS_MESSAGE);
 			refreshViews();
@@ -324,10 +324,10 @@ namespace cforum
 		}
 	}
 
-	bool Controller::save(const QString path)
+	bool Controller::save(const QUrl path)
 	{
 		emit messageSent(SAVING_DATABASE_MESSAGE);
-		if (cforum->save(path.toStdString()))
+		if (cforum->save(path.toLocalFile().toStdString()))
 		{
 			emit messageSent(SAVING_DATA_SUCCESS_MESSAGE);
 			return true;

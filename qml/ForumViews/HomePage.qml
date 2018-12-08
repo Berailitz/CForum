@@ -1,3 +1,4 @@
+import Qt.labs.platform 1.0
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
@@ -92,7 +93,7 @@ Page {
                 font.pointSize: 40
                 focusPolicy: Qt.NoFocus
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                onClicked: forumController.load()
+                onClicked: loadFolderDialog.open()
             }
 
             Button {
@@ -101,9 +102,21 @@ Page {
                 font.family: "dengxian"
                 font.pointSize: 40
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                onClicked: forumController.save()
+                onClicked: saveFolderDialog.open()
             }
         }
+    }
+
+    FolderDialog {
+        id: loadFolderDialog
+        folder: "."
+        onAccepted: forumController.load(currentFolder)
+    }
+
+    FolderDialog {
+        id: saveFolderDialog
+        folder: "."
+        onAccepted: forumController.save(currentFolder)
     }
 }
 
