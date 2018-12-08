@@ -25,7 +25,8 @@ SOURCES += \
     guest.cpp \
     moderator.cpp \
     normal_user.cpp \
-    post.cpp
+    post.cpp \
+    error_handler.cpp
 
 RESOURCES += qml.qrc
 
@@ -51,4 +52,5 @@ HEADERS += \
     guest.h \
     moderator.h \
     normal_user.h \
-    post.h
+    post.h \
+    error_handler.h
