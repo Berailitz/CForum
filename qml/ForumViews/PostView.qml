@@ -91,8 +91,6 @@ Page {
 
     Connections {
         target: appWindow
-        onAfterSynchronizing: {
-            commentListView.height = commentListView.contentHeight
-        }
+        onAfterSynchronizing: commentListView.height = commentListView.contentHeight
     }
 }
