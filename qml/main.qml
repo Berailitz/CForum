@@ -34,14 +34,10 @@ ApplicationWindow {
                 console.log(message)
                 if (messagePopupAnimation.running)
                 {
-                    var oldMessage = messageText.text
                     messagePopupAnimation.stop()
-                    messageText.text = oldMessage + "\n" + message
+                    messageText.text = messageText.oldMessage + "\n"
                 }
-                else
-                {
-                    messageText.text = message
-                }
+                messageText.text = messageText.text + message
                 messagePopup.open()
             }
         }
@@ -62,6 +58,7 @@ ApplicationWindow {
             horizontalAlignment: Text.AlignHCenter
             font.family: "dengxian"
             font.pointSize: 20
+            property string oldMessage: ""
         }
 
         onOpened: PropertyAnimation {
@@ -73,6 +70,7 @@ ApplicationWindow {
             duration: 1500
             onStopped: {
                 messagePopup.close()
+                messageText.oldMessage = messageText.text
                 messageText.text = ""
             }
         }
