@@ -13,6 +13,7 @@ namespace cforum
 		user = defaultUser;
 		board = defaultBoard;
 		post = defaultPost;
+		initializeConnection();
 	}
 
     Controller::~Controller()
@@ -69,6 +70,17 @@ namespace cforum
 	int Controller::getUserID() const
 	{
 		return user->getID();
+	}
+
+	void Controller::initializeConnection()
+	{
+		if (socket)
+		{
+			delete socket;
+		}
+		socket = new QWebSocket();
+		QObject::connect(&*socket, &QWebSocket::connected, this, &Controller::onConnected);
+		QObject::connect(&*socket, &QWebSocket::disconnected, this, &Controller::onDisconnected);
 	}
 
 	void Controller::initializeDatabase()
@@ -305,38 +317,20 @@ namespace cforum
 		}
 	}
 
-    bool Controller::load(const QUrl path)
+	void Controller::open(const QString &url)
 	{
-		BoardList emptyBoardList;
-		engine.rootContext()->setContextProperty("boardListModel", QVariant::fromValue(emptyBoardList));
-		emit messageSent(LOADING_DATABASE_MESSAGE);
-		if (cforum->load(path.toLocalFile().toStdString()))
-		{
-			emit messageSent(LOADING_DATA_SUCCESS_MESSAGE);
-			refreshViews();
-			return true;
-		}
-		else
-		{
-			errorRaised(ERROR_LOADING_DATA_MESSAGE);
-			refreshViews();
-			return false;
-		}
+		socket->open(url);
+		return;
 	}
 
-	bool Controller::save(const QUrl path)
+	void Controller::onConnected()
 	{
-		emit messageSent(SAVING_DATABASE_MESSAGE);
-		if (cforum->save(path.toLocalFile().toStdString()))
-		{
-			emit messageSent(SAVING_DATA_SUCCESS_MESSAGE);
-			return true;
-		}
-		else
-		{
-			errorRaised(ERROR_SAVING_DATA_MESSAGE);
-			return false;
-		}
+		emit messageSent(SERVER_CONNECTED_MESSAGE);
+	}
+
+	void Controller::onDisconnected()
+	{
+		emit messageSent(SERVER_DISCONNECTED_MESSAGE);
 	}
 
 	bool Controller::isAdmin() const

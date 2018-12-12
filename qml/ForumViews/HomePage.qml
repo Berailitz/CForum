@@ -86,41 +86,6 @@ Page {
                 }
             }
         }
-
-        RowLayout {
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-
-            Button {
-                text: qsTr("加载数据库")
-                Layout.preferredWidth: 500
-                font.family: "dengxian"
-                font.pointSize: 40
-                focusPolicy: Qt.NoFocus
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                onClicked: loadFolderDialog.open()
-            }
-
-            Button {
-                text: qsTr("保存数据库")
-                Layout.preferredWidth: 500
-                font.family: "dengxian"
-                font.pointSize: 40
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                onClicked: saveFolderDialog.open()
-            }
-        }
-    }
-
-    FolderDialog {
-        id: loadFolderDialog
-        folder: "."
-        onAccepted: forumController.load(currentFolder)
-    }
-
-    FolderDialog {
-        id: saveFolderDialog
-        folder: "."
-        onAccepted: forumController.save(currentFolder)
     }
 }
 

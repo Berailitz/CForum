@@ -4,6 +4,7 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QUrl>
+#include <QWebSocket>
 #include "cforum.h"
 
 namespace cforum
@@ -29,10 +30,8 @@ namespace cforum
 	const QUrl DATABASE_PATH = QUrl::fromLocalFile("data");
 	const QString LOADING_DATABASE_MESSAGE = QString::fromUtf8("加载中");
 	const QString SAVING_DATABASE_MESSAGE = QString::fromUtf8("保存中");
-	const QString ERROR_LOADING_DATA_MESSAGE = QString::fromUtf8("数据库加载异常");
-	const QString LOADING_DATA_SUCCESS_MESSAGE = QString::fromUtf8("数据库加载成功");
-	const QString ERROR_SAVING_DATA_MESSAGE = QString::fromUtf8("数据库保存异常");
-	const QString SAVING_DATA_SUCCESS_MESSAGE = QString::fromUtf8("数据库保存成功");
+	const QString SERVER_CONNECTED_MESSAGE = QString::fromUtf8("连接服务器成功");
+	const QString SERVER_DISCONNECTED_MESSAGE = QString::fromUtf8("连接已断开");
 
     class Controller : public QObject
     {
@@ -64,6 +63,7 @@ namespace cforum
         void messageSent(QString message);
     public Q_SLOTS:
 		void errorRaised(const QString message);
+		void initializeConnection();
 		void initializeDatabase();
         void addUser(const QString userName, const QString password); // 注册
         void login(const QString userName, const QString password);
@@ -81,10 +81,12 @@ namespace cforum
         void removePost(const int postID); // 删除主题帖
         void addComment(const QString content); // 发回复帖
         void removeComment(const int commentID); // 删除回复帖
-		bool load(const QUrl path = DATABASE_PATH);
-		bool save(const QUrl path = DATABASE_PATH);
+		void open(const QString &url = QString::fromUtf8("ws://localhost:8118/"));
+		void onConnected();
+		void onDisconnected();
 	private:
         QQmlApplicationEngine &engine;
+		QWebSocket *socket = nullptr;
 		CForum *cforum;
 		User *user;
 		Board *board;
