@@ -31,14 +31,16 @@ namespace cforum
 		RemoveModeratorMessageType // 双向，取消设置版主
 	};
 
+	const QString LINE_BREAK = QString::fromUtf8("\n");
+
 	class Message : public QObject
 	{
 		Q_OBJECT
 	public:
 		Message();
 		Message(const QString &qstring);
-		virtual void load(const QString &qstring) = 0;
-		virtual QString dump() const = 0;
+		virtual void load(const QString &qstring);
+		virtual QString dump() const;
 
 	private:
 		MessageType type = EmptyMessageType;
