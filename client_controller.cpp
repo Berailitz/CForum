@@ -326,6 +326,14 @@ namespace cforum
 	void ClientController::onConnected()
 	{
 		emit messageSent(SERVER_CONNECTED_MESSAGE);
+		connect(&*socket, &QWebSocket::textMessageReceived,
+			this, &ClientController::onTextMessageReceived);
+	}
+
+	void ClientController::onTextMessageReceived(const QString & textMessage)
+	{
+		ResponseMessage message(textMessage);
+		execute(message);
 	}
 
 	void ClientController::onDisconnected()
@@ -397,5 +405,10 @@ namespace cforum
 			refreshViews();
 			emit postOpened();
 		}
+	}
+
+	void ClientController::execute(ResponseMessage & message)
+	{
+		emit messageSent(message.dump());
 	}
 }
