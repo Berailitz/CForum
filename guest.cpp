@@ -2,7 +2,7 @@
 
 namespace cforum
 {
-    Guest::Guest() : User(0, "Guest", "Guest", GuestType)
+    Guest::Guest() : User(0, GUEST_NAME, GUEST_PASSWORD, GuestType)
     {
     }
 

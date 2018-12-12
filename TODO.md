@@ -235,6 +235,7 @@ ClientController
         - `GetCommentListRequestMessageType`: 请求报文，请求回复帖列表，请求前清空回复帖列表，服务端依次返回所有回复帖
         - `RegisterRequestMessageType`: 请求报文，注册
         - `LoginRequestMessageType`: 请求报文，登录
+        - `LogoutRequestMessageType`: 请求报文，注销
         - `UpdateUserResponseMessageType`: 响应报文，更新用户信息，仅由服务端发往客户端
         - `ToastResponseMessageType`: 响应报文，显示提示信息
         - `AddBoardMessageType`: 双向，新增版面
@@ -259,6 +260,7 @@ ClientController
             1. `Get*ListRequestMessageType`
             2. `RegisterRequestMessageType`
             2. `LoginRequestMessageType`
+            2. `LogoutRequestMessageType`
             1. `AddBoardMessageType`
             1. `AddPostMessageType`
             1. `RemovePostMessageType`
@@ -302,6 +304,7 @@ ClientController
     4. 客户端不阻塞UI线程，但禁止任何操作，即将对应的按钮禁用，待收到`refreshUI`信号后恢复
     1. 当其他用户执行操作时，服务器通知各用户
     2. 游客账号的用户名和密码均为`Guest`
+    3. 新增主题帖、回复帖的`ID`字段和`canDetele`字段由服务端设置，请求报文中的`ID`字段为`-1`，`canDetele`字段为真
 - 协议格式
     - 请求版面列表
         - C: `{GetBoardListRequestMessageType}`
@@ -313,6 +316,8 @@ ClientController
         - C: `{RegisterRequestMessageType}\n{name}{password}`
     - 登录
         - C: `{LoginRequestMessageType}\n{name}{password}`
+    - 注销
+        - C: `{LogoutRequestMessageType}`
     - 更新用户信息
         - S: `{UpdateUserResponseMessageType}\n{{userID}.cfdata}`
     - 显示提示信息
