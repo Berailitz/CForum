@@ -162,7 +162,7 @@ namespace cforum
 
 	bool ClientController::canRemovePost(const int postID) const
 	{
-		return cforum->canRemovePost(board->getID(), postID, user->getID());
+		return false;
 	}
 
     void ClientController::addPost(const QString title, const QString content)
@@ -179,9 +179,6 @@ namespace cforum
 
     void ClientController::removePost(const int postID)
 	{
-		RequestMessage message;
-		message.removePost(board->getID(), postID, user->getID());
-		sendMessage(message);
 	}
 
     void ClientController::addComment(const QString content)
@@ -193,9 +190,6 @@ namespace cforum
 
     void ClientController::removeComment(const int commentID)
 	{
-		RequestMessage message;
-		message.removeComment(board->getID(), post->getID(), commentID, user->getID());
-		sendMessage(message);
 	}
 
 	void ClientController::open(const QString &url)

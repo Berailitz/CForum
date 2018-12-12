@@ -26,9 +26,7 @@ namespace cforum
 		ToastResponseMessageType, // 响应报文，显示提示信息
 		AddBoardMessageType, // 双向，新增版面
 		AddPostMessageType, // 双向，发主题帖
-		RemovePostMessageType, // 双向，删除主题帖
 		AddCommentMessageType, // 双向，发回复帖
-		RemoveCommentMessageType, // 双向，删除回复帖
 		AddModeratorMessageType, // 双向，设置版主
 		RemoveModeratorMessageType // 双向，取消设置版主
 	};
