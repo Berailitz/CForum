@@ -33,7 +33,7 @@ namespace cforum
 	const QString SERVER_CONNECTED_MESSAGE = QString::fromUtf8("连接服务器成功");
 	const QString SERVER_DISCONNECTED_MESSAGE = QString::fromUtf8("连接已断开");
 
-    class Controller : public QObject
+    class ClientController : public QObject
     {
         Q_OBJECT
         Q_PROPERTY(QString greeting READ getGreeting NOTIFY forumOpened)
@@ -45,8 +45,8 @@ namespace cforum
 		Q_PROPERTY(bool isModerator READ isModerator NOTIFY boardOpened)
 		Q_PROPERTY(int userID READ getUserID NOTIFY forumOpened)
 	public:
-        Controller(QQmlApplicationEngine &engine);
-		~Controller();
+        ClientController(QQmlApplicationEngine &engine);
+		~ClientController();
         QString getGreeting() const;
         QString getBoardTitle() const;
 		QString getPostTitle() const;

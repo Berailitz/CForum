@@ -118,7 +118,7 @@ Model
    - `bool load(const string path)`
    - `bool save(const string path) const`
 
-Controller
+ClientController
 =====
 
 1. `ForumController`

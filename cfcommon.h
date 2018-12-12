@@ -12,7 +12,7 @@ namespace cforum
 {
 	const QString FRONT_END_DATETIME_FORMAT = QString::fromUtf8("M月d日 HH:mm:ss");
 
-	class Controller;
+	class ClientController;
 
 	bool matchRegular(const QString text, const QString regularExpression);
 	int count_files(const fs::path path);

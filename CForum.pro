@@ -17,7 +17,7 @@ SOURCES += \
         main.cpp \
     board.cpp \
     cforum.cpp \
-    controller.cpp \
+    client_controller.cpp \
     user.cpp \
     cfcommon.cpp \
     admin.cpp \
@@ -44,7 +44,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     board.h \
     cforum.h \
-    controller.h \
+    client_controller.h \
     user.h \
     cfcommon.h \
     admin.h \
