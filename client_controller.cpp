@@ -1,8 +1,8 @@
-#include "controller.h"
+#include "client_controller.h"
 
 namespace cforum
 {
-    Controller::Controller(QQmlApplicationEngine &engine) : 
+    ClientController::ClientController(QQmlApplicationEngine &engine) : 
 		QObject(), engine(engine),
 		cforum(new CForum()),
 		defaultUser(new Guest()),
@@ -16,7 +16,7 @@ namespace cforum
 		initializeConnection();
 	}
 
-    Controller::~Controller()
+    ClientController::~ClientController()
 	{
 		delete cforum;
 		delete defaultUser;
@@ -24,12 +24,12 @@ namespace cforum
 		delete defaultPost;
 	}
 
-    QString Controller::getGreeting() const
+    QString ClientController::getGreeting() const
     {
         return WELCOME_MESSAGE + user->getInfo() + QString::fromUtf8("。");
     }
 
-    QString Controller::getBoardTitle() const
+    QString ClientController::getBoardTitle() const
 	{
 		QString boardTitle = board->getName() + (isModerator() ? MODERATOR_NOTE_MESSAGE : "");
 		ModeratorSet* moderators = board->getModerators();
@@ -57,38 +57,38 @@ namespace cforum
         return boardTitle;
 	}
 
-	QString Controller::getPostTitle() const
+	QString ClientController::getPostTitle() const
 	{
         return post->getTitle() + " -- by: " + getUsername(post->getAuthorID()) + ", " + post->getTimeString();
 	}
 
-    QString Controller::getPostContent() const
+    QString ClientController::getPostContent() const
     {
         return post->getContent();
     }
 
-	int Controller::getUserID() const
+	int ClientController::getUserID() const
 	{
 		return user->getID();
 	}
 
-	void Controller::initializeConnection()
+	void ClientController::initializeConnection()
 	{
 		if (socket)
 		{
 			delete socket;
 		}
 		socket = new QWebSocket();
-		QObject::connect(&*socket, &QWebSocket::connected, this, &Controller::onConnected);
-		QObject::connect(&*socket, &QWebSocket::disconnected, this, &Controller::onDisconnected);
+		QObject::connect(&*socket, &QWebSocket::connected, this, &ClientController::onConnected);
+		QObject::connect(&*socket, &QWebSocket::disconnected, this, &ClientController::onDisconnected);
 	}
 
-	void Controller::initializeDatabase()
+	void ClientController::initializeDatabase()
 	{
 		cforum->initializeDatabase();
 	}
 
-    void Controller::addUser(const QString newUserName, const QString newPassword)
+    void ClientController::addUser(const QString newUserName, const QString newPassword)
     {
 		user = cforum->addNormalUser(newUserName, newPassword);
 		if (user)
@@ -104,14 +104,14 @@ namespace cforum
 		}
 	}
 
-    void Controller::login(const QString userName, const QString password)
+    void ClientController::login(const QString userName, const QString password)
 	{
         User *newUser = cforum->login(userName, password);
         if (newUser)
 		{
             qDebug() << LOGIN_SUCCESS_MESSAGE << userName;
             emit messageSent(LOGIN_SUCCESS_MESSAGE);
-            Controller::user = newUser;
+            ClientController::user = newUser;
 			openForum();
 		}
         else
@@ -121,14 +121,14 @@ namespace cforum
         }
 	}
 
-	void Controller::guestLogin()
+	void ClientController::guestLogin()
 	{
 		qDebug() << LOGIN_SUCCESS_MESSAGE;
 		emit messageSent(LOGIN_SUCCESS_MESSAGE);
 		openForum();
 	}
 
-	void Controller::logout()
+	void ClientController::logout()
 	{
 		cforum->logout(user->getName());
 		user = defaultUser;
@@ -138,7 +138,7 @@ namespace cforum
 		emit messageSent(LOGOUT_SUCCESS_MESSAGE);
 	}
 
-    void Controller::setModerator(const QString userName)
+    void ClientController::setModerator(const QString userName)
 	{
  		const User *user = cforum->getUserByName(userName);
 		if (user == nullptr)
@@ -169,7 +169,7 @@ namespace cforum
 		openBoard(board->getID());
 	}
 
-	void Controller::removeModerator(const QString userName)
+	void ClientController::removeModerator(const QString userName)
 	{
 		const User *user = cforum->getUserByName(userName);
 		if (user == nullptr)
@@ -191,7 +191,7 @@ namespace cforum
 		openBoard(board->getID());
 	}
 
-    QString Controller::getUsername(const int userID) const
+    QString ClientController::getUsername(const int userID) const
     {
         const User *user = cforum->getUserByID(userID);
         if (user != nullptr)
@@ -204,12 +204,12 @@ namespace cforum
         }
     }
 
-	void Controller::viewForum()
+	void ClientController::viewForum()
 	{
 		emit openForum();
 	}
 
-    void Controller::addBoard(const QString boardName)
+    void ClientController::addBoard(const QString boardName)
 	{
 		Board *newBoard = cforum->addBoard(boardName);
 		if (newBoard)
@@ -223,17 +223,17 @@ namespace cforum
 		}
 	}
 
-    void Controller::viewBoard(const int boardID)
+    void ClientController::viewBoard(const int boardID)
     {
 		openBoard(boardID);
     }
 
-	bool Controller::canRemovePost(const int postID) const
+	bool ClientController::canRemovePost(const int postID) const
 	{
 		return cforum->canRemovePost(board->getID(), postID, user->getID());
 	}
 
-    void Controller::addPost(const QString title, const QString content)
+    void ClientController::addPost(const QString title, const QString content)
 	{
 		QQmlContext *ctxt = engine.rootContext();
 		ctxt->setContextProperty("postListModel", QVariant::fromValue(*defaultBoard->getPosts()));
@@ -253,12 +253,12 @@ namespace cforum
 		}
 	}
 
-	void Controller::viewPost(const int postID)
+	void ClientController::viewPost(const int postID)
 	{
 		openPost(postID);
 	}
 
-    void Controller::removePost(const int postID)
+    void ClientController::removePost(const int postID)
 	{
 		QQmlContext *ctxt = engine.rootContext();
 		ctxt->setContextProperty("postListModel", QVariant::fromValue(*defaultBoard->getPosts()));
@@ -280,7 +280,7 @@ namespace cforum
 		}
 	}
 
-    void Controller::addComment(const QString content)
+    void ClientController::addComment(const QString content)
 	{
 		engine.rootContext()->setContextProperty("commentListModel", QVariant::fromValue(*defaultPost->getComments()));
 		if (cforum->addComment(board->getID(), post->getID(), content, user->getID()))
@@ -298,7 +298,7 @@ namespace cforum
 		}
 	}
 
-    void Controller::removeComment(const int commentID)
+    void ClientController::removeComment(const int commentID)
 	{
 		engine.rootContext()->setContextProperty("commentListModel", QVariant::fromValue(*defaultPost->getComments()));
 		if (cforum->removeComment(board->getID(), post->getID(), commentID, user->getID()))
@@ -317,38 +317,38 @@ namespace cforum
 		}
 	}
 
-	void Controller::open(const QString &url)
+	void ClientController::open(const QString &url)
 	{
 		socket->open(url);
 		return;
 	}
 
-	void Controller::onConnected()
+	void ClientController::onConnected()
 	{
 		emit messageSent(SERVER_CONNECTED_MESSAGE);
 	}
 
-	void Controller::onDisconnected()
+	void ClientController::onDisconnected()
 	{
 		emit messageSent(SERVER_DISCONNECTED_MESSAGE);
 	}
 
-	bool Controller::isAdmin() const
+	bool ClientController::isAdmin() const
 	{
 		return user->isAdmin();
 	}
 
-	bool Controller::isGuest() const
+	bool ClientController::isGuest() const
 	{
 		return user->isGuest();
 	}
 
-    bool Controller::isModerator() const
+    bool ClientController::isModerator() const
     {
         return board->isModerator(user->getID());
     }
 
-    void Controller::refreshViews()
+    void ClientController::refreshViews()
 	{
 		// 刷新UI
 		QQmlContext *ctxt = engine.rootContext();
@@ -359,17 +359,17 @@ namespace cforum
         qDebug() << "Refresh: " << cforum->getBoards()->size() << " (ALL) Boards ";
 	}
 
-	void Controller::errorRaised(const QString message)
+	void ClientController::errorRaised(const QString message)
 	{
 		emit messageSent(message);
 	}
 
-	void Controller::openForum()
+	void ClientController::openForum()
 	{
 		emit forumOpened();
 	}
 
-	void Controller::openBoard(const int boardID)
+	void ClientController::openBoard(const int boardID)
 	{
 		if (boardID == -1)
 		{
@@ -388,7 +388,7 @@ namespace cforum
 		}
 	}
 
-	void Controller::openPost(const int postID)
+	void ClientController::openPost(const int postID)
 	{
 		Post *newPost = board->getPostByID(postID);
 		if (newPost)

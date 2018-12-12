@@ -2,7 +2,7 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 
-#include "controller.h"
+#include "client_controller.h"
 #include "cfcommon.h"
 #include "error_handler.h"
 
@@ -16,9 +16,9 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
     QCoreApplication::setAttribute(Qt::AA_UseOpenGLES);
     QQmlApplicationEngine engine;
-	cforum::Controller *forumController = new cforum::Controller(engine);
+	cforum::ClientController *forumController = new cforum::ClientController(engine);
 	engine.rootContext()->setContextProperty("forumController", QVariant::fromValue(&*forumController));
-	QObject::connect(&*errorHandler, &cforum::ErrorHandler::errorRaised, &*forumController, &cforum::Controller::errorRaised);
+	QObject::connect(&*errorHandler, &cforum::ErrorHandler::errorRaised, &*forumController, &cforum::ClientController::errorRaised);
 	engine.load(QUrl(QString::fromUtf8("qrc:/qml/main.qml")));
 	forumController->open(QString::fromUtf8("ws://localhost:8118/"));
 	forumController->refreshViews();
