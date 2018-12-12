@@ -10,6 +10,7 @@ Note
 
 1. `QML`中`ListView`对应的容器类型必须为`QList<QObject*>`，元素为`QObject`的子类，使用`Q_OBJECT`标记，并使用`Q_PROPERTY`注册读写函数和信号，无需注册为`QML`类型
 2. `QQmlApplicationEngine`加载的`QML`文件需包含`ApplicationWindow`
+3. 版面表仅能`append`
 
 需求分析
 =====
@@ -201,95 +202,141 @@ Controller
 网络访问协议
 ====
 
-- 基本逻辑：客户端负责显示信息，尽可能不处理信息，信息按需加载，即时销毁，不设缓存
+- 基本逻辑
+    - 客户端为有限状态机，负责展示信息，不含信息处理逻辑
+    - 服务端需要知道客户端的状态，如用户`ID`等信息，故服务端需保存各个连接的状态
+    - 客户端与服务端采用异步通信，故服务端只需一个线程
+    - 服务端的`ForumServer`建立连接，并为每个连接构造一个`ClientDescriptor`实例，并关联其槽函数
+    - `Message`
+        - 分为请求报文（客户端发给服务端）和响应报文（服务端发给客户端）
+    - `ForumServer`
+        - 为主函数
+        - 为无状态服务
+        - 维护数据库，处理业务逻辑
+        - 执行`Message`报文，构造对应的响应报文，并单播或广播响应报文
+    - `ClientDescriptor`
+        - 继承自`ClientState`
+        - 依据客户端的状态信息，将客户端发送的文本报文反序列化为`Message`实例
+        - 依据客户端的状态信息，检查是否需要发生某个广播的`Message`报文给其对应的客户端
+        - 将`Message`实例序列化为文本报文
+    - `ClientController`
+        - 按需加载数据，即时销毁，不设缓存
+    - 凡是需要转方至其他客户端的消息，其中均需包含完整的状态信息，缺省格式为离线数据格式
 - 数据结构
-    - 客户端请求`class Request`
-        - 用于通知其他同时在线的用户
-        - `RequestType type`
-            1. `AddBoardRequestType`
-            1. `AddPostRequestType`
-            1. `RemovePostRequestType`
-            1. `AddCommentRequestType`
-            1. `RemoveCommentRequestType`
-            1. `AddModeratorRequestType`
-            1. `RemoveModeratorRequestType`
+    - 状态`class ClientState`
         - `int userID = -1`
         - `int boardID = -1`
         - `int postID = -1`
         - `int commentID = -1`
     - 报文类型`MessageType`
-        - `RefreshMessageType`: 状态更新
-        - `ResponseMessageType`: 服务器的回复，此类报文与客户端发送的前一个报文对应
-        - `ToastMessageType`: 需显示在客户端的提示信息
-        - `RegisterMessageType`: 注册
-        - `LoginMessageType`: 登录
-        - `AddBoardMessageType`: 新增版面
-        - `GetBoardListMessageType`: 请求版面列表
-        - `GetPostListMessageType`: 请求主题帖列表
-        - `AddPostMessageType`: 发主题帖
-        - `RemovePostMessageType`: 删除主题帖
-        - `GetCommentListMessageType`: 请求回复帖列表
-        - `AddCommentMessageType`: 发回复帖
-        - `RemoveCommentCommentMessageType`: 删除回复帖
-        - `AddModeratorMessageType`: 设置版主
-        - `RemoveModeratorMessageType`: 取消设置版主
-    - 报文`ResponseMessage`
-        - `QQmlApplicationEngine &engine`
+        - `GetBoardListRequestMessageType`: 请求报文，请求版面列表，请求前清空版面列表，服务端依次返回所有版面
+        - `GetPostListRequestMessageType`: 请求报文，请求主题帖列表，请求前清空主题帖列表，服务端依次返回所有主题帖
+        - `GetCommentListRequestMessageType`: 请求报文，请求回复帖列表，请求前清空回复帖列表，服务端依次返回所有回复帖
+        - `RegisterRequestMessageType`: 请求报文，注册
+        - `LoginRequestMessageType`: 请求报文，登录
+        - `UpdateUserResponseMessageType`: 响应报文，更新用户信息，仅由服务端发往客户端
+        - `ToastResponseMessageType`: 响应报文，显示提示信息
+        - `AddBoardMessageType`: 双向，新增版面
+        - `AddPostMessageType`: 双向，发主题帖
+        - `RemovePostMessageType`: 双向，删除主题帖
+        - `AddCommentMessageType`: 双向，发回复帖
+        - `RemoveCommentMessageType`: 双向，删除回复帖
+        - `AddModeratorMessageType`: 双向，设置版主
+        - `RemoveModeratorMessageType`: 双向，取消设置版主
+    - 报文`Message`
+        - 基类，表示一个客户端发给服务端，或服务端发给客户端，或服务端中的`Processer`间传递信息的报文
+        - 可与`QString`类相互转换
+        - `Message(const QString &qstring)`
         - `MessageType type`
-        - `void execute() const`
-- 程序架构
-    1. 采用`WebSocket`长连接，使用文本报文传递信息，双方均可主动发出信息
-    2. 每一个报文的第一行均为报文类型`MessageType`
-    2. 服务器每收到一个报文，都会返回一个
-    2. `ResponseMessageType`报文至少包含`行`，其第二行为一个`int`型状态码，`0`表识成功，非`0`否则失败
-    3. 仅有`2`行的`ResponseMessageType`报文，即基本应答报文，其格式为：`{ResponseMessageType}\n{statusCode}`
-    3. 服务器返回每个报文后，可以再返回一个报文，即提示信息报文，类型为`ToastMessageType`，以显示提示信息
-    2. 每建立一个连接，创建一个`Processer`线程，类似于`Controller`，`Processer`保存对应连接的状态信息，包括
-        - `CForum *cforum`
-        - `int userID`
-        - `int boardID`
-        - `int postID`
-    1. 当其他用户执行操作时，服务器通知各用户
-    2. 客户端即为一个`Controller`，按需加载并保存当前界面上的状态信息，即
+        - `ClientState clientState`
+        - `void load(const QString &qstring)`
+        - `QString dump() const`
+    - 请求报文`class RequestMessage`
+        - 继承自`Message`，由客户端发给服务端，用于请求一项操作
+        - 客户端执行其`execute`方法
+        - 其类型为
+            1. `Get*ListRequestMessageType`
+            2. `RegisterRequestMessageType`
+            2. `LoginRequestMessageType`
+            1. `AddBoardMessageType`
+            1. `AddPostMessageType`
+            1. `RemovePostMessageType`
+            1. `AddCommentMessageType`
+            1. `RemoveCommentMessageType`
+            1. `AddModeratorMessageType`
+            1. `RemoveModeratorMessageType`
+        - `void execute(ForumServer *forumServer) const`: 执行请求，并发出响应
+    - 响应报文`class ResponseMessage`
+        - 继承自`Message`，由服务端发给客户端，用于通知客户端更新界面和状态
+        - 客户端执行其`execute`方法
+        - 其类型为
+            1. `ToastResponseMessageType`
+            2. `UpdateUserResponseMessageType`
+            1. `AddBoardMessageType`
+            1. `AddPostMessageType`
+            1. `RemovePostMessageType`
+            1. `AddCommentMessageType`
+            1. `RemoveCommentMessageType`
+            1. `AddModeratorMessageType`
+            1. `RemoveModeratorMessageType`
+        - `void execute(QQmlApplicationEngine *engine) const`
+    - 处理器`ClientDescriptor`
+        - 继承自`ClientState`
+        - `Message loadMessage(const QString textMessage)`
+        - `QString dumpMessage(const Message message)`
+    - 客户端控制器`ClientController`
+        - 按需加载并保存当前界面上的状态信息
+        - `QQmlApplicationEngine *engine = nullptr`
         - `User *user`
         - `Board *board`
         - `Post *post`
-    2. 客户端每执行一项操作后，即将对应的按钮禁用，待收到`refreshUI`信号后恢复
+        - `void refreshUI()`: 刷新UI信号
+    - 服务端`ForumServer`
+        - `QList<ClientDescriptor*> descriptors`
+        - `void boardcast(const Message &message)`
+- 程序架构
+    1. 采用`WebSocket`长连接，使用文本报文传递信息，双方均可主动发出信息
+    2. 报文与的第一行均为报文类型`MessageType`
+    3. 服务器异步处理请求，返回响应
+    4. 客户端不阻塞UI线程，但禁止任何操作，即将对应的按钮禁用，待收到`refreshUI`信号后恢复
+    1. 当其他用户执行操作时，服务器通知各用户
     2. 游客账号的用户名和密码均为`Guest`
-- 协议格式（略去基本应答报文和提示信息报文）
-    - 注册
-        - C: `{RegisterMessageType}\n{name}{password}`
-    - 登录
-        - C: `{LoginMessageType}\n{name}{password}`
-        - S: `{ResponseMessageType}\n{statusCode}\n{type}\n{id}\n{lastLoginTime}\n{lastLogoutTime}\n{name}\n{password}`
-    - 新增版面
-        - C: `{AddPostMessageType}\n{boardName}`
+- 协议格式
     - 请求版面列表
-        - C: `{GetBoardListMessageType}`
-        - S: `{ResponseMessageType}\n{statusCode}\n{boardName1}\n...`
+        - C: `{GetBoardListRequestMessageType}`
     - 请求主题帖列表
-        - C: `{GetPostListMessageType}\n{boardID}`
-        - S: `{ResponseMessageType}\n{statusCode}\n{canRemove}\n{postTitle1}\n...`
-    - 发主题帖
-        - C: `{AddPostMessageType}\n{title}{content}`
-    - 删除主题帖
-        - C: `{RemovePostMessageType}\n{postID}`
+        - C: `{GetPostListRequestMessageType}`
     - 请求回复帖列表
-        - C: `{GetCommentListMessageType}\n{postID}`
-        - S: `{ResponseMessageType}\n{statusCode}`
-        - S: `{ResponseMessageType}\n{commentID}\n{authorID}\n{isRemoved}\n{time}\n{content}`
-        - S: `...`
+        - C: `{GetCommentListRequestMessageType}`
+    - 注册
+        - C: `{RegisterRequestMessageType}\n{name}{password}`
+    - 登录
+        - C: `{LoginRequestMessageType}\n{name}{password}`
+    - 更新用户信息
+        - S: `{UpdateUserResponseMessageType}\n{{userID}.cfdata}`
+    - 显示提示信息
+        - S: `{ToastResponseMessageType}\n{toastText}`
+    - 新增版面
+        - C: `{AddBoardMessageType}\n{boardName}`
+        - S: `{AddBoardMessageType}\n{board.cfdata}`
+    - 发主题帖
+        - C: `{AddPostMessageType}\n{boardID}\n{{postID}.cfdata}`
+        - S: `{AddPostMessageType}\n{boardID}\n{{postID}.cfdata}`
+    - 删除主题帖
+        - C: `{RemovePostMessageType}\n{boardID}\n{postID}`
+        - S: `{RemovePostMessageType}\n{boardID}\n{postID}`
     - 发回复帖
-        - C: `{LoginMessageType}\n{content}`
+        - C: `{LoginMessageType}\n{boardID}\n{postID}\n{{commentID}.cfdata}`
+        - S: `{LoginMessageType}\n{boardID}\n{postID}\n{{commentID}.cfdata}`
     - 删除回复帖
-        - C: `{LoginMessageType}\n{commentID}`
+        - C: `{LoginMessageType}\n{boardID}\n{postID}\n{commentID}`
+        - S: `{LoginMessageType}\n{boardID}\n{postID}\n{commentID}`
     - 设置版主
-        - C: `{LoginMessageType}\n{userName}`
+        - C: `{LoginMessageType}\n{boardID}\n{userName}`
+        - S: `{LoginMessageType}\n{boardID}\n{userName}`
     - 取消设置版主
-        - C: `{LoginMessageType}\n{userName}`
-    - 状态更新
-        - C: `{RefreshMessageType}\n{userName}`
-        - #TODO#
+        - C: `{LoginMessageType}\n{boardID}\n{userName}`
+        - S: `{LoginMessageType}\n{boardID}\n{userName}`
 
 备注
 ====
