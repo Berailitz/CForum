@@ -198,6 +198,99 @@ Controller
     - 每个主题帖存储至一个二级子文件夹`/content/{boardID}/{postID}`，及其下的一个文本文件`post.cfdata`: `{postID}\n{commentCounter}\n{isRemoved}\n{authorID}\n{time}\n{title}\n{content}`
     - 每个回复贴存储至一个文本文件`/content/{boardID}/{postID}/{commentID}.cfdata`: `{commentID}\n{authorID}\n{isRemoved}\n{time}\n{content}`
 
+网络访问协议
+====
+
+- 基本逻辑：客户端负责显示信息，尽可能不处理信息，信息按需加载，即时销毁，不设缓存
+- 数据结构
+    - 客户端请求`class Request`
+        - 用于通知其他同时在线的用户
+        - `RequestType type`
+            1. `AddBoardRequestType`
+            1. `AddPostRequestType`
+            1. `RemovePostRequestType`
+            1. `AddCommentRequestType`
+            1. `RemoveCommentRequestType`
+            1. `AddModeratorRequestType`
+            1. `RemoveModeratorRequestType`
+        - `int userID = -1`
+        - `int boardID = -1`
+        - `int postID = -1`
+        - `int commentID = -1`
+    - 报文类型`MessageType`
+        - `RefreshMessageType`: 状态更新
+        - `ResponseMessageType`: 服务器的回复，此类报文与客户端发送的前一个报文对应
+        - `ToastMessageType`: 需显示在客户端的提示信息
+        - `RegisterMessageType`: 注册
+        - `LoginMessageType`: 登录
+        - `AddBoardMessageType`: 新增版面
+        - `GetBoardListMessageType`: 请求版面列表
+        - `GetPostListMessageType`: 请求主题帖列表
+        - `AddPostMessageType`: 发主题帖
+        - `RemovePostMessageType`: 删除主题帖
+        - `GetCommentListMessageType`: 请求回复帖列表
+        - `AddCommentMessageType`: 发回复帖
+        - `RemoveCommentCommentMessageType`: 删除回复帖
+        - `AddModeratorMessageType`: 设置版主
+        - `RemoveModeratorMessageType`: 取消设置版主
+    - 报文`ResponseMessage`
+        - `QQmlApplicationEngine &engine`
+        - `MessageType type`
+        - `void execute() const`
+- 程序架构
+    1. 采用`WebSocket`长连接，使用文本报文传递信息，双方均可主动发出信息
+    2. 每一个报文的第一行均为报文类型`MessageType`
+    2. 服务器每收到一个报文，都会返回一个
+    2. `ResponseMessageType`报文至少包含`行`，其第二行为一个`int`型状态码，`0`表识成功，非`0`否则失败
+    3. 仅有`2`行的`ResponseMessageType`报文，即基本应答报文，其格式为：`{ResponseMessageType}\n{statusCode}`
+    3. 服务器返回每个报文后，可以再返回一个报文，即提示信息报文，类型为`ToastMessageType`，以显示提示信息
+    2. 每建立一个连接，创建一个`Processer`线程，类似于`Controller`，`Processer`保存对应连接的状态信息，包括
+        - `CForum *cforum`
+        - `int userID`
+        - `int boardID`
+        - `int postID`
+    1. 当其他用户执行操作时，服务器通知各用户
+    2. 客户端即为一个`Controller`，按需加载并保存当前界面上的状态信息，即
+        - `User *user`
+        - `Board *board`
+        - `Post *post`
+    2. 客户端每执行一项操作后，即将对应的按钮禁用，待收到`refreshUI`信号后恢复
+    2. 游客账号的用户名和密码均为`Guest`
+- 协议格式（略去基本应答报文和提示信息报文）
+    - 注册
+        - C: `{RegisterMessageType}\n{name}{password}`
+    - 登录
+        - C: `{LoginMessageType}\n{name}{password}`
+        - S: `{ResponseMessageType}\n{statusCode}\n{type}\n{id}\n{lastLoginTime}\n{lastLogoutTime}\n{name}\n{password}`
+    - 新增版面
+        - C: `{AddPostMessageType}\n{boardName}`
+    - 请求版面列表
+        - C: `{GetBoardListMessageType}`
+        - S: `{ResponseMessageType}\n{statusCode}\n{boardName1}\n...`
+    - 请求主题帖列表
+        - C: `{GetPostListMessageType}\n{boardID}`
+        - S: `{ResponseMessageType}\n{statusCode}\n{canRemove}\n{postTitle1}\n...`
+    - 发主题帖
+        - C: `{AddPostMessageType}\n{title}{content}`
+    - 删除主题帖
+        - C: `{RemovePostMessageType}\n{postID}`
+    - 请求回复帖列表
+        - C: `{GetCommentListMessageType}\n{postID}`
+        - S: `{ResponseMessageType}\n{statusCode}`
+        - S: `{ResponseMessageType}\n{commentID}\n{authorID}\n{isRemoved}\n{time}\n{content}`
+        - S: `...`
+    - 发回复帖
+        - C: `{LoginMessageType}\n{content}`
+    - 删除回复帖
+        - C: `{LoginMessageType}\n{commentID}`
+    - 设置版主
+        - C: `{LoginMessageType}\n{userName}`
+    - 取消设置版主
+        - C: `{LoginMessageType}\n{userName}`
+    - 状态更新
+        - C: `{RefreshMessageType}\n{userName}`
+        - #TODO#
+
 备注
 ====
 
