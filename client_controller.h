@@ -7,6 +7,7 @@
 #include <QWebSocket>
 #include "cforum.h"
 #include "response_message.h"
+#include "request_message.h"
 
 namespace cforum
 {
@@ -72,7 +73,7 @@ namespace cforum
 		void logout();
         void setModerator(const QString userName); // 将用户设为当前版面的版主之一
 		void removeModerator(const QString userName); // 将用户从当前版面的版主列表中移除
-        QString getUsername(const int userID) const;
+        QString getUsername(const int userID) const; // #TODO#
 		void viewForum(); // 控制UI转向论坛界面
         void addBoard(const QString boardName);
         void viewBoard(const int boardID = -1); // 控制UI转向版面界面
@@ -100,6 +101,7 @@ namespace cforum
         Board *defaultBoard;
         Post *defaultPost;
 		void execute(ResponseMessage &message);
+		void sendMessage(RequestMessage &message);
 	};
 }
 
