@@ -6,6 +6,7 @@
 #include <QUrl>
 #include <QWebSocket>
 #include "cforum.h"
+#include "response_message.h"
 
 namespace cforum
 {
@@ -83,6 +84,7 @@ namespace cforum
         void removeComment(const int commentID); // 删除回复帖
 		void open(const QString &url = QString::fromUtf8("ws://localhost:8118/"));
 		void onConnected();
+		void onTextMessageReceived(const QString &textMessage);
 		void onDisconnected();
 	private:
         QQmlApplicationEngine &engine;
@@ -97,6 +99,7 @@ namespace cforum
         User *defaultUser;
         Board *defaultBoard;
         Post *defaultPost;
+		void execute(ResponseMessage &message);
 	};
 }
 
