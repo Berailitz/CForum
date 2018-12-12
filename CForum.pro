@@ -26,7 +26,11 @@ SOURCES += \
     moderator.cpp \
     normal_user.cpp \
     post.cpp \
-    error_handler.cpp
+    error_handler.cpp \
+    client_state.cpp \
+    message.cpp \
+    request_message.cpp \
+    response_message.cpp
 
 RESOURCES += qml.qrc
 
@@ -53,4 +57,8 @@ HEADERS += \
     moderator.h \
     normal_user.h \
     post.h \
-    error_handler.h
+    error_handler.h \
+    client_state.h \
+    message.h \
+    request_message.h \
+    response_message.h
