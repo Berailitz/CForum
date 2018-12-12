@@ -229,6 +229,7 @@ ClientController
         - `int postID = -1`
         - `int commentID = -1`
     - 报文类型`MessageType`
+        - `EmptyMessageType`: 空报文
         - `GetBoardListRequestMessageType`: 请求报文，请求版面列表，请求前清空版面列表，服务端依次返回所有版面
         - `GetPostListRequestMessageType`: 请求报文，请求主题帖列表，请求前清空主题帖列表，服务端依次返回所有主题帖
         - `GetCommentListRequestMessageType`: 请求报文，请求回复帖列表，请求前清空回复帖列表，服务端依次返回所有回复帖
@@ -249,7 +250,7 @@ ClientController
         - `Message(const QString &qstring)`
         - `MessageType type`
         - `ClientState clientState`
-        - `void load(const QString &qstring)`
+        - `void load(const QString &qstring)`: 仅读取第一行，其余部分存于messageString
         - `QString dump() const`
     - 请求报文`class RequestMessage`
         - 继承自`Message`，由客户端发给服务端，用于请求一项操作
@@ -279,7 +280,6 @@ ClientController
             1. `RemoveCommentMessageType`
             1. `AddModeratorMessageType`
             1. `RemoveModeratorMessageType`
-        - `void execute(QQmlApplicationEngine *engine) const`
     - 处理器`ClientDescriptor`
         - 继承自`ClientState`
         - `Message loadMessage(const QString textMessage)`
@@ -291,6 +291,7 @@ ClientController
         - `Board *board`
         - `Post *post`
         - `void refreshUI()`: 刷新UI信号
+        - `void execute(ResponseMessage *message) const`
     - 服务端`ForumServer`
         - `QList<ClientDescriptor*> descriptors`
         - `void boardcast(const Message &message)`
