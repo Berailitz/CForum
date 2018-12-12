@@ -240,9 +240,7 @@ ClientController
         - `ToastResponseMessageType`: 响应报文，显示提示信息
         - `AddBoardMessageType`: 双向，新增版面
         - `AddPostMessageType`: 双向，发主题帖
-        - `RemovePostMessageType`: 双向，删除主题帖
         - `AddCommentMessageType`: 双向，发回复帖
-        - `RemoveCommentMessageType`: 双向，删除回复帖
         - `AddModeratorMessageType`: 双向，设置版主
         - `RemoveModeratorMessageType`: 双向，取消设置版主
     - 报文`Message`
@@ -263,9 +261,7 @@ ClientController
             2. `LogoutRequestMessageType`
             1. `AddBoardMessageType`
             1. `AddPostMessageType`
-            1. `RemovePostMessageType`
             1. `AddCommentMessageType`
-            1. `RemoveCommentMessageType`
             1. `AddModeratorMessageType`
             1. `RemoveModeratorMessageType`
         - `void execute(ForumServer *forumServer) const`: 执行请求，并发出响应
@@ -277,9 +273,7 @@ ClientController
             2. `UpdateUserResponseMessageType`
             1. `AddBoardMessageType`
             1. `AddPostMessageType`
-            1. `RemovePostMessageType`
             1. `AddCommentMessageType`
-            1. `RemoveCommentMessageType`
             1. `AddModeratorMessageType`
             1. `RemoveModeratorMessageType`
     - 处理器`ClientDescriptor`
@@ -304,7 +298,7 @@ ClientController
     4. 客户端不阻塞UI线程，但禁止任何操作，即将对应的按钮禁用，待收到`refreshUI`信号后恢复
     1. 当其他用户执行操作时，服务器通知各用户
     2. 游客账号的用户名和密码均为`Guest`
-    3. 新增主题帖、回复帖的`ID`字段和`canDetele`字段由服务端设置，请求报文中的`ID`字段为`-1`，`canDetele`字段为真
+    3. 新增主题帖、回复帖的`ID`字段由服务端设置，请求报文中的`ID`字段为`-1`
 - 协议格式
     - 请求版面列表
         - C: `{GetBoardListRequestMessageType}`
@@ -326,17 +320,11 @@ ClientController
         - C: `{AddBoardMessageType}\n{boardName}`
         - S: `{AddBoardMessageType}\n{board.cfdata}`
     - 发主题帖
-        - C: `{AddPostMessageType}\n{boardID}\n{canRemove}\n{{postID}.cfdata}`
-        - S: `{AddPostMessageType}\n{boardID}\n{canRemove}\n{{postID}.cfdata}`
-    - 删除主题帖
-        - C: `{RemovePostMessageType}\n{boardID}\n{postID}`
-        - S: `{RemovePostMessageType}\n{boardID}\n{postID}`
+        - C: `{AddPostMessageType}\n{boardID}\n{{postID}.cfdata}`
+        - S: `{AddPostMessageType}\n{boardID}\n{{postID}.cfdata}`
     - 发回复帖
         - C: `{LoginMessageType}\n{boardID}\n{postID}\n{{commentID}.cfdata}`
         - S: `{LoginMessageType}\n{boardID}\n{postID}\n{{commentID}.cfdata}`
-    - 删除回复帖
-        - C: `{LoginMessageType}\n{boardID}\n{postID}\n{commentID}`
-        - S: `{LoginMessageType}\n{boardID}\n{postID}\n{commentID}`
     - 设置版主
         - C: `{LoginMessageType}\n{boardID}\n{userName}`
         - S: `{LoginMessageType}\n{boardID}\n{userName}`

@@ -37,13 +37,7 @@ namespace cforum
 		Post post(-1, content, userID, title);
 		post.save(out);
 		type = AddPostMessageType;
-		messageString = QString::number(boardID) + LINE_BREAK + QString::number(1) + LINE_BREAK + QString::fromStdString(out.str());
-	}
-
-	void RequestMessage::removePost(const int boardID, const int postID, const int userID)
-	{
-		type = RemovePostMessageType;
-		messageString = QString::number(boardID) + LINE_BREAK + QString::number(postID);
+		messageString = QString::number(boardID) + LINE_BREAK + QString::fromStdString(out.str());
 	}
 
 	void RequestMessage::addComment(const int boardID, const int postID, const QString content, const int userID)
@@ -53,12 +47,6 @@ namespace cforum
 		comment.save(out);
 		type = AddCommentMessageType;
 		messageString = QString::number(boardID) + LINE_BREAK + QString::number(postID) + LINE_BREAK + QString::fromStdString(out.str());
-	}
-
-	void RequestMessage::removeComment(const int boardID, const int postID, const int commentID, const int userID)
-	{
-		type = RemoveCommentMessageType;
-		messageString = QString::number(boardID) + LINE_BREAK + QString::number(postID) + LINE_BREAK + QString::number(commentID);
 	}
 
 	void RequestMessage::setModerator(const int boardID, const QString userName)
