@@ -20,9 +20,8 @@ int main(int argc, char *argv[])
 	engine.rootContext()->setContextProperty("forumController", QVariant::fromValue(&*forumController));
 	QObject::connect(&*errorHandler, &cforum::ErrorHandler::errorRaised, &*forumController, &cforum::Controller::errorRaised);
 	engine.load(QUrl(QString::fromUtf8("qrc:/qml/main.qml")));
-	doLoad = forumController->load();
+	forumController->open(QString::fromUtf8("ws://localhost:8118/"));
 	forumController->refreshViews();
 	returnValue = app.exec();
-	forumController->save();
 	return returnValue;
 }
