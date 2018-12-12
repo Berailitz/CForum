@@ -320,8 +320,8 @@ Controller
         - C: `{AddBoardMessageType}\n{boardName}`
         - S: `{AddBoardMessageType}\n{board.cfdata}`
     - 发主题帖
-        - C: `{AddPostMessageType}\n{boardID}\n{{postID}.cfdata}`
-        - S: `{AddPostMessageType}\n{boardID}\n{{postID}.cfdata}`
+        - C: `{AddPostMessageType}\n{boardID}\n{canRemove}\n{{postID}.cfdata}`
+        - S: `{AddPostMessageType}\n{boardID}\n{canRemove}\n{{postID}.cfdata}`
     - 删除主题帖
         - C: `{RemovePostMessageType}\n{boardID}\n{postID}`
         - S: `{RemovePostMessageType}\n{boardID}\n{postID}`
