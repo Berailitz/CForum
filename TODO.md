@@ -299,13 +299,14 @@ ClientController
     1. 当其他用户执行操作时，服务器通知各用户
     2. 游客账号的用户名和密码均为`Guest`
     3. 新增主题帖、回复帖的`ID`字段由服务端设置，请求报文中的`ID`字段为`-1`
+    4. 主题帖标题由服务端处理，即服务端发送的标题中包含发帖人和时间
 - 协议格式
     - 请求版面列表
         - C: `{GetBoardListRequestMessageType}`
     - 请求主题帖列表
-        - C: `{GetPostListRequestMessageType}`
+        - C: `{GetPostListRequestMessageType}\n{boardID}`
     - 请求回复帖列表
-        - C: `{GetCommentListRequestMessageType}`
+        - C: `{GetCommentListRequestMessageType}\n{boardID}\n{postID}`
     - 注册
         - C: `{RegisterRequestMessageType}\n{name}{password}`
     - 登录
@@ -323,14 +324,14 @@ ClientController
         - C: `{AddPostMessageType}\n{boardID}\n{{postID}.cfdata}`
         - S: `{AddPostMessageType}\n{boardID}\n{{postID}.cfdata}`
     - 发回复帖
-        - C: `{LoginMessageType}\n{boardID}\n{postID}\n{{commentID}.cfdata}`
-        - S: `{LoginMessageType}\n{boardID}\n{postID}\n{{commentID}.cfdata}`
+        - C: `{AddCommentMessageType}\n{boardID}\n{postID}\n{{commentID}.cfdata}`
+        - S: `{AddCommentMessageType}\n{boardID}\n{postID}\n{{commentID}.cfdata}`
     - 设置版主
-        - C: `{LoginMessageType}\n{boardID}\n{userName}`
-        - S: `{LoginMessageType}\n{boardID}\n{userName}`
+        - C: `{AddModeratorMessageType}\n{boardID}\n{userName}`
+        - S: `{AddModeratorMessageType}\n{boardID}\n{userName}`
     - 取消设置版主
-        - C: `{LoginMessageType}\n{boardID}\n{userName}`
-        - S: `{LoginMessageType}\n{boardID}\n{userName}`
+        - C: `{RemoveModeratorMessageType}\n{boardID}\n{userName}`
+        - S: `{RemoveModeratorMessageType}\n{boardID}\n{userName}`
 
 备注
 ====
