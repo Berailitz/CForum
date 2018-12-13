@@ -60,4 +60,22 @@ namespace cforum
 		type = RemoveModeratorMessageType;
 		messageString = QString::number(boardID) + LINE_BREAK + userName;
 	}
+
+	void RequestMessage::getBoardList()
+	{
+		type = GetBoardListRequestMessageType;
+		messageString = "";
+	}
+
+	void RequestMessage::getPostList(const int boardID)
+	{
+		type = GetPostListRequestMessageType;
+		messageString = QString::number(boardID);
+	}
+
+	void RequestMessage::getCommentList(const int boardID, const int postID)
+	{
+		type = GetCommentListRequestMessageType;
+		messageString = QString::number(boardID) + LINE_BREAK + QString::number(postID);
+	}
 }
