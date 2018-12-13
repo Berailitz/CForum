@@ -14,13 +14,13 @@ namespace cforum
 	void RequestMessage::addNormalUser(const QString userName, const QString password)
 	{
 		type = RegisterRequestMessageType;
-		messageString = userName + LINE_BREAK + password;
+		messageString = userName + Q_LINE_BREAK + password;
 	}
 
 	void RequestMessage::login(const QString userName, const QString password)
 	{
 		type = LoginRequestMessageType;
-		messageString = userName + LINE_BREAK + password;
+		messageString = userName + Q_LINE_BREAK + password;
 	}
 
 	void RequestMessage::logout()
@@ -41,7 +41,7 @@ namespace cforum
 		Post post(-1, content, userID, title);
 		post.save(out);
 		type = AddPostMessageType;
-		messageString = QString::number(boardID) + LINE_BREAK + QString::fromStdString(out.str());
+		messageString = QString::number(boardID) + Q_LINE_BREAK + QString::fromStdString(out.str());
 	}
 
 	void RequestMessage::addComment(const int boardID, const int postID, const QString content, const int userID)
@@ -50,19 +50,19 @@ namespace cforum
 		Comment comment(-1, content, userID);
 		comment.save(out);
 		type = AddCommentMessageType;
-		messageString = QString::number(boardID) + LINE_BREAK + QString::number(postID) + LINE_BREAK + QString::fromStdString(out.str());
+		messageString = QString::number(boardID) + Q_LINE_BREAK + QString::number(postID) + Q_LINE_BREAK + QString::fromStdString(out.str());
 	}
 
 	void RequestMessage::setModerator(const int boardID, const QString userName)
 	{
 		type = AddModeratorMessageType;
-		messageString = QString::number(boardID) + LINE_BREAK + userName;
+		messageString = QString::number(boardID) + Q_LINE_BREAK + userName;
 	}
 
 	void RequestMessage::removeModerator(const int boardID, const QString userName)
 	{
 		type = RemoveModeratorMessageType;
-		messageString = QString::number(boardID) + LINE_BREAK + userName;
+		messageString = QString::number(boardID) + Q_LINE_BREAK + userName;
 	}
 
 	void RequestMessage::getBoardList()
@@ -80,6 +80,6 @@ namespace cforum
 	void RequestMessage::getCommentList(const int boardID, const int postID)
 	{
 		type = GetCommentListRequestMessageType;
-		messageString = QString::number(boardID) + LINE_BREAK + QString::number(postID);
+		messageString = QString::number(boardID) + Q_LINE_BREAK + QString::number(postID);
 	}
 }
