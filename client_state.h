@@ -9,7 +9,8 @@ namespace cforum
 	{
 		Q_OBJECT
 	public:
-		explicit ClientState();
+		ClientState();
+		virtual ~ClientState();
 
 	public:
 		int userID = -1;

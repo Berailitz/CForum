@@ -30,7 +30,8 @@ SOURCES += \
     request_message.cpp \
     response_message.cpp \
     server_main.cpp \
-    forum_server.cpp
+    forum_server.cpp \
+    client_descriptor.cpp
 
 RESOURCES += server_qml.qrc
 
@@ -61,4 +62,5 @@ HEADERS += \
     message.h \
     request_message.h \
     response_message.h \
-    forum_server.h
+    forum_server.h \
+    client_descriptor.h
