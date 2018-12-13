@@ -104,7 +104,7 @@ namespace cforum
 		BoardList* defaultBoards = nullptr;
 		PostList* defaultPosts = nullptr;
 		CommentList* defaultComments = nullptr;
-		User *loadUser(istream &userStream) const;
+		void loadUser(istream &userStream);
 		void execute(ResponseMessage &message);
 		void sendMessage(RequestMessage &message);
 		void resetBoards(bool doClear);

@@ -275,32 +275,34 @@ namespace cforum
 		sendMessage(message);
 	}
 
-	User * ClientController::loadUser(istream &userStream) const
+	void ClientController::loadUser(istream &userStream)
 	{
 		int typeInt;
 		UserType type;
-		User *newUser;
 		userStream >> typeInt;
 		type = static_cast<UserType>(typeInt);
+		if (user = defaultUser)
+		{
+			delete user;
+		}
 		switch (type)
 		{
 		case AdminType:
-			newUser = new Admin();
-			userStream >> *newUser;
+			user = new Admin();
+			userStream >> *user;
 			break;
 		case GuestType:
-			newUser = new Guest();
+			user = defaultUser;
 			break;
 		case NormalUserType:
-			newUser = new NormalUser();
-			userStream >> *newUser;
+			user = new NormalUser();
+			userStream >> *user;
 			break;
 		case ModeratorType:
-			newUser = new Moderator();
-			userStream >> *newUser;
+			user = new Moderator();
+			userStream >> *user;
 			break;
 		}
-		return newUser;
 	}
 
 	void ClientController::execute(ResponseMessage & message)
@@ -313,8 +315,7 @@ namespace cforum
 		switch (message.getType())
 		{
 		case UpdateUserResponseMessageType:
-			delete user;
-			user = loadUser(iss);
+			loadUser(iss);
 			emit forumOpened();
 			break;
 		case ToastResponseMessageType:
@@ -333,6 +334,7 @@ namespace cforum
 			newPost = new Post;
 			iss >> *newPost;
 			posts->append(newPost);
+			setPosts();
 			emit boardOpened();
 			break;
 		case AddCommentMessageType:
@@ -340,12 +342,12 @@ namespace cforum
 			newComment = new Comment;
 			iss >> *newComment;
 			comments->append(newComment);
+			setComments();
 			emit postOpened();
 			break;
 		default:
 			break;
 		}
-		emit messageSent(message.dump());
 	}
 
 	void ClientController::sendMessage(RequestMessage & message)
