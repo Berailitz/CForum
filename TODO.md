@@ -278,8 +278,7 @@ ClientController
             1. `RemoveModeratorMessageType`
     - 处理器`ClientDescriptor`
         - 继承自`ClientState`
-        - `Message loadMessage(const QString textMessage)`
-        - `QString dumpMessage(const Message message)`
+        - `QWebSocket *client`
     - 客户端控制器`ClientController`
         - 按需加载并保存当前界面上的状态信息
         - `QQmlApplicationEngine *engine = nullptr`
