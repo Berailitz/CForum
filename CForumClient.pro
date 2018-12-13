@@ -14,7 +14,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        main.cpp \
     board.cpp \
     cforum.cpp \
     client_controller.cpp \
@@ -30,7 +29,8 @@ SOURCES += \
     client_state.cpp \
     message.cpp \
     request_message.cpp \
-    response_message.cpp
+    response_message.cpp \
+    client_main.cpp
 
 RESOURCES += qml.qrc
 
