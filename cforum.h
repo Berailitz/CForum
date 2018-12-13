@@ -67,6 +67,8 @@ namespace cforum
 		BoardList* boards = nullptr;
 		UserList* users = nullptr;
     };
+
+	User * loadUser(istream &userStream);
 }
 
 #endif // !CFORUM_CFORUM_H
