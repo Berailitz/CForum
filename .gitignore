@@ -423,5 +423,3 @@ CMakeLists.txt.user*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-CForum.vcxproj
-CForum.vcxproj.filters
