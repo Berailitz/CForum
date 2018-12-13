@@ -277,32 +277,11 @@ namespace cforum
 
 	void ClientController::loadUser(istream &userStream)
 	{
-		int typeInt;
-		UserType type;
-		userStream >> typeInt;
-		type = static_cast<UserType>(typeInt);
-		if (user = defaultUser)
+		if (user != defaultUser)
 		{
 			delete user;
 		}
-		switch (type)
-		{
-		case AdminType:
-			user = new Admin();
-			userStream >> *user;
-			break;
-		case GuestType:
-			user = defaultUser;
-			break;
-		case NormalUserType:
-			user = new NormalUser();
-			userStream >> *user;
-			break;
-		case ModeratorType:
-			user = new Moderator();
-			userStream >> *user;
-			break;
-		}
+		user = cforum::loadUser(userStream);
 	}
 
 	void ClientController::execute(ResponseMessage & message)
