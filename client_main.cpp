@@ -19,9 +19,9 @@ int main(int argc, char *argv[])
 	cforum::ClientController *forumController = new cforum::ClientController(engine);
 	engine.rootContext()->setContextProperty("forumController", QVariant::fromValue(&*forumController));
 	QObject::connect(&*errorHandler, &cforum::ErrorHandler::errorRaised, &*forumController, &cforum::ClientController::errorRaised);
+	forumController->refreshViews();
 	engine.load(QUrl(QString::fromUtf8("qrc:/qml/client_main.qml")));
 	forumController->open(QString::fromUtf8("ws://localhost:8118/"));
-	forumController->refreshViews();
 	returnValue = app.exec();
 	return returnValue;
 }
