@@ -300,6 +300,7 @@ ClientController
     2. 游客账号的用户名和密码均为`Guest`
     3. 新增主题帖、回复帖的`ID`字段由服务端设置，请求报文中的`ID`字段为`-1`
     4. 主题帖标题由服务端处理，即服务端发送的标题中包含发帖人和时间
+    5. 登录成功后，服务端自动下发版面列表
 - 协议格式
     - 请求版面列表
         - C: `{GetBoardListRequestMessageType}`
@@ -326,10 +327,10 @@ ClientController
     - 发回复帖
         - C: `{AddCommentMessageType}\n{boardID}\n{postID}\n{{commentID}.cfdata}`
         - S: `{AddCommentMessageType}\n{boardID}\n{postID}\n{{commentID}.cfdata}`
-    - 设置版主
+    - 设置版主: #TODO#
         - C: `{AddModeratorMessageType}\n{boardID}\n{userName}`
         - S: `{AddModeratorMessageType}\n{boardID}\n{userName}`
-    - 取消设置版主
+    - 取消设置版主: #TODO#
         - C: `{RemoveModeratorMessageType}\n{boardID}\n{userName}`
         - S: `{RemoveModeratorMessageType}\n{boardID}\n{userName}`
 
