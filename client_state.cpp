@@ -5,4 +5,8 @@ namespace cforum
 	ClientState::ClientState() : QObject()
 	{
 	}
+
+	ClientState::~ClientState()
+	{
+	}
 }
