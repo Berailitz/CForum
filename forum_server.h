@@ -9,11 +9,14 @@
 
 #include "cforum.h"
 #include "request_message.h"
+#include "response_message.h"
 #include "client_descriptor.h"
 
 namespace cforum
 {
 	using ClientList = QVector<ClientDescriptor *>;
+
+	const string REGISTER_SUCCESS_MESSAGE = "注册成功";
 
     class ForumServer : public QObject
     {
@@ -22,6 +25,8 @@ namespace cforum
 		ForumServer();
 		~ForumServer();
         bool listen(const int port = 8118);
+		bool load(const fs::path path);
+		bool save(const fs::path path) const;
 
     public Q_SLOTS:
         void onNewConnection();
@@ -36,7 +41,13 @@ namespace cforum
 		CForum *cforum;
         QWebSocketServer *server;
 		ClientList *clients;
-		void execute(const RequestMessage &message);
+		void execute(QWebSocket &socket, const RequestMessage &request);
+		void sendBoardList(QWebSocket &socket) const;
+		void sendPostList(QWebSocket &socket, const int boardID) const;
+		void sendCommentList(QWebSocket &socket, const int boardID, const int postID) const;
+		void addNormalUser(QWebSocket &socket, const QString name, const QString password) const;
+		void login(QWebSocket &socket, const QString name, const QString password) const;
+		void addBoard(QWebSocket &socket, const QString name) const;
     };
 }
 

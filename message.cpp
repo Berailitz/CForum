@@ -17,13 +17,14 @@ namespace cforum
 		stringstream iss(qstring.toStdString());
 		int typeInt;
 		iss >> typeInt;
+		iss.get();
 		type = static_cast<MessageType>(typeInt);
 		messageString = QString::fromStdString(string((istreambuf_iterator<char>(iss)), {}));
 	}
 
 	QString Message::dump() const
 	{
-		return QString::number(type) + LINE_BREAK + messageString;
+		return QString::number(type) + Q_LINE_BREAK + messageString;
 	}
 
 	MessageType Message::getType() const
@@ -34,5 +35,10 @@ namespace cforum
 	QString Message::getMessageString() const
 	{
 		return messageString;
+	}
+
+	void Message::setMessageString(const QString & newMessageString)
+	{
+		messageString = newMessageString;
 	}
 }
