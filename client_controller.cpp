@@ -23,9 +23,36 @@ namespace cforum
 
     ClientController::~ClientController()
 	{
+		if (user != defaultUser)
+		{
+			delete user;
+		}
+		if (board != defaultBoard)
+		{
+			delete board;
+		}
+		if (post != defaultPost)
+		{
+			delete post;
+		}
+		if (boards != defaultBoards)
+		{
+			delete boards;
+		}
+		if (posts != defaultPosts)
+		{
+			delete posts;
+		}
+		if (comments != defaultComments)
+		{
+			delete comments;
+		}
 		delete defaultUser;
 		delete defaultBoard;
 		delete defaultPost;
+		delete defaultBoards;
+		delete defaultPosts;
+		delete defaultComments;
 	}
 
     QString ClientController::getGreeting() const
@@ -241,13 +268,11 @@ namespace cforum
 
 	void ClientController::openPost(const int postID)
 	{
-		Post *newPost = board->getPostByID(postID);
-		if (newPost)
-		{
-			post = newPost;
-			refreshViews();
-			emit postOpened();
-		}
+		RequestMessage message;
+		resetPosts(true);
+		resetComments(true);
+		message.getPostList(postID);
+		sendMessage(message);
 	}
 
 	User * ClientController::loadUser(istream &userStream) const
