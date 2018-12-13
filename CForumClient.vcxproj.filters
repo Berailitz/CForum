@@ -175,7 +175,7 @@
     <None Include="qml\main.qml">
       <Filter>Resource Files</Filter>
     </None>
-    <QtRcc Include="qml.qrc">
+    <QtRcc Include="client_qml.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
     <None Include="qtquickcontrols2.conf">
