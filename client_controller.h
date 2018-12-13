@@ -26,7 +26,8 @@ namespace cforum
 	const QString USER_IS_MODERATOR_MESSAGE = QString::fromUtf8("用户是版主");
 	const QString ILLEGAL_OPERATION_MESSAGE = QString::fromUtf8("非法操作");
 	const QString MODERATOR_NOTE_MESSAGE = QString::fromUtf8("（我管理的版面）");
-	const QString MODERATOR_LIST_PREFIX_MESSAGE = QString::fromUtf8("，版主为：");
+	const QString MODERATOR_COUNT_PREFIX_MESSAGE = QString::fromUtf8("，");
+	const QString MODERATOR_COUNT_SUBFIX_MESSAGE = QString::fromUtf8("位版主");
 	const QString NO_MODERATOR_MESSGAE = QString::fromUtf8("，本版面没有版主");
 	const QString LIST_SEPARATER = QString::fromUtf8(", ");
 	const QUrl DATABASE_PATH = QUrl::fromLocalFile("data");
@@ -66,14 +67,12 @@ namespace cforum
     public Q_SLOTS:
 		void errorRaised(const QString message);
 		void initializeConnection();
-		void initializeDatabase();
         void addUser(const QString userName, const QString password); // 注册
         void login(const QString userName, const QString password);
 		void guestLogin();
 		void logout();
         void setModerator(const QString userName); // 将用户设为当前版面的版主之一
 		void removeModerator(const QString userName); // 将用户从当前版面的版主列表中移除
-        QString getUsername(const int userID) const; // #TODO#
 		void viewForum(); // 控制UI转向论坛界面
         void addBoard(const QString boardName);
         void viewBoard(const int boardID = -1); // 控制UI转向版面界面
@@ -90,7 +89,9 @@ namespace cforum
 	private:
         QQmlApplicationEngine &engine;
 		QWebSocket *socket = nullptr;
-		CForum *cforum;
+		BoardList* boards;
+		PostList* posts;
+		CommentList* comments;
 		User *user;
 		Board *board;
 		Post *post;
@@ -100,8 +101,18 @@ namespace cforum
         User *defaultUser;
         Board *defaultBoard;
         Post *defaultPost;
+		BoardList* defaultBoards = nullptr;
+		PostList* defaultPosts = nullptr;
+		CommentList* defaultComments = nullptr;
+		User *loadUser(istream &userStream) const;
 		void execute(ResponseMessage &message);
 		void sendMessage(RequestMessage &message);
+		void resetBoards(bool doClear);
+		void resetPosts(bool doClear);
+		void resetComments(bool doClear);
+		void setBoards();
+		void setPosts();
+		void setComments();
 	};
 }
 

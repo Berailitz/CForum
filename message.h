@@ -41,6 +41,8 @@ namespace cforum
 		Message(const QString &qstring);
 		virtual void load(const QString &qstring);
 		virtual QString dump() const;
+		MessageType getType() const;
+		QString getMessageString() const;
 
 	protected:
 		MessageType type = EmptyMessageType;

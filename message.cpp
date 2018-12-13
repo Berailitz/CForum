@@ -25,4 +25,14 @@ namespace cforum
 	{
 		return QString::number(type) + LINE_BREAK + messageString;
 	}
+
+	MessageType Message::getType() const
+	{
+		return type;
+	}
+	
+	QString Message::getMessageString() const
+	{
+		return messageString;
+	}
 }
