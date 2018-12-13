@@ -317,7 +317,7 @@
     <None Include="qml\ForumViews\ForumItems\PostItem.qml" />
     <None Include="qml\ForumViews\PostView.qml" />
     <None Include="qml\main.qml" />
-    <QtRcc Include="qml.qrc">
+    <QtRcc Include="client_qml.qrc">
     </QtRcc>
     <None Include="qtquickcontrols2.conf" />
   </ItemGroup>

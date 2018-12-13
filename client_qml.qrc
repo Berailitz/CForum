@@ -1,7 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>qtquickcontrols2.conf</file>
-        <file>qml/main.qml</file>
+        <file>qml/client_main.qml</file>
         <file>qml/ForumViews/BoardView.qml</file>
         <file>qml/ForumViews/ForumView.qml</file>
         <file>qml/ForumViews/HomePage.qml</file>
