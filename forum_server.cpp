@@ -141,9 +141,9 @@ namespace cforum
 
 	void ForumServer::sendBoardList(QWebSocket & socket) const
 	{
-		ostringstream oss;
 		for (QObject *&qit : *cforum->getBoards())
 		{
+			ostringstream oss;
 			Board *bit = static_cast<Board*>(qit);
 			oss << AddBoardMessageType << STD_LINE_BREAK << *bit;
 			socket.sendTextMessage(QString::fromStdString(oss.str()));
@@ -152,13 +152,13 @@ namespace cforum
 
 	void ForumServer::sendPostList(QWebSocket & socket, const int boardID) const
 	{
-		ostringstream oss;
 		Board *board;
 		board = cforum->getBoardByID(boardID);
 		if (board)
 		{
 			for (QObject *&qit : *board->getPosts())
 			{
+				ostringstream oss;
 				Post *pit = static_cast<Post*>(qit);
 				oss << AddPostMessageType << STD_LINE_BREAK << boardID << STD_LINE_BREAK << *pit;
 				socket.sendTextMessage(QString::fromStdString(oss.str()));
@@ -168,7 +168,6 @@ namespace cforum
 
 	void ForumServer::sendCommentList(QWebSocket & socket, const int boardID, const int postID) const
 	{
-		ostringstream oss;
 		Board *board;
 		Post *post;
 		board = cforum->getBoardByID(boardID);
@@ -179,6 +178,7 @@ namespace cforum
 			{
 				for (QObject *&qit : *post->getComments())
 				{
+					ostringstream oss;
 					Comment *cit = static_cast<Comment*>(qit);
 					oss << AddCommentMessageType << STD_LINE_BREAK << boardID << STD_LINE_BREAK << postID << STD_LINE_BREAK << *cit;
 					socket.sendTextMessage(QString::fromStdString(oss.str()));
@@ -189,11 +189,11 @@ namespace cforum
 
 	void ForumServer::addNormalUser(QWebSocket & socket, const QString name, const QString password) const
 	{
-		ostringstream oss;
 		User *user;
 		user = cforum->addNormalUser(name, password);
 		if (user)
 		{
+			ostringstream oss;
 			oss << ToastResponseMessageType << STD_LINE_BREAK << REGISTER_SUCCESS_MESSAGE;
 			socket.sendTextMessage(QString::fromStdString(oss.str()));
 		}
@@ -201,23 +201,23 @@ namespace cforum
 
 	void ForumServer::login(QWebSocket & socket, const QString name, const QString password) const
 	{
-		ostringstream oss;
 		User *user;
 		user = cforum->login(name, password);
 		if (user)
 		{
+			ostringstream oss;
 			oss << UpdateUserResponseMessageType << STD_LINE_BREAK << *user;
 			socket.sendTextMessage(QString::fromStdString(oss.str()));
+			sendBoardList(socket);
 		}
-		sendBoardList(socket);
 	}
 
 	void ForumServer::addBoard(QWebSocket & socket, const QString name) const
 	{
-		ostringstream oss;
 		Board *board = cforum->addBoard(name);
 		if (board)
 		{
+			ostringstream oss;
 			oss << AddBoardMessageType << STD_LINE_BREAK << *board;
 			socket.sendTextMessage(QString::fromStdString(oss.str()));
 		}
