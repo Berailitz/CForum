@@ -32,7 +32,8 @@ SOURCES += \
     response_message.cpp \
     client_main.cpp
 
-RESOURCES += qml.qrc
+RESOURCES += \
+    client_qml.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
