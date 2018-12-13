@@ -533,4 +533,32 @@ namespace cforum
 		}
 		return true;
 	}
+
+	User * loadUser(istream & userStream)
+	{
+		User *user;
+		int typeInt;
+		UserType type;
+		userStream >> typeInt;
+		type = static_cast<UserType>(typeInt);
+		switch (type)
+		{
+		case AdminType:
+			user = new Admin();
+			userStream >> *user;
+			break;
+		case GuestType:
+			user = new Guest();
+			break;
+		case NormalUserType:
+			user = new NormalUser();
+			userStream >> *user;
+			break;
+		case ModeratorType:
+			user = new Moderator();
+			userStream >> *user;
+			break;
+		}
+		return user;
+	}
 }
