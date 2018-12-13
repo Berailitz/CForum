@@ -7,6 +7,10 @@ namespace cforum
 
 	}
 
+	RequestMessage::RequestMessage(const QString & qstring) : Message(qstring)
+	{
+	}
+
 	void RequestMessage::addNormalUser(const QString userName, const QString password)
 	{
 		type = RegisterRequestMessageType;

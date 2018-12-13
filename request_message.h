@@ -9,6 +9,7 @@ namespace cforum
 	{
 	public:
 		RequestMessage();
+		RequestMessage(const QString &qstring);
 		void addNormalUser(const QString userName, const QString password);
 		void login(const QString userName, const QString password);
 		void logout();
