@@ -9,9 +9,12 @@
 
 #include "cforum.h"
 #include "request_message.h"
+#include "client_descriptor.h"
 
 namespace cforum
 {
+	using ClientList = QVector<ClientDescriptor *>;
+
     class ForumServer : public QObject
     {
         Q_OBJECT
@@ -32,8 +35,7 @@ namespace cforum
     private:
 		CForum *cforum;
         QWebSocketServer *server;
-        QList<QWebSocket *> *clients;
-        QString hashSocket(const QWebSocket &socket);
+		ClientList *clients;
 		void execute(const RequestMessage &message);
     };
 }
