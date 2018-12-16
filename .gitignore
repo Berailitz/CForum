@@ -1,5 +1,6 @@
 data/
 data.bak/
+build/
 
 # Prerequisites
 *.d
