@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="board.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cforum.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="controller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cfcommon.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="user.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="admin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="comment.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="guest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="moderator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="normal_user.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="post.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="board.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="cforum.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="controller.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="user.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="cfcommon.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="admin.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="comment.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="guest.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="moderator.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="normal_user.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="post.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="debug\moc_predefs.h.cbt">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="release\moc_predefs.h.cbt">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="qml\ForumViews\ForumItems\BoardItem.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\ForumViews\BoardView.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\ForumViews\ForumItems\CommentItem.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\ForumViews\ForumView.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\ForumViews\HomePage.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\ForumViews\ForumDialogs\AddCommentDialog.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\ForumViews\ForumDialogs\AddPostDialog.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\ForumViews\ForumDialogs\AddBoard.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\ForumViews\ForumItems\PostItem.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\ForumViews\PostView.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qml\main.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <QtRcc Include="qml.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
+    <None Include="qtquickcontrols2.conf">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+</Project>
