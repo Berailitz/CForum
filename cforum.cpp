@@ -351,77 +351,87 @@ namespace cforum
 
 	bool CForum::load(const fs::path path)
 	{
-		string raw_string;
-		int userCounter = count_files(path / "user");
-		int boardCounter = count_files(path / "content");
-		initializeDatabase();
-		for (int userID = 1; userID <= userCounter; userID++)
+		const fs::path userPath = path / "user";
+		const fs::path contentPath = path / "content";
+		if (fs::exists(path) && fs::exists(userPath) && fs::exists(contentPath))
 		{
-			// 读取用户信息
-			ifstream userStream(path / "user" / (to_string(userID) + ".cfdata"));
-			if (userStream.is_open())
+			string raw_string;
+			int userCounter = count_files(userPath);
+			int boardCounter = count_files(contentPath);
+			initializeDatabase();
+			for (int userID = 1; userID <= userCounter; userID++)
 			{
-				int typeInt;
-				UserType type;
-				User *newUser;
-				userStream >> typeInt;
-				type = static_cast<UserType>(typeInt);
-				switch (type)
+				// 读取用户信息
+				ifstream userStream(userPath / (to_string(userID) + ".cfdata"));
+				if (userStream.is_open())
 				{
-				case AdminType:
-					newUser = new Admin();
-					userStream >> *newUser;
-					users->push_back(newUser);
-					break;
-				case GuestType:
-					errorHandler->raiseError(INVALID_USER_TYPE_MESSAGE);
-					break;
-				case NormalUserType:
-					newUser = new NormalUser();
-					userStream >> *newUser;
-					users->push_back(newUser);
-					break;
-				case ModeratorType:
-					newUser = new Moderator();
-					userStream >> *newUser;
-					users->push_back(newUser);
-					break;
+					int typeInt;
+					UserType type;
+					User *newUser;
+					userStream >> typeInt;
+					type = static_cast<UserType>(typeInt);
+					switch (type)
+					{
+					case AdminType:
+						newUser = new Admin();
+						userStream >> *newUser;
+						users->push_back(newUser);
+						break;
+					case GuestType:
+						errorHandler->raiseError(INVALID_USER_TYPE_MESSAGE);
+						break;
+					case NormalUserType:
+						newUser = new NormalUser();
+						userStream >> *newUser;
+						users->push_back(newUser);
+						break;
+					case ModeratorType:
+						newUser = new Moderator();
+						userStream >> *newUser;
+						users->push_back(newUser);
+						break;
+					}
+					userStream.close();
 				}
-				userStream.close();
+				else
+				{
+					errorHandler->raiseError(DATABASE_ERROR_READING_MESSAGE);
+					return false;
+				}
+			}
+			for (int boardID = 1; boardID <= boardCounter; boardID++)
+			{
+				// 读取版面
+				fs::path boardPath = contentPath / to_string(boardID);
+				ifstream boardStream(boardPath / "board.cfdata");
+				if (boardStream.is_open())
+				{
+					Board *newBoard = new Board();
+					boardStream >> *newBoard;
+					boards->push_back(newBoard);
+					newBoard->loadPosts(boardPath);
+					boardStream.close();
+				}
+				else
+				{
+					errorHandler->raiseError(DATABASE_ERROR_READING_MESSAGE);
+					return false;
+				}
+			}
+			// 检查论坛数据有效性
+			if (!checkData())
+			{
+				return false;
 			}
 			else
 			{
-				errorHandler->raiseError(DATABASE_ERROR_READING_MESSAGE);
-				return false;
+				return true;
 			}
-		}
-		for (int boardID = 1; boardID <= boardCounter; boardID++)
-		{
-			// 读取版面
-			fs::path boardPath = path / "content" / to_string(boardID);
-			ifstream boardStream(boardPath / "board.cfdata");
-			if (boardStream.is_open())
-			{
-				Board *newBoard = new Board();
-				boardStream >> *newBoard;
-				boards->push_back(newBoard);
-				newBoard->loadPosts(boardPath);
-				boardStream.close();
-			}
-			else
-			{
-				errorHandler->raiseError(DATABASE_ERROR_READING_MESSAGE);
-				return false;
-			}
-		}
-		// 检查论坛数据有效性
-		if (!checkData())
-		{
-			return false;
 		}
 		else
 		{
-			return true;
+			errorHandler->raiseError(DATABASE_ERROR_ILLEGAL_FOLDER);
+			return false;
 		}
 	}
 
