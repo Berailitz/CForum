@@ -32,6 +32,7 @@ namespace cforum
 	const QString INVALID_MODERATOR_ID_MESSAGE = QString::fromUtf8("版主ID不合法");
 	const QString INVALID_POST_AUTHOR_ID_MESSAGE = QString::fromUtf8("主题帖作者ID不合法");
 	const QString INVALID_COMMENT_AUTHOR_ID_MESSAGE = QString::fromUtf8("回复帖作者ID不合法");
+	const QString DATABASE_ERROR_ILLEGAL_FOLDER = QString::fromUtf8("数据库文件夹结构不合法");
 	const QString DATABASE_ERROR_WRITING_MESSAGE = QString::fromUtf8("数据库写入异常");
 	const QString DATABASE_ERROR_READING_MESSAGE = QString::fromUtf8("数据库读取异常");
 
