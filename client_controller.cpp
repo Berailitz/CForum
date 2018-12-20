@@ -145,7 +145,7 @@ namespace cforum
 
 	void ClientController::viewForum()
 	{
-		emit openForum();
+		openForum();
 	}
 
     void ClientController::addBoard(const QString boardName)
@@ -157,7 +157,14 @@ namespace cforum
 
     void ClientController::viewBoard(const int boardID)
     {
-		openBoard(boardID);
+		if (boardID == -1)
+		{
+			openBoard(board->getID());
+		}
+		else
+		{
+			openBoard(boardID);
+		}
     }
 
 	bool ClientController::canRemovePost(const int postID) const
@@ -250,29 +257,29 @@ namespace cforum
 	void ClientController::openForum()
 	{
 		RequestMessage message;
-		resetBoards(true);
-		resetPosts(true);
-		resetComments(true);
 		message.getBoardList();
 		sendMessage(message);
+		board = defaultBoard;
 	}
 
 	void ClientController::openBoard(const int boardID)
 	{
 		RequestMessage message;
-		resetPosts(true);
-		resetComments(true);
 		message.getPostList(boardID);
 		sendMessage(message);
+		resetBoards(false);
+		board = static_cast<Board*>(boards->at(boardID - 1));
+		post = defaultPost;
 	}
 
 	void ClientController::openPost(const int postID)
 	{
 		RequestMessage message;
-		resetPosts(true);
-		resetComments(true);
-		message.getPostList(postID);
+		message.getCommentList(board->getID(), postID);
 		sendMessage(message);
+		resetPosts(false);
+		post = static_cast<Post*>(posts->at(postID - 1));
+		setPosts();
 	}
 
 	void ClientController::loadUser(istream &userStream)
@@ -291,11 +298,13 @@ namespace cforum
 		Board *newBoard;
 		Post *newPost;
 		Comment *newComment;
+		int targetBoardID;
+		int targetPostID;
 		switch (message.getType())
 		{
 		case UpdateUserResponseMessageType:
 			loadUser(iss);
-			emit forumOpened();
+			openForum();
 			break;
 		case ToastResponseMessageType:
 			emit messageSent(messageString);
@@ -304,25 +313,54 @@ namespace cforum
 			resetBoards(false);
 			newBoard = new Board;
 			iss >> *newBoard;
+			if (newBoard->getID() == 1)
+			{
+				boards->clear();
+			}
 			boards->append(newBoard);
 			setBoards();
 			emit forumOpened();
 			break;
 		case AddPostMessageType:
-			resetPosts(false);
-			newPost = new Post;
-			iss >> *newPost;
-			posts->append(newPost);
-			setPosts();
-			emit boardOpened();
+			iss >> targetBoardID;
+			iss.get();
+			resetBoards(false);
+			if (board->getID() == targetBoardID)
+			{
+				resetPosts(false);
+				newPost = new Post;
+				iss >> *newPost;
+				if (newPost->getID() == 1)
+				{
+					posts->clear();
+				}
+				posts->append(newPost);
+				setPosts();
+				emit boardOpened();
+			}
+			setBoards();
 			break;
 		case AddCommentMessageType:
-			resetComments(false);
-			newComment = new Comment;
-			iss >> *newComment;
-			comments->append(newComment);
-			setComments();
-			emit postOpened();
+			iss >> targetBoardID;
+			iss >> targetPostID;
+			iss.get();
+			resetBoards(false);
+			resetPosts(false);
+			if (board->getID() == targetBoardID && post->getID() == targetPostID)
+			{
+				resetComments(false);
+				newComment = new Comment;
+				iss >> *newComment;
+				if (newComment->getID() == 1)
+				{
+					comments->clear();
+				}
+				comments->append(newComment);
+				setComments();
+				emit postOpened();
+			}
+			setPosts();
+			setBoards();
 			break;
 		default:
 			break;
@@ -334,16 +372,43 @@ namespace cforum
 		socket->sendTextMessage(message.dump());
 	}
 
+	void ClientController::clearBoards()
+	{
+		board = defaultBoard;
+		for (QObject *&qit : *boards)
+		{
+			delete static_cast<Board*>(qit);
+		}
+		boards->clear();
+	}
+
+	void ClientController::clearPosts()
+	{
+		post = defaultPost;
+		for (QObject *qit : *posts)
+		{
+			delete static_cast<Post*>(qit);
+		}
+		posts->clear();
+	}
+
+	void ClientController::clearComments()
+	{
+		for (QObject* &qit : *comments)
+		{
+			Comment *cit;
+			cit = static_cast<Comment*>(qit);
+			delete cit;
+		}
+		comments->clear();
+	}
+
 	void ClientController::resetBoards(bool doClear)
 	{
 		engine.rootContext()->setContextProperty("boardListModel", QVariant::fromValue(*defaultBoards));
 		if (doClear)
 		{
-			for (QObject *&qit : *boards)
-			{
-				delete static_cast<Board*>(qit);
-			}
-			boards->clear();
+			clearBoards();
 		}
 	}
 
@@ -352,11 +417,7 @@ namespace cforum
 		engine.rootContext()->setContextProperty("postListModel", QVariant::fromValue(*defaultPosts));
 		if (doClear)
 		{
-			for (QObject *qit : *posts)
-			{
-				delete static_cast<Post*>(qit);
-			}
-			posts->clear();
+			clearPosts();
 		}
 	}
 
@@ -365,13 +426,7 @@ namespace cforum
 		engine.rootContext()->setContextProperty("commentListModel", QVariant::fromValue(*defaultComments));
 		if (doClear)
 		{
-			for (QObject* &qit : *comments)
-			{
-				Comment *cit;
-				cit = static_cast<Comment*>(qit);
-				delete cit;
-			}
-			comments->clear();
+			clearComments();
 		}
 	}
 
