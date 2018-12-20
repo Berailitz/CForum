@@ -67,8 +67,8 @@ namespace cforum
     {
         QWebSocket *socket = qobject_cast<QWebSocket *>(sender());
 		RequestMessage message(textMessage);
+		emit messageReceived(hashSocket(*socket) + QString::fromUtf8(" > ") + textMessage + "\n");
 		execute(*socket, message);
-        emit messageReceived(hashSocket(*socket) + QString::fromUtf8(" > ") + textMessage + "\n");
     }
 
     void ForumServer::onDisconnection()
@@ -91,11 +91,16 @@ namespace cforum
         {
             if (client->hash() == target)
             {
-                client->send(textMessage);
-                emit messageReceived(target + " < " + textMessage + "\n");
+				sendMessage(*client->getSocket(), textMessage);
             }
         }
     }
+
+	void ForumServer::sendMessage(QWebSocket & socket, const QString & textMessage)
+	{
+		socket.sendTextMessage(textMessage);
+		emit messageReceived(hashSocket(socket) + " < " + textMessage + "\n");
+	}
 
 	void ForumServer::execute(QWebSocket &socket, const RequestMessage & request)
 	{
@@ -139,18 +144,18 @@ namespace cforum
 		}
 	}
 
-	void ForumServer::sendBoardList(QWebSocket & socket) const
+	void ForumServer::sendBoardList(QWebSocket & socket)
 	{
 		for (QObject *&qit : *cforum->getBoards())
 		{
 			ostringstream oss;
 			Board *bit = static_cast<Board*>(qit);
 			oss << AddBoardMessageType << STD_LINE_BREAK << *bit;
-			socket.sendTextMessage(QString::fromStdString(oss.str()));
+			sendMessage(socket, QString::fromStdString(oss.str()));
 		}
 	}
 
-	void ForumServer::sendPostList(QWebSocket & socket, const int boardID) const
+	void ForumServer::sendPostList(QWebSocket & socket, const int boardID)
 	{
 		Board *board;
 		board = cforum->getBoardByID(boardID);
@@ -161,12 +166,12 @@ namespace cforum
 				ostringstream oss;
 				Post *pit = static_cast<Post*>(qit);
 				oss << AddPostMessageType << STD_LINE_BREAK << boardID << STD_LINE_BREAK << *pit;
-				socket.sendTextMessage(QString::fromStdString(oss.str()));
+				sendMessage(socket, QString::fromStdString(oss.str()));
 			}
 		}
 	}
 
-	void ForumServer::sendCommentList(QWebSocket & socket, const int boardID, const int postID) const
+	void ForumServer::sendCommentList(QWebSocket & socket, const int boardID, const int postID)
 	{
 		Board *board;
 		Post *post;
@@ -181,13 +186,13 @@ namespace cforum
 					ostringstream oss;
 					Comment *cit = static_cast<Comment*>(qit);
 					oss << AddCommentMessageType << STD_LINE_BREAK << boardID << STD_LINE_BREAK << postID << STD_LINE_BREAK << *cit;
-					socket.sendTextMessage(QString::fromStdString(oss.str()));
+					sendMessage(socket, QString::fromStdString(oss.str()));
 				}
 			}
 		}
 	}
 
-	void ForumServer::addNormalUser(QWebSocket & socket, const QString name, const QString password) const
+	void ForumServer::addNormalUser(QWebSocket & socket, const QString name, const QString password)
 	{
 		User *user;
 		user = cforum->addNormalUser(name, password);
@@ -195,11 +200,11 @@ namespace cforum
 		{
 			ostringstream oss;
 			oss << ToastResponseMessageType << STD_LINE_BREAK << REGISTER_SUCCESS_MESSAGE;
-			socket.sendTextMessage(QString::fromStdString(oss.str()));
+			sendMessage(socket, QString::fromStdString(oss.str()));
 		}
 	}
 
-	void ForumServer::login(QWebSocket & socket, const QString name, const QString password) const
+	void ForumServer::login(QWebSocket & socket, const QString name, const QString password)
 	{
 		User *user;
 		user = cforum->login(name, password);
@@ -207,19 +212,19 @@ namespace cforum
 		{
 			ostringstream oss;
 			oss << UpdateUserResponseMessageType << STD_LINE_BREAK << *user;
-			socket.sendTextMessage(QString::fromStdString(oss.str()));
-			sendBoardList(socket);
+			sendMessage(socket, QString::fromStdString(oss.str()));
+			//sendBoardList(socket);
 		}
 	}
 
-	void ForumServer::addBoard(QWebSocket & socket, const QString name) const
+	void ForumServer::addBoard(QWebSocket & socket, const QString name)
 	{
 		Board *board = cforum->addBoard(name);
 		if (board)
 		{
 			ostringstream oss;
 			oss << AddBoardMessageType << STD_LINE_BREAK << *board;
-			socket.sendTextMessage(QString::fromStdString(oss.str()));
+			sendMessage(socket, QString::fromStdString(oss.str()));
 		}
 	}
 }
