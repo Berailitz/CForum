@@ -16,10 +16,10 @@ namespace cforum
 {
 	using ClientList = QVector<ClientDescriptor *>;
 
-	const QString REGISTER_SUCCESS_MESSAGE = "注册成功";
-	const QString ADD_BOARD_SUCCESS_MESSAGE = "添加版面成功";
-	const QString ADD_POST_SUCCESS_MESSAGE = "发主题帖成功";
-	const QString ADD_COMMENT_SUCCESS_MESSAGE = "发回复帖成功";
+	const QString REGISTER_SUCCESS_MESSAGE = QString::fromUtf8("注册成功");
+	const QString ADD_BOARD_SUCCESS_MESSAGE = QString::fromUtf8("添加版面成功");
+	const QString ADD_POST_SUCCESS_MESSAGE = QString::fromUtf8("发主题帖成功");
+	const QString ADD_COMMENT_SUCCESS_MESSAGE = QString::fromUtf8("发回复帖成功");
 
     class ForumServer : public QObject
     {
