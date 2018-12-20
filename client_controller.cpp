@@ -201,6 +201,7 @@ namespace cforum
 
 	void ClientController::open(const QString &url)
 	{
+		emit messageSent(SERVER_CONNECTING_MESSAGE);
 		socket->open(url);
 		return;
 	}
@@ -220,7 +221,14 @@ namespace cforum
 
 	void ClientController::onDisconnected()
 	{
-		emit messageSent(SERVER_DISCONNECTED_MESSAGE);
+		emit messageSent(SERVER_DISCONNECTED_MESSAGE + socket->errorString());
+		open();
+	}
+
+	void ClientController::onError()
+	{
+		emit messageSent(SERVER_ERROR_MESSAGE + socket->errorString());
+		open();
 	}
 
 	bool ClientController::isAdmin() const
