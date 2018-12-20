@@ -48,7 +48,7 @@ namespace cforum
 		Post *addPost(const int boardID, const QString title, const QString content, const int userID);
 		bool canRemovePost(const int boardID, const int postID, const int userID) const;
 		bool removePost(const int boardID, const int postID, const int userID);
-		bool addComment(const int boardID, const int postID, const QString content, const int userID);
+		Comment * addComment(const int boardID, const int postID, const QString content, const int userID);
 		bool removeComment(const int boardID, const int postID, const int commentID, const int userID);
         Board *getBoardByID(const int boardID) const;
         User *getUserByID(const int userID) const;

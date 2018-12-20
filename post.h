@@ -23,7 +23,7 @@ namespace cforum
 		QString getTitle() const;
 		bool canRemove(const bool isModerator = false) const;
 		CommentList* getComments();
-        bool post(const QString content, const int userID); // newComment is in heap
+		Comment * post(const QString content, const int userID); // newComment is in heap
 		void removeContent();
         bool remove(const int commentID); // commentID < comments->size()，删除回复贴
 		Comment *getCommentByID(const int commentID);

@@ -267,7 +267,7 @@ namespace cforum
 		}
 	}
 
-	bool CForum::addComment(const int boardID, const int postID, const QString content, const int userID)
+	Comment * CForum::addComment(const int boardID, const int postID, const QString content, const int userID)
 	{
 		Board *board = getBoardByID(boardID);
 		User *user = getUserByID(userID);
@@ -276,8 +276,7 @@ namespace cforum
 			Post *post = board->getPostByID(postID);
 			if (post)
 			{
-				post->post(content, userID);
-				return true;
+				return post->post(content, userID);
 			}
 			else
 			{

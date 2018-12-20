@@ -48,13 +48,13 @@ namespace cforum
 		return comments;
 	}
 
-    bool Post::post(const QString content, const int userID)
+	Comment *Post::post(const QString content, const int userID)
     {
 		Comment * newComment = new Comment(comments->size() + 1, content, userID);
         comments->push_back(newComment);
 		visibleCommentCounter++;
 		emit commentsChanged();
-        return true;
+        return newComment;
     }
 
 	void Post::removeContent()
