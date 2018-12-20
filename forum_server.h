@@ -32,7 +32,8 @@ namespace cforum
         void onNewConnection();
         void onTextMessageReceived(const QString &textMessage);
         void onDisconnection();
-        void sendMessage(const QString &target, const QString &textMessage);
+		void sendMessage(const QString &target, const QString &textMessage);
+		void sendMessage(QWebSocket &socket, const QString &textMessage);
 
     Q_SIGNALS:
         void messageReceived(const QString &message);
@@ -42,12 +43,12 @@ namespace cforum
         QWebSocketServer *server;
 		ClientList *clients;
 		void execute(QWebSocket &socket, const RequestMessage &request);
-		void sendBoardList(QWebSocket &socket) const;
-		void sendPostList(QWebSocket &socket, const int boardID) const;
-		void sendCommentList(QWebSocket &socket, const int boardID, const int postID) const;
-		void addNormalUser(QWebSocket &socket, const QString name, const QString password) const;
-		void login(QWebSocket &socket, const QString name, const QString password) const;
-		void addBoard(QWebSocket &socket, const QString name) const;
+		void sendBoardList(QWebSocket &socket);
+		void sendPostList(QWebSocket &socket, const int boardID);
+		void sendCommentList(QWebSocket &socket, const int boardID, const int postID);
+		void addNormalUser(QWebSocket &socket, const QString name, const QString password);
+		void login(QWebSocket &socket, const QString name, const QString password);
+		void addBoard(QWebSocket &socket, const QString name);
     };
 }
 

@@ -8,7 +8,7 @@ RowLayout {
     visible: !model.isRemoved
     height: model.isRemoved ? 0 : implicitHeight
     Text {
-        text: qsTr("#") + model.id + " " + model.title + qsTr(" -- by: ") + forumController.getUsername(model.authorID) + ", " + model.time
+        text: qsTr("#") + model.id + " " + model.title
         font.family: "dengxian"
         font.pointSize: 20
         Layout.preferredWidth: 850
