@@ -280,6 +280,7 @@ namespace cforum
 		resetPosts(false);
 		post = static_cast<Post*>(posts->at(postID - 1));
 		setPosts();
+		emit postOpened();
 	}
 
 	void ClientController::loadUser(istream &userStream)
