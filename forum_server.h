@@ -17,7 +17,9 @@ namespace cforum
 	using ClientList = QVector<ClientDescriptor *>;
 
 	const QString REGISTER_SUCCESS_MESSAGE = "注册成功";
+	const QString ADD_BOARD_SUCCESS_MESSAGE = "添加版面成功";
 	const QString ADD_POST_SUCCESS_MESSAGE = "发主题帖成功";
+	const QString ADD_COMMENT_SUCCESS_MESSAGE = "发回复帖成功";
 
     class ForumServer : public QObject
     {
@@ -58,6 +60,7 @@ namespace cforum
 		void login(QWebSocket &socket, const QString name, const QString password);
 		void addBoard(QWebSocket &socket, const QString name);
 		void addPost(QWebSocket & socket, const int boardID, istream &in);
+		void addComment(QWebSocket & socket, const int boardID, const int postID, istream &in);
     };
 }
 

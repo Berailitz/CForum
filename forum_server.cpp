@@ -144,6 +144,12 @@ namespace cforum
 			iss.get();
 			addPost(socket, boardID, iss);
 			break;
+		case AddCommentMessageType:
+			iss >> boardID;
+			iss >> postID;
+			iss.get();
+			addComment(socket, boardID, postID, iss);
+			break;
 		default:
 			break;
 		}
@@ -268,9 +274,8 @@ namespace cforum
 		Board *board = cforum->addBoard(name);
 		if (board)
 		{
-			ostringstream oss;
-			oss << AddBoardMessageType << STD_LINE_BREAK << *board;
-			sendMessage(socket, QString::fromStdString(oss.str()));
+			sendToast(socket, ADD_BOARD_SUCCESS_MESSAGE);
+			broadcastBoard(*board);
 		}
 	}
 
@@ -283,6 +288,18 @@ namespace cforum
 		{
 			sendToast(socket, ADD_POST_SUCCESS_MESSAGE);
 			broadcastPost(boardID, *realPost);
+		}
+	}
+
+	void ForumServer::addComment(QWebSocket & socket, const int boardID, const int postID, istream & in)
+	{
+		Comment newComment;
+		in >> newComment;
+		Comment *realComment = cforum->addComment(boardID, postID, newComment.getContent(), newComment.getAuthorID());
+		if (realComment)
+		{
+			sendToast(socket, ADD_COMMENT_SUCCESS_MESSAGE);
+			broadcastComment(boardID, postID, *realComment);
 		}
 	}
 }
