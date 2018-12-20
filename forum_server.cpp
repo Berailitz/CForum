@@ -139,20 +139,44 @@ namespace cforum
 			getline(iss, boardName);
 			addBoard(socket, QString::fromStdString(boardName));
 			break;
+		case AddPostMessageType:
+			iss >> boardID;
+			iss.get();
+			addPost(socket, boardID, iss);
+			break;
 		default:
 			break;
 		}
+	}
+
+	void ForumServer::sendBoard(QWebSocket & socket, const Board & board)
+	{
+		ostringstream oss;
+		oss << AddBoardMessageType << STD_LINE_BREAK << board;
+		sendMessage(socket, QString::fromStdString(oss.str()));
 	}
 
 	void ForumServer::sendBoardList(QWebSocket & socket)
 	{
 		for (QObject *&qit : *cforum->getBoards())
 		{
-			ostringstream oss;
-			Board *bit = static_cast<Board*>(qit);
-			oss << AddBoardMessageType << STD_LINE_BREAK << *bit;
-			sendMessage(socket, QString::fromStdString(oss.str()));
+			sendBoard(socket, *static_cast<Board*>(qit));
 		}
+	}
+
+	void ForumServer::broadcastBoard(const Board & board)
+	{
+		for (ClientDescriptor *client : *clients)
+		{
+			sendBoard(*client->getSocket(), board);
+		}
+	}
+
+	void ForumServer::sendPost(QWebSocket & socket, const int boardID, const Post &post)
+	{
+		ostringstream oss;
+		oss << AddPostMessageType << STD_LINE_BREAK << boardID << STD_LINE_BREAK << post;
+		sendMessage(socket, QString::fromStdString(oss.str()));
 	}
 
 	void ForumServer::sendPostList(QWebSocket & socket, const int boardID)
@@ -163,12 +187,24 @@ namespace cforum
 		{
 			for (QObject *&qit : *board->getPosts())
 			{
-				ostringstream oss;
-				Post *pit = static_cast<Post*>(qit);
-				oss << AddPostMessageType << STD_LINE_BREAK << boardID << STD_LINE_BREAK << *pit;
-				sendMessage(socket, QString::fromStdString(oss.str()));
+				sendPost(socket, boardID, *static_cast<Post*>(qit));
 			}
 		}
+	}
+
+	void ForumServer::broadcastPost(const int boardID, const Post & post)
+	{
+		for (ClientDescriptor *client : *clients)
+		{
+			sendPost(*client->getSocket(), boardID, post);
+		}
+	}
+
+	void ForumServer::sendComment(QWebSocket & socket, const int boardID, const int postID, const Comment & comment)
+	{
+		ostringstream oss;
+		oss << AddCommentMessageType << STD_LINE_BREAK << boardID << STD_LINE_BREAK << postID << STD_LINE_BREAK << comment;
+		sendMessage(socket, QString::fromStdString(oss.str()));
 	}
 
 	void ForumServer::sendCommentList(QWebSocket & socket, const int boardID, const int postID)
@@ -183,13 +219,25 @@ namespace cforum
 			{
 				for (QObject *&qit : *post->getComments())
 				{
-					ostringstream oss;
-					Comment *cit = static_cast<Comment*>(qit);
-					oss << AddCommentMessageType << STD_LINE_BREAK << boardID << STD_LINE_BREAK << postID << STD_LINE_BREAK << *cit;
-					sendMessage(socket, QString::fromStdString(oss.str()));
+					sendComment(socket, boardID, postID, *static_cast<Comment*>(qit));
 				}
 			}
 		}
+	}
+
+	void ForumServer::broadcastComment(const int boardID, const int postID, const Comment & comment)
+	{
+		for (ClientDescriptor *client : *clients)
+		{
+			sendComment(*client->getSocket(), boardID, postID, comment);
+		}
+	}
+
+	void ForumServer::sendToast(QWebSocket & socket, const QString &text)
+	{
+		ostringstream oss;
+		oss << ToastResponseMessageType << STD_LINE_BREAK << text.toStdString();
+		sendMessage(socket, QString::fromStdString(oss.str()));
 	}
 
 	void ForumServer::addNormalUser(QWebSocket & socket, const QString name, const QString password)
@@ -198,9 +246,7 @@ namespace cforum
 		user = cforum->addNormalUser(name, password);
 		if (user)
 		{
-			ostringstream oss;
-			oss << ToastResponseMessageType << STD_LINE_BREAK << REGISTER_SUCCESS_MESSAGE;
-			sendMessage(socket, QString::fromStdString(oss.str()));
+			sendToast(socket, REGISTER_SUCCESS_MESSAGE);
 		}
 	}
 
@@ -225,6 +271,18 @@ namespace cforum
 			ostringstream oss;
 			oss << AddBoardMessageType << STD_LINE_BREAK << *board;
 			sendMessage(socket, QString::fromStdString(oss.str()));
+		}
+	}
+
+	void ForumServer::addPost(QWebSocket & socket, const int boardID, istream & in)
+	{
+		Post newPost;
+		in >> newPost;
+		Post *realPost = cforum->addPost(boardID, newPost.getTitle(), newPost.getContent(), newPost.getAuthorID());
+		if (realPost)
+		{
+			sendToast(socket, ADD_POST_SUCCESS_MESSAGE);
+			broadcastPost(boardID, *realPost);
 		}
 	}
 }
