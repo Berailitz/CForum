@@ -95,7 +95,7 @@ ApplicationWindow {
         target: forumServer
         onMessageReceived: {
             console.log(message)
-            historyTextArea.text += message
+            historyTextArea.append(message)
         }
     }
 }

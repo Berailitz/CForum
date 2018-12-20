@@ -107,6 +107,9 @@ namespace cforum
 		void loadUser(istream &userStream);
 		void execute(ResponseMessage &message);
 		void sendMessage(RequestMessage &message);
+		void clearBoards();
+		void clearPosts();
+		void clearComments();
 		void resetBoards(bool doClear);
 		void resetPosts(bool doClear);
 		void resetComments(bool doClear);
