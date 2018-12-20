@@ -315,7 +315,7 @@ namespace cforum
 			iss >> *newBoard;
 			if (newBoard->getID() == 1)
 			{
-				boards->clear();
+				clearBoards();
 			}
 			boards->append(newBoard);
 			setBoards();
@@ -332,7 +332,7 @@ namespace cforum
 				iss >> *newPost;
 				if (newPost->getID() == 1)
 				{
-					posts->clear();
+					clearPosts();
 				}
 				posts->append(newPost);
 				setPosts();
@@ -353,7 +353,7 @@ namespace cforum
 				iss >> *newComment;
 				if (newComment->getID() == 1)
 				{
-					comments->clear();
+					clearComments();
 				}
 				comments->append(newComment);
 				setComments();
@@ -377,7 +377,7 @@ namespace cforum
 		board = defaultBoard;
 		for (QObject *&qit : *boards)
 		{
-			delete static_cast<Board*>(qit);
+			qit->deleteLater();
 		}
 		boards->clear();
 	}
@@ -387,7 +387,7 @@ namespace cforum
 		post = defaultPost;
 		for (QObject *qit : *posts)
 		{
-			delete static_cast<Post*>(qit);
+			qit->deleteLater();
 		}
 		posts->clear();
 	}
@@ -396,9 +396,7 @@ namespace cforum
 	{
 		for (QObject* &qit : *comments)
 		{
-			Comment *cit;
-			cit = static_cast<Comment*>(qit);
-			delete cit;
+			qit->deleteLater();
 		}
 		comments->clear();
 	}
