@@ -258,14 +258,23 @@ namespace cforum
 
 	void ForumServer::login(QWebSocket & socket, const QString name, const QString password)
 	{
-		User *user;
-		user = cforum->login(name, password);
-		if (user)
+		if (name == GUEST_NAME && password == GUEST_PASSWORD)
 		{
 			ostringstream oss;
-			oss << UpdateUserResponseMessageType << STD_LINE_BREAK << *user;
+			oss << UpdateUserResponseMessageType << STD_LINE_BREAK << Guest();
 			sendMessage(socket, QString::fromStdString(oss.str()));
-			//sendBoardList(socket);
+		}
+		else
+		{
+			User *user;
+			user = cforum->login(name, password);
+			if (user)
+			{
+				ostringstream oss;
+				oss << UpdateUserResponseMessageType << STD_LINE_BREAK << *user;
+				sendMessage(socket, QString::fromStdString(oss.str()));
+				//sendBoardList(socket);
+			}
 		}
 	}
 
