@@ -66,7 +66,11 @@ Page {
                 font.family: "dengxian"
                 font.pointSize: 40
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                onClicked: forumController.guestLogin()
+                onClicked: {
+                    forumController.guestLogin()
+                    usernameTextField.text = ""
+                    passwordTextField.text = ""
+                }
             }
 
             Button {
