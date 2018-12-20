@@ -16,7 +16,8 @@ namespace cforum
 {
 	using ClientList = QVector<ClientDescriptor *>;
 
-	const string REGISTER_SUCCESS_MESSAGE = "注册成功";
+	const QString REGISTER_SUCCESS_MESSAGE = "注册成功";
+	const QString ADD_POST_SUCCESS_MESSAGE = "发主题帖成功";
 
     class ForumServer : public QObject
     {
@@ -43,12 +44,20 @@ namespace cforum
         QWebSocketServer *server;
 		ClientList *clients;
 		void execute(QWebSocket &socket, const RequestMessage &request);
+		void sendBoard(QWebSocket &socket, const Board &board);
 		void sendBoardList(QWebSocket &socket);
+		void broadcastBoard(const Board &board);
+		void sendPost(QWebSocket &socket, const int boardID, const Post &post);
 		void sendPostList(QWebSocket &socket, const int boardID);
+		void broadcastPost(const int boardID, const Post &post);
+		void sendComment(QWebSocket &socket, const int boardID, const int postID, const Comment &comment);
 		void sendCommentList(QWebSocket &socket, const int boardID, const int postID);
+		void broadcastComment(const int boardID, const int postID, const Comment &comment);
+		void sendToast(QWebSocket &socket, const QString &text);
 		void addNormalUser(QWebSocket &socket, const QString name, const QString password);
 		void login(QWebSocket &socket, const QString name, const QString password);
 		void addBoard(QWebSocket &socket, const QString name);
+		void addPost(QWebSocket & socket, const int boardID, istream &in);
     };
 }
 
