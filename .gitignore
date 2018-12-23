@@ -425,3 +425,5 @@ CMakeLists.txt.user*
 !.vscode/extensions.json
 CForum.vcxproj
 CForum.vcxproj.filters
+
+html/
