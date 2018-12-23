@@ -320,12 +320,6 @@ ClientController
     - 发回复帖
         - C: `{AddCommentMessageType}\n{boardID}\n{postID}\n{{commentID}.cfdata}`
         - S: `{AddCommentMessageType}\n{boardID}\n{postID}\n{{commentID}.cfdata}`
-    - 设置版主: #TODO#
-        - C: `{AddModeratorMessageType}\n{boardID}\n{userName}`
-        - S: `{AddModeratorMessageType}\n{boardID}\n{userName}`
-    - 取消设置版主: #TODO#
-        - C: `{RemoveModeratorMessageType}\n{boardID}\n{userName}`
-        - S: `{RemoveModeratorMessageType}\n{boardID}\n{userName}`
 
 备注
 ====
