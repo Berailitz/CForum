@@ -241,8 +241,6 @@ ClientController
         - `AddBoardMessageType`: 双向，新增版面
         - `AddPostMessageType`: 双向，发主题帖
         - `AddCommentMessageType`: 双向，发回复帖
-        - `AddModeratorMessageType`: 双向，设置版主
-        - `RemoveModeratorMessageType`: 双向，取消设置版主
     - 报文`Message`
         - 基类，表示一个客户端发给服务端，或服务端发给客户端，或服务端中的`Processer`间传递信息的报文
         - 可与`QString`类相互转换
@@ -262,8 +260,6 @@ ClientController
             1. `AddBoardMessageType`
             1. `AddPostMessageType`
             1. `AddCommentMessageType`
-            1. `AddModeratorMessageType`
-            1. `RemoveModeratorMessageType`
         - `void execute(ForumServer *forumServer) const`: 执行请求，并发出响应
     - 响应报文`class ResponseMessage`
         - 继承自`Message`，由服务端发给客户端，用于通知客户端更新界面和状态
@@ -274,8 +270,6 @@ ClientController
             1. `AddBoardMessageType`
             1. `AddPostMessageType`
             1. `AddCommentMessageType`
-            1. `AddModeratorMessageType`
-            1. `RemoveModeratorMessageType`
     - 处理器`ClientDescriptor`
         - 继承自`ClientState`
         - `QWebSocket *client`

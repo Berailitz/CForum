@@ -131,16 +131,10 @@ namespace cforum
 
     void ClientController::setModerator(const QString userName)
 	{
-		RequestMessage message;
-		message.setModerator(board->getID(), userName);
-		sendMessage(message);
 	}
 
 	void ClientController::removeModerator(const QString userName)
 	{
-		RequestMessage message;
-		message.removeModerator(board->getID(), userName);
-		sendMessage(message);
 	}
 
 	void ClientController::viewForum()
