@@ -453,7 +453,7 @@ EXTRACT_PACKAGE        = NO
 # included in the documentation.
 # The default value is: NO.
 
-EXTRACT_STATIC         = NO
+EXTRACT_STATIC         = YES
 
 # If the EXTRACT_LOCAL_CLASSES tag is set to YES, classes (and structs) defined
 # locally in source files will be included in the documentation. If set to NO,
@@ -524,7 +524,7 @@ INTERNAL_DOCS          = NO
 # and Mac users are advised to set this option to NO.
 # The default value is: system dependent.
 
-CASE_SENSE_NAMES       = NO
+CASE_SENSE_NAMES       = YES
 
 # If the HIDE_SCOPE_NAMES tag is set to NO then doxygen will show members with
 # their full class and namespace scopes in the documentation. If set to YES, the
@@ -1045,7 +1045,7 @@ CLANG_ASSISTED_PARSING = YES
 # specified with INPUT and INCLUDE_PATH.
 # This tag requires that the tag CLANG_ASSISTED_PARSING is set to YES.
 
-CLANG_OPTIONS          = 
+CLANG_OPTIONS          = -std=c++1z
 
 # If clang assisted parsing is enabled you can provide the clang parser with the
 # path to the compilation database (see:
@@ -2036,7 +2036,7 @@ ENABLE_PREPROCESSING   = YES
 # The default value is: NO.
 # This tag requires that the tag ENABLE_PREPROCESSING is set to YES.
 
-MACRO_EXPANSION        = NO
+MACRO_EXPANSION        = YES
 
 # If the EXPAND_ONLY_PREDEF and MACRO_EXPANSION tags are both set to YES then
 # the macro expansion is limited to the macros specified with the PREDEFINED and
@@ -2058,7 +2058,15 @@ SEARCH_INCLUDES        = YES
 # preprocessor.
 # This tag requires that the tag SEARCH_INCLUDES is set to YES.
 
-INCLUDE_PATH           = 
+INCLUDE_PATH           = C:\Qt\Qt5.11.2\5.11.2\msvc2017_64\include \
+                         C:\Qt\Qt5.11.2\5.11.2\msvc2017_64\include\QtCore \
+                         C:\Qt\Qt5.11.2\5.11.2\msvc2017_64\include\QtWebSockets \
+                         C:\Qt\Qt5.11.2\5.11.2\msvc2017_64\include\QtNetwork \
+                         C:\Qt\Qt5.11.2\5.11.2\msvc2017_64\mkspecs\win32-msvc \
+                         C:\Qt\Qt5.11.2\5.11.2\msvc2017_64\include\QtQuick \
+                         C:\Qt\Qt5.11.2\5.11.2\msvc2017_64\include\QtGui \
+                         C:\Qt\Qt5.11.2\5.11.2\msvc2017_64\include\QtANGLE \
+                         C:\Qt\Qt5.11.2\5.11.2\msvc2017_64\include\QtQml
 
 # You can use the INCLUDE_FILE_PATTERNS tag to specify one or more wildcard
 # patterns (like *.h and *.hpp) to filter out the header-files in the
