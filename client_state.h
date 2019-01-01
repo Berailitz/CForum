@@ -10,7 +10,11 @@ namespace cforum
 		Q_OBJECT
 	public:
 		ClientState();
+		ClientState(const ClientState &oldClientState);
+		ClientState(const ClientState *oldClientState);
 		virtual ~ClientState();
+		void initialize(const ClientState *oldClientState);
+		ClientState operator=(const ClientState &oldClientState);
 
 	public:
 		int userID = -1;

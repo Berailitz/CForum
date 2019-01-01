@@ -2,8 +2,11 @@
 #define CFORUM_FORUM_SERVER_H
 
 #include <QDebug>
+#include <QMutex>
+#include <QMutexLocker>
 #include <QObject>
 #include <QString>
+#include <QtConcurrent>
 #include <QWebSocket>
 #include <QWebSocketServer>
 
@@ -35,31 +38,34 @@ namespace cforum
         void onNewConnection();
         void onTextMessageReceived(const QString &textMessage);
         void onDisconnection();
-		void sendMessage(const QString &target, const QString &textMessage);
-		void sendMessage(QWebSocket &socket, const QString &textMessage);
+		void onMessageToSend(QWebSocket &socket, const QString &textMessage);
+		void onMessageToSend(const QString &target, const QString &textMessage);
 
     Q_SIGNALS:
-        void messageReceived(const QString &message);
+		void messageReceived(const QString &message);
+		void messageToSend(QWebSocket &socket, const QString &textMessage);
+		void messageToSend(const QString &target, const QString &textMessage);
 
     private:
+		QMutex mutex;
 		CForum *cforum;
 		ClientList *clients;
-		void execute(QWebSocket &socket, const RequestMessage &request);
-		void sendBoard(QWebSocket &socket, const Board &board);
-		void sendBoardList(QWebSocket &socket);
+		void execute(const QString &target, const RequestMessage &request);
+		void sendBoard(const QString &target, const Board &board);
+		void sendBoardList(const QString &target);
 		void broadcastBoard(const Board &board);
-		void sendPost(QWebSocket &socket, const int boardID, const Post &post);
-		void sendPostList(QWebSocket &socket, const int boardID);
+		void sendPost(const QString &target, const int boardID, const Post &post);
+		void sendPostList(const QString &target, const int boardID);
 		void broadcastPost(const int boardID, const Post &post);
-		void sendComment(QWebSocket &socket, const int boardID, const int postID, const Comment &comment);
-		void sendCommentList(QWebSocket &socket, const int boardID, const int postID);
+		void sendComment(const QString &target, const int boardID, const int postID, const Comment &comment);
+		void sendCommentList(const QString &target, const int boardID, const int postID);
 		void broadcastComment(const int boardID, const int postID, const Comment &comment);
-		void sendToast(QWebSocket &socket, const QString &text);
-		void addNormalUser(QWebSocket &socket, const QString name, const QString password);
-		void login(QWebSocket &socket, const QString name, const QString password);
-		void addBoard(QWebSocket &socket, const QString name);
-		void addPost(QWebSocket & socket, const int boardID, istream &in);
-		void addComment(QWebSocket & socket, const int boardID, const int postID, istream &in);
+		void sendToast(const QString &target, const QString &text);
+		void addNormalUser(const QString &target, const QString name, const QString password);
+		void login(const QString &target, const QString name, const QString password);
+		void addBoard(const QString &target, const QString name);
+		void addPost(const QString &target, const int boardID, istream &in);
+		void addComment(const QString &target, const int boardID, const int postID, istream &in);
     };
 }
 

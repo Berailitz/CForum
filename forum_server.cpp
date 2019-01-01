@@ -8,6 +8,10 @@ namespace cforum
 		cforum(new CForum()),
 		clients(new QVector<ClientDescriptor *>)
     {
+		connect(this, qOverload<QWebSocket &, const QString &>(&ForumServer::messageToSend),
+			this, qOverload<QWebSocket &, const QString &>(&ForumServer::onMessageToSend));
+		connect(this, qOverload<const QString &, const QString &>(&ForumServer::messageToSend),
+			this, qOverload<const QString &, const QString &>(&ForumServer::onMessageToSend));
     }
 
 	ForumServer::~ForumServer()
@@ -65,7 +69,8 @@ namespace cforum
         QWebSocket *socket = qobject_cast<QWebSocket *>(sender());
 		RequestMessage message(textMessage);
 		emit messageReceived(hashSocket(*socket) + QString::fromUtf8(" > ") + textMessage + "\n");
-		execute(*socket, message);
+		QtConcurrent::run(this, &ForumServer::execute, hashSocket(*socket), message);
+		//execute(*socket, message);
     }
 
     void ForumServer::onDisconnection()
@@ -82,25 +87,26 @@ namespace cforum
         emit messageReceived(hashSocket(*socket) + " disconnected.\n");
     }
 
-    void ForumServer::sendMessage(const QString &target, const QString &textMessage)
-    {
-        for (ClientDescriptor *client : *clients)
-        {
-            if (client->hash() == target)
-            {
-				sendMessage(*client->getSocket(), textMessage);
-            }
-        }
-    }
-
-	void ForumServer::sendMessage(QWebSocket & socket, const QString & textMessage)
+	void ForumServer::onMessageToSend(QWebSocket & socket, const QString & textMessage)
 	{
 		socket.sendTextMessage(textMessage);
 		emit messageReceived(hashSocket(socket) + " < " + textMessage + "\n");
 	}
 
-	void ForumServer::execute(QWebSocket &socket, const RequestMessage & request)
+	void ForumServer::onMessageToSend(const QString & target, const QString & textMessage)
 	{
+		for (ClientDescriptor *client : *clients)
+		{
+			if (client->hash() == target)
+			{
+				emit messageToSend(*client->getSocket(), textMessage);
+			}
+		}
+	}
+
+	void ForumServer::execute(const QString &target, const RequestMessage & request)
+	{
+		QMutexLocker locker(&mutex);
 		QString messageString = request.getMessageString();
 		istringstream iss(messageString.toStdString());
 		int boardID;
@@ -111,59 +117,59 @@ namespace cforum
 		switch (request.getType())
 		{
 		case GetBoardListRequestMessageType:
-			sendBoardList(socket);
+			sendBoardList(target);
 			break;
 		case GetPostListRequestMessageType:
 			iss >> boardID;
-			sendPostList(socket, boardID);
+			sendPostList(target, boardID);
 			break;
 		case GetCommentListRequestMessageType:
 			iss >> boardID;
 			iss >> postID;
-			sendCommentList(socket, boardID, postID);
+			sendCommentList(target, boardID, postID);
 			break;
 		case RegisterRequestMessageType:
 			getline(iss, userName);
 			getline(iss, password);
-			addNormalUser(socket, QString::fromStdString(userName), QString::fromStdString(password));
+			addNormalUser(target, QString::fromStdString(userName), QString::fromStdString(password));
 			break;
 		case LoginRequestMessageType:
 			getline(iss, userName);
 			getline(iss, password);
-			login(socket, QString::fromStdString(userName), QString::fromStdString(password));
+			login(target, QString::fromStdString(userName), QString::fromStdString(password));
 			break;
 		case AddBoardMessageType:
 			getline(iss, boardName);
-			addBoard(socket, QString::fromStdString(boardName));
+			addBoard(target, QString::fromStdString(boardName));
 			break;
 		case AddPostMessageType:
 			iss >> boardID;
 			iss.get();
-			addPost(socket, boardID, iss);
+			addPost(target, boardID, iss);
 			break;
 		case AddCommentMessageType:
 			iss >> boardID;
 			iss >> postID;
 			iss.get();
-			addComment(socket, boardID, postID, iss);
+			addComment(target, boardID, postID, iss);
 			break;
 		default:
 			break;
 		}
 	}
 
-	void ForumServer::sendBoard(QWebSocket & socket, const Board & board)
+	void ForumServer::sendBoard(const QString &target, const Board & board)
 	{
 		ostringstream oss;
 		oss << AddBoardMessageType << STD_LINE_BREAK << board;
-		sendMessage(socket, QString::fromStdString(oss.str()));
+		emit messageToSend(target, QString::fromStdString(oss.str()));
 	}
 
-	void ForumServer::sendBoardList(QWebSocket & socket)
+	void ForumServer::sendBoardList(const QString &target)
 	{
 		for (QObject *&qit : *cforum->getBoards())
 		{
-			sendBoard(socket, *static_cast<Board*>(qit));
+			sendBoard(target, *static_cast<Board*>(qit));
 		}
 	}
 
@@ -171,18 +177,18 @@ namespace cforum
 	{
 		for (ClientDescriptor *client : *clients)
 		{
-			sendBoard(*client->getSocket(), board);
+			sendBoard(client->hash(), board);
 		}
 	}
 
-	void ForumServer::sendPost(QWebSocket & socket, const int boardID, const Post &post)
+	void ForumServer::sendPost(const QString &target, const int boardID, const Post &post)
 	{
 		ostringstream oss;
 		oss << AddPostMessageType << STD_LINE_BREAK << boardID << STD_LINE_BREAK << post;
-		sendMessage(socket, QString::fromStdString(oss.str()));
+		emit messageToSend(target, QString::fromStdString(oss.str()));
 	}
 
-	void ForumServer::sendPostList(QWebSocket & socket, const int boardID)
+	void ForumServer::sendPostList(const QString &target, const int boardID)
 	{
 		Board *board;
 		board = cforum->getBoardByID(boardID);
@@ -190,7 +196,7 @@ namespace cforum
 		{
 			for (QObject *&qit : *board->getPosts())
 			{
-				sendPost(socket, boardID, *static_cast<Post*>(qit));
+				sendPost(target, boardID, *static_cast<Post*>(qit));
 			}
 		}
 	}
@@ -199,18 +205,18 @@ namespace cforum
 	{
 		for (ClientDescriptor *client : *clients)
 		{
-			sendPost(*client->getSocket(), boardID, post);
+			sendPost(client->hash(), boardID, post);
 		}
 	}
 
-	void ForumServer::sendComment(QWebSocket & socket, const int boardID, const int postID, const Comment & comment)
+	void ForumServer::sendComment(const QString &target, const int boardID, const int postID, const Comment & comment)
 	{
 		ostringstream oss;
 		oss << AddCommentMessageType << STD_LINE_BREAK << boardID << STD_LINE_BREAK << postID << STD_LINE_BREAK << comment;
-		sendMessage(socket, QString::fromStdString(oss.str()));
+		emit messageToSend(target, QString::fromStdString(oss.str()));
 	}
 
-	void ForumServer::sendCommentList(QWebSocket & socket, const int boardID, const int postID)
+	void ForumServer::sendCommentList(const QString &target, const int boardID, const int postID)
 	{
 		Board *board;
 		Post *post;
@@ -222,7 +228,7 @@ namespace cforum
 			{
 				for (QObject *&qit : *post->getComments())
 				{
-					sendComment(socket, boardID, postID, *static_cast<Comment*>(qit));
+					sendComment(target, boardID, postID, *static_cast<Comment*>(qit));
 				}
 			}
 		}
@@ -232,34 +238,34 @@ namespace cforum
 	{
 		for (ClientDescriptor *client : *clients)
 		{
-			sendComment(*client->getSocket(), boardID, postID, comment);
+			sendComment(client->hash(), boardID, postID, comment);
 		}
 	}
 
-	void ForumServer::sendToast(QWebSocket & socket, const QString &text)
+	void ForumServer::sendToast(const QString &target, const QString &text)
 	{
 		ostringstream oss;
 		oss << ToastResponseMessageType << STD_LINE_BREAK << text.toStdString();
-		sendMessage(socket, QString::fromStdString(oss.str()));
+		emit messageToSend(target, QString::fromStdString(oss.str()));
 	}
 
-	void ForumServer::addNormalUser(QWebSocket & socket, const QString name, const QString password)
+	void ForumServer::addNormalUser(const QString &target, const QString name, const QString password)
 	{
 		User *user;
 		user = cforum->addNormalUser(name, password);
 		if (user)
 		{
-			sendToast(socket, REGISTER_SUCCESS_MESSAGE);
+			sendToast(target, REGISTER_SUCCESS_MESSAGE);
 		}
 	}
 
-	void ForumServer::login(QWebSocket & socket, const QString name, const QString password)
+	void ForumServer::login(const QString &target, const QString name, const QString password)
 	{
 		if (name == GUEST_NAME && password == GUEST_PASSWORD)
 		{
 			ostringstream oss;
 			oss << UpdateUserResponseMessageType << STD_LINE_BREAK << Guest();
-			sendMessage(socket, QString::fromStdString(oss.str()));
+			emit messageToSend(target, QString::fromStdString(oss.str()));
 		}
 		else
 		{
@@ -269,42 +275,42 @@ namespace cforum
 			{
 				ostringstream oss;
 				oss << UpdateUserResponseMessageType << STD_LINE_BREAK << *user;
-				sendMessage(socket, QString::fromStdString(oss.str()));
+				emit messageToSend(target, QString::fromStdString(oss.str()));
 				//sendBoardList(socket);
 			}
 		}
 	}
 
-	void ForumServer::addBoard(QWebSocket & socket, const QString name)
+	void ForumServer::addBoard(const QString &target, const QString name)
 	{
 		Board *board = cforum->addBoard(name);
 		if (board)
 		{
-			sendToast(socket, ADD_BOARD_SUCCESS_MESSAGE);
+			sendToast(target, ADD_BOARD_SUCCESS_MESSAGE);
 			broadcastBoard(*board);
 		}
 	}
 
-	void ForumServer::addPost(QWebSocket & socket, const int boardID, istream & in)
+	void ForumServer::addPost(const QString &target, const int boardID, istream & in)
 	{
 		Post newPost;
 		in >> newPost;
 		Post *realPost = cforum->addPost(boardID, newPost.getTitle(), newPost.getContent(), newPost.getAuthorID());
 		if (realPost)
 		{
-			sendToast(socket, ADD_POST_SUCCESS_MESSAGE);
+			sendToast(target, ADD_POST_SUCCESS_MESSAGE);
 			broadcastPost(boardID, *realPost);
 		}
 	}
 
-	void ForumServer::addComment(QWebSocket & socket, const int boardID, const int postID, istream & in)
+	void ForumServer::addComment(const QString &target, const int boardID, const int postID, istream & in)
 	{
 		Comment newComment;
 		in >> newComment;
 		Comment *realComment = cforum->addComment(boardID, postID, newComment.getContent(), newComment.getAuthorID());
 		if (realComment)
 		{
-			sendToast(socket, ADD_COMMENT_SUCCESS_MESSAGE);
+			sendToast(target, ADD_COMMENT_SUCCESS_MESSAGE);
 			broadcastComment(boardID, postID, *realComment);
 		}
 	}

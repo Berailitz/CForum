@@ -21,6 +21,7 @@ namespace cforum
 
 	private:
 		QWebSocket *socket;
+		QString hashString;
     };
 
 	bool operator==(const ClientDescriptor& lhs, const ClientDescriptor& rhs);

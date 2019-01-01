@@ -7,8 +7,25 @@ namespace cforum
 
 	}
 
+	RequestMessage::RequestMessage(const RequestMessage & oldRequestMessage)
+	{
+		initialize(&oldRequestMessage);
+	}
+
+	RequestMessage::RequestMessage(const RequestMessage * oldRequestMessage)
+	{
+		initialize(oldRequestMessage);
+	}
+
 	RequestMessage::RequestMessage(const QString & qstring) : Message(qstring)
 	{
+	}
+
+	void RequestMessage::initialize(const RequestMessage * oldRequestMessage)
+	{
+		type = oldRequestMessage->type;
+		clientState = oldRequestMessage->clientState;
+		messageString = oldRequestMessage->messageString;
 	}
 
 	void RequestMessage::addNormalUser(const QString userName, const QString password)
