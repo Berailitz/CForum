@@ -6,7 +6,7 @@ namespace cforum
 		ClientState(),
 		socket(socket)
     {
-
+		hashString = hashSocket(*socket);
     }
 
 	ClientDescriptor::~ClientDescriptor()
@@ -16,7 +16,7 @@ namespace cforum
 
 	QString ClientDescriptor::hash() const
 	{
-		return hashSocket(*socket);
+		return hashString;
 	}
 
 	void ClientDescriptor::send(const QString &textMessage)
