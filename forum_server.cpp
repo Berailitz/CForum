@@ -43,7 +43,13 @@ namespace cforum
 
 	bool ForumServer::load(const fs::path path)
 	{
+		lastPath = path;
 		return cforum->load(path);
+	}
+
+	bool ForumServer::save() const
+	{
+		return save(lastPath);
 	}
 
 	bool ForumServer::save(const fs::path path) const

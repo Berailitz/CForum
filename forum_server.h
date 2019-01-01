@@ -23,6 +23,7 @@ namespace cforum
 	const QString ADD_BOARD_SUCCESS_MESSAGE = QString::fromUtf8("添加版面成功");
 	const QString ADD_POST_SUCCESS_MESSAGE = QString::fromUtf8("发主题帖成功");
 	const QString ADD_COMMENT_SUCCESS_MESSAGE = QString::fromUtf8("发回复帖成功");
+	const fs::path DEFAULT_DATABASE_FOLDER_PATH = "data";
 
     class ForumServer : public QWebSocketServer
     {
@@ -32,6 +33,7 @@ namespace cforum
 		~ForumServer();
         bool listen(const int port = 8118);
 		bool load(const fs::path path);
+		bool save() const;
 		bool save(const fs::path path) const;
 
     public Q_SLOTS:
@@ -50,6 +52,7 @@ namespace cforum
 		QMutex mutex;
 		CForum *cforum;
 		ClientList *clients;
+		fs::path lastPath = DEFAULT_DATABASE_FOLDER_PATH;
 		void execute(const QString &target, const RequestMessage &request);
 		void sendBoard(const QString &target, const Board &board);
 		void sendBoardList(const QString &target);
