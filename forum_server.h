@@ -6,6 +6,7 @@
 #include <QMutexLocker>
 #include <QObject>
 #include <QString>
+#include <QStringList>
 #include <QtConcurrent>
 #include <QWebSocket>
 #include <QWebSocketServer>
@@ -18,6 +19,7 @@
 namespace cforum
 {
 	using ClientList = QVector<ClientDescriptor *>;
+	using ClientHashList = list<QString>;
 
 	const QString REGISTER_SUCCESS_MESSAGE = QString::fromUtf8("注册成功");
 	const QString ADD_BOARD_SUCCESS_MESSAGE = QString::fromUtf8("添加版面成功");
@@ -40,7 +42,7 @@ namespace cforum
         void onNewConnection();
         void onTextMessageReceived(const QString &textMessage);
         void onDisconnection();
-		void onMessageToSend(QWebSocket &socket, const QString &textMessage);
+		void sendMessage(QWebSocket &socket, const QString &textMessage);
 		void onMessageToSend(const QString &target, const QString &textMessage);
 
     Q_SIGNALS:
@@ -49,7 +51,10 @@ namespace cforum
 		void messageToSend(const QString &target, const QString &textMessage);
 
     private:
-		QMutex mutex;
+		QMutex userMutex;
+		QMutex contentMutex;
+		QMutex clientsMutex;
+		QMutex fileMutex;
 		CForum *cforum;
 		ClientList *clients;
 		fs::path lastPath = DEFAULT_DATABASE_FOLDER_PATH;
@@ -69,6 +74,7 @@ namespace cforum
 		void addBoard(const QString &target, const QString name);
 		void addPost(const QString &target, const int boardID, istream &in);
 		void addComment(const QString &target, const int boardID, const int postID, istream &in);
+		ClientHashList *getAllClientHash();
     };
 }
 

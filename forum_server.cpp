@@ -8,8 +8,6 @@ namespace cforum
 		cforum(new CForum()),
 		clients(new QVector<ClientDescriptor *>)
     {
-		connect(this, qOverload<QWebSocket &, const QString &>(&ForumServer::messageToSend),
-			this, qOverload<QWebSocket &, const QString &>(&ForumServer::onMessageToSend));
 		connect(this, qOverload<const QString &, const QString &>(&ForumServer::messageToSend),
 			this, qOverload<const QString &, const QString &>(&ForumServer::onMessageToSend));
     }
@@ -93,7 +91,7 @@ namespace cforum
         emit messageReceived(hashSocket(*socket) + " disconnected.\n");
     }
 
-	void ForumServer::onMessageToSend(QWebSocket & socket, const QString & textMessage)
+	void ForumServer::sendMessage(QWebSocket & socket, const QString & textMessage)
 	{
 		socket.sendTextMessage(textMessage);
 		emit messageReceived(hashSocket(socket) + " < " + textMessage + "\n");
@@ -105,14 +103,13 @@ namespace cforum
 		{
 			if (client->hash() == target)
 			{
-				emit messageToSend(*client->getSocket(), textMessage);
+				sendMessage(*client->getSocket(), textMessage);
 			}
 		}
 	}
 
 	void ForumServer::execute(const QString &target, const RequestMessage & request)
 	{
-		QMutexLocker locker(&mutex);
 		QString messageString = request.getMessageString();
 		istringstream iss(messageString.toStdString());
 		int boardID;
@@ -162,6 +159,7 @@ namespace cforum
 		default:
 			break;
 		}
+		QMutexLocker contentLocker(&fileMutex);
 		save();
 	}
 
@@ -174,6 +172,7 @@ namespace cforum
 
 	void ForumServer::sendBoardList(const QString &target)
 	{
+		QMutexLocker contentLocker(&contentMutex);
 		for (QObject *&qit : *cforum->getBoards())
 		{
 			sendBoard(target, *static_cast<Board*>(qit));
@@ -182,9 +181,10 @@ namespace cforum
 
 	void ForumServer::broadcastBoard(const Board & board)
 	{
-		for (ClientDescriptor *client : *clients)
+		ClientHashList *hashList = getAllClientHash();
+		for (QString hash : *hashList)
 		{
-			sendBoard(client->hash(), board);
+			sendBoard(hash, board);
 		}
 	}
 
@@ -198,6 +198,7 @@ namespace cforum
 	void ForumServer::sendPostList(const QString &target, const int boardID)
 	{
 		Board *board;
+		QMutexLocker contentLocker(&contentMutex);
 		board = cforum->getBoardByID(boardID);
 		if (board)
 		{
@@ -210,9 +211,10 @@ namespace cforum
 
 	void ForumServer::broadcastPost(const int boardID, const Post & post)
 	{
-		for (ClientDescriptor *client : *clients)
+		ClientHashList *hashList = getAllClientHash();
+		for (QString hash : *hashList)
 		{
-			sendPost(client->hash(), boardID, post);
+			sendPost(hash, boardID, post);
 		}
 	}
 
@@ -227,6 +229,7 @@ namespace cforum
 	{
 		Board *board;
 		Post *post;
+		QMutexLocker contentLocker(&contentMutex);
 		board = cforum->getBoardByID(boardID);
 		if (board)
 		{
@@ -243,9 +246,10 @@ namespace cforum
 
 	void ForumServer::broadcastComment(const int boardID, const int postID, const Comment & comment)
 	{
-		for (ClientDescriptor *client : *clients)
+		ClientHashList *hashList = getAllClientHash();
+		for (QString hash : *hashList)
 		{
-			sendComment(client->hash(), boardID, postID, comment);
+			sendComment(hash, boardID, postID, comment);
 		}
 	}
 
@@ -259,6 +263,7 @@ namespace cforum
 	void ForumServer::addNormalUser(const QString &target, const QString name, const QString password)
 	{
 		User *user;
+		QMutexLocker userLocker(&userMutex);
 		user = cforum->addNormalUser(name, password);
 		if (user)
 		{
@@ -277,6 +282,7 @@ namespace cforum
 		else
 		{
 			User *user;
+			QMutexLocker userLocker(&userMutex);
 			user = cforum->login(name, password);
 			if (user)
 			{
@@ -290,6 +296,8 @@ namespace cforum
 
 	void ForumServer::addBoard(const QString &target, const QString name)
 	{
+		QMutexLocker contentLocker(&contentMutex);
+
 		Board *board = cforum->addBoard(name);
 		if (board)
 		{
@@ -300,9 +308,14 @@ namespace cforum
 
 	void ForumServer::addPost(const QString &target, const int boardID, istream & in)
 	{
+		QMutexLocker userLocker(&userMutex);
+		QMutexLocker contentLocker(&contentMutex);
+
 		Post newPost;
 		in >> newPost;
 		Post *realPost = cforum->addPost(boardID, newPost.getTitle(), newPost.getContent(), newPost.getAuthorID());
+		userLocker.unlock();
+
 		if (realPost)
 		{
 			sendToast(target, ADD_POST_SUCCESS_MESSAGE);
@@ -312,13 +325,29 @@ namespace cforum
 
 	void ForumServer::addComment(const QString &target, const int boardID, const int postID, istream & in)
 	{
+		QMutexLocker userLocker(&userMutex);
+		QMutexLocker contentLocker(&contentMutex);
+
 		Comment newComment;
 		in >> newComment;
 		Comment *realComment = cforum->addComment(boardID, postID, newComment.getContent(), newComment.getAuthorID());
+		userLocker.unlock();
+
 		if (realComment)
 		{
 			sendToast(target, ADD_COMMENT_SUCCESS_MESSAGE);
 			broadcastComment(boardID, postID, *realComment);
 		}
+	}
+
+	ClientHashList * ForumServer::getAllClientHash()
+	{
+		ClientHashList *hashList = new ClientHashList();
+		QMutexLocker clientsLocker(&clientsMutex);
+		for (ClientDescriptor *client : *clients)
+		{
+			hashList->push_back(client->hash());
+		}
+		return hashList;
 	}
 }
