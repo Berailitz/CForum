@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     cforum::ForumServer *server = new cforum::ForumServer;
     engine.rootContext()->setContextProperty("forumServer", QVariant::fromValue(&*server));
     engine.load(QUrl(QString::fromUtf8("qrc:/qml/server_main.qml")));
-	server->load("data");
+	server->load(cforum::DEFAULT_DATABASE_FOLDER_PATH);
     server->listen();
     return app.exec();
 }
