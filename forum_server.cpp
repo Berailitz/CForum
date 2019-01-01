@@ -162,6 +162,7 @@ namespace cforum
 		default:
 			break;
 		}
+		save();
 	}
 
 	void ForumServer::sendBoard(const QString &target, const Board & board)
