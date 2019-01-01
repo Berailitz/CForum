@@ -21,7 +21,7 @@ namespace cforum
 	const QString ADD_POST_SUCCESS_MESSAGE = QString::fromUtf8("发主题帖成功");
 	const QString ADD_COMMENT_SUCCESS_MESSAGE = QString::fromUtf8("发回复帖成功");
 
-    class ForumServer : public QObject
+    class ForumServer : public QWebSocketServer
     {
         Q_OBJECT
     public:
@@ -43,7 +43,6 @@ namespace cforum
 
     private:
 		CForum *cforum;
-        QWebSocketServer *server;
 		ClientList *clients;
 		void execute(QWebSocket &socket, const RequestMessage &request);
 		void sendBoard(QWebSocket &socket, const Board &board);

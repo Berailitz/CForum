@@ -3,11 +3,9 @@
 namespace cforum
 {
 	ForumServer::ForumServer() :
-		QObject(),
+		QWebSocketServer(QStringLiteral("WS Server"),
+			QWebSocketServer::NonSecureMode),
 		cforum(new CForum()),
-		server(new QWebSocketServer(QStringLiteral("WS Server"),
-			QWebSocketServer::NonSecureMode,
-			this)),
 		clients(new QVector<ClientDescriptor *>)
     {
     }
@@ -15,7 +13,6 @@ namespace cforum
 	ForumServer::~ForumServer()
 	{
 		delete cforum;
-		delete server;
 		for (ClientDescriptor * client : *clients)
 		{
 			client->getSocket()->close();
@@ -26,10 +23,10 @@ namespace cforum
 
 	bool ForumServer::listen(const int port)
 	{
-		if (server->listen(QHostAddress::Any, port))
+		if (QWebSocketServer::listen(QHostAddress::Any, port))
 		{
 			emit messageReceived("Listening on " + QString::number(port) + "\n");
-			connect(server, &QWebSocketServer::newConnection,
+			connect(this, &QWebSocketServer::newConnection,
 				this, &ForumServer::onNewConnection);
 			return true;
 		}
@@ -52,7 +49,7 @@ namespace cforum
 
     void ForumServer::onNewConnection()
     {
-		QWebSocket *socket = server->nextPendingConnection();
+		QWebSocket *socket = QWebSocketServer::nextPendingConnection();
 		ClientDescriptor *newClient = new ClientDescriptor(socket);
         emit messageReceived(newClient->hash() + " connected.\n");
 
