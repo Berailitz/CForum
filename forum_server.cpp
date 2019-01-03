@@ -10,6 +10,8 @@ namespace cforum
     {
 		connect(this, qOverload<const QString &, const QString &>(&ForumServer::messageToSend),
 			this, qOverload<const QString &, const QString &>(&ForumServer::onMessageToSend));
+		connect(this, &QWebSocketServer::newConnection,
+			this, &ForumServer::onNewConnection);
     }
 
 	ForumServer::~ForumServer()
@@ -28,8 +30,6 @@ namespace cforum
 		if (QWebSocketServer::listen(QHostAddress::Any, port))
 		{
 			emit messageReceived("Listening on " + QString::number(port) + "\n");
-			connect(this, &QWebSocketServer::newConnection,
-				this, &ForumServer::onNewConnection);
 			return true;
 		}
 		else
