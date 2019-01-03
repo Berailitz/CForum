@@ -70,9 +70,11 @@ namespace cforum
 		void sendPost(const QString &target, const int boardID, const Post &post);
 		void sendPostList(const QString &target, const int boardID);
 		void broadcastPost(const int boardID, const Post &post);
+		void broadcastPostDeletion(const int boardID, const int postID);
 		void sendComment(const QString &target, const int boardID, const int postID, const Comment &comment);
 		void sendCommentList(const QString &target, const int boardID, const int postID);
 		void broadcastComment(const int boardID, const int postID, const Comment &comment);
+		void broadcastCommentDeletion(const int boardID, const int postID, const int commentID);
 		void sendToast(const QString &target, const QString &text);
 		void addNormalUser(const QString &target, const QString name, const QString password);
 		void login(const QString &target, const QString name, const QString password);

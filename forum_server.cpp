@@ -238,6 +238,17 @@ namespace cforum
 		}
 	}
 
+	void ForumServer::broadcastPostDeletion(const int boardID, const int postID)
+	{
+		ClientHashList *hashList = getAllClientHash();
+		RequestMessage message;
+		message.removePost(boardID, postID, -1);
+		for (QString hash : *hashList)
+		{
+			emit messageToSend(hash, message.dump());
+		}
+	}
+
 	void ForumServer::sendComment(const QString &target, const int boardID, const int postID, const Comment & comment)
 	{
 		ostringstream oss;
@@ -270,6 +281,17 @@ namespace cforum
 		for (QString hash : *hashList)
 		{
 			sendComment(hash, boardID, postID, comment);
+		}
+	}
+
+	void ForumServer::broadcastCommentDeletion(const int boardID, const int postID, const int commentID)
+	{
+		ClientHashList *hashList = getAllClientHash();
+		RequestMessage message;
+		message.removeComment(boardID, postID, commentID, -1);
+		for (QString hash : *hashList)
+		{
+			emit messageToSend(hash, message.dump());
 		}
 	}
 
@@ -353,7 +375,7 @@ namespace cforum
 		{
 			Board *targetBoard = cforum->getBoardByID(boardID);
 			sendToast(target, REMOVE_POST_SUCCESS_MESSAGE);
-			broadcastBoard(*targetBoard);
+			broadcastPostDeletion(boardID, postID);
 		}
 		else
 		{
@@ -388,7 +410,7 @@ namespace cforum
 		{
 			Post *targetPost = cforum->getBoardByID(boardID)->getPostByID(postID);
 			sendToast(target, REMOVE_COMMENT_SUCCESS_MESSAGE);
-			broadcastPost(boardID, *targetPost);
+			broadcastCommentDeletion(boardID, postID, commentID);
 		}
 		else
 		{

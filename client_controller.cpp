@@ -185,7 +185,6 @@ namespace cforum
 		RequestMessage message;
 		message.removePost(board->getID(), postID, user->getID());
 		sendMessage(message);
-		viewForum();
 	}
 
     void ClientController::addComment(const QString content)
@@ -200,7 +199,6 @@ namespace cforum
 		RequestMessage message;
 		message.removeComment(board->getID(), post->getID(), commentID, user->getID());
 		sendMessage(message);
-		viewBoard();
 	}
 
 	void ClientController::open(const QString &url)
@@ -309,8 +307,7 @@ namespace cforum
 		Board *newBoard;
 		Post *newPost;
 		Comment *newComment;
-		int targetBoardID;
-		int targetPostID;
+		int targetBoardID, targetPostID, targetCommentID;
 		switch (message.getType())
 		{
 		case UpdateUserResponseMessageType:
@@ -339,6 +336,7 @@ namespace cforum
 			if (board->getID() == targetBoardID)
 			{
 				resetPosts(false);
+
 				newPost = new Post;
 				iss >> *newPost;
 				if (newPost->getID() == 1)
@@ -346,6 +344,7 @@ namespace cforum
 					clearPosts();
 				}
 				posts->append(newPost);
+
 				setPosts();
 				emit boardOpened();
 			}
@@ -360,6 +359,7 @@ namespace cforum
 			if (board->getID() == targetBoardID && post->getID() == targetPostID)
 			{
 				resetComments(false);
+
 				newComment = new Comment;
 				iss >> *newComment;
 				if (newComment->getID() == 1)
@@ -367,6 +367,46 @@ namespace cforum
 					clearComments();
 				}
 				comments->append(newComment);
+
+				setComments();
+				emit postOpened();
+			}
+			setPosts();
+			setBoards();
+			break;
+		case RemovePostMessageType:
+			iss >> targetBoardID;
+			iss >> targetPostID;
+			iss.get();
+			resetBoards(false);
+			if (board->getID() == targetBoardID)
+			{
+				resetPosts(false);
+
+				PostList::iterator pit = posts->begin();
+				advance(pit, targetPostID - 1);
+				posts->erase(pit);
+
+				setPosts();
+				emit boardOpened();
+			}
+			setBoards();
+			break;
+		case RemoveCommentMessageType:
+			iss >> targetBoardID;
+			iss >> targetPostID;
+			iss >> targetCommentID;
+			iss.get();
+			resetBoards(false);
+			resetPosts(false);
+			if (board->getID() == targetBoardID && post->getID() == targetPostID)
+			{
+				resetComments(false);
+
+				CommentList::iterator cit = comments->begin();
+				advance(cit, targetCommentID - 1);
+				comments->erase(cit);
+
 				setComments();
 				emit postOpened();
 			}
