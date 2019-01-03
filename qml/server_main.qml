@@ -4,13 +4,64 @@ import QtQuick.Window 2.2
 import QtQuick.Controls 2.4
 
 ApplicationWindow {
-    id: applicationWindow
+    id: appWindow
+    visible: true
+    flags: Qt.Window | Qt.WindowFullscreenButtonHint
+    visibility: "Maximized"
     width: 1280
     height: 720
-    visible: true
 
     ColumnLayout {
-        anchors.fill: parent
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
+
+        Item {
+            width: 1080
+            height: 60
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+            RowLayout {
+                Text {
+                    text: qsTr("请输入服务器要监听的端口号")
+                    font.pointSize: 20
+                    font.family: "dengxian"
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    horizontalAlignment: Text.AlignLeft
+                    Layout.preferredWidth: 450
+                }
+
+                TextField {
+                    id: portTextEdit
+                    font.pointSize: 20
+                    font.family: "dengxian"
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    horizontalAlignment: Text.AlignLeft
+                    Layout.preferredWidth: 400
+                    inputMethodHints: Qt.ImhDigitsOnly
+                    text: qsTr("8118")
+                }
+
+                Button {
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    Layout.preferredWidth: 100
+                    text: qsTr("启动")
+
+                    onClicked: {
+                        forumServer.start(portTextEdit.text)
+                    }
+                }
+
+                Button {
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    Layout.preferredWidth: 100
+                    text: qsTr("停止")
+
+                    onClicked: {
+                        forumServer.stop()
+                    }
+                }
+            }
+        }
 
         Item {
             width: 1080

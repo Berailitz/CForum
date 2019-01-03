@@ -25,18 +25,38 @@ namespace cforum
 		delete clients;
 	}
 
-	bool ForumServer::listen(const int port)
+	bool ForumServer::start(const QString portString)
 	{
-		if (QWebSocketServer::listen(QHostAddress::Any, port))
+		int port = portString.toInt();
+		return start(port);
+	}
+
+	bool ForumServer::start(const int port)
+	{
+		if (isListening())
 		{
-			emit messageReceived("Listening on " + QString::number(port) + "\n");
+			emit messageReceived(SERVER_ALREADY_START_MESSAGE);
 			return true;
 		}
 		else
 		{
-			emit messageReceived("CANNOT listening on " + QString::number(port) + "\n");
-			return false;
+			if (QWebSocketServer::listen(QHostAddress::Any, port))
+			{
+				emit messageReceived(SERVER_START_MESSAGE + serverUrl().toDisplayString() + "\n");
+				return true;
+			}
+			else
+			{
+				emit messageReceived(SERVER_START_ERROR_MESSAGE);
+				return false;
+			}
 		}
+	}
+
+	void ForumServer::stop()
+	{
+		close();
+		emit messageReceived(SERVER_STOP_MESSAGE);
 	}
 
 	bool ForumServer::load(const fs::path path)

@@ -8,7 +8,7 @@ ApplicationWindow {
     visible: true
     flags: Qt.Window | Qt.WindowFullscreenButtonHint
     visibility: "Maximized"
-    width: 1080
+    width: 1280
     height: 720
 
     SwipeView {

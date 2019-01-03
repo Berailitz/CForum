@@ -21,6 +21,10 @@ namespace cforum
 	using ClientList = QVector<ClientDescriptor *>;
 	using ClientHashList = list<QString>;
 
+	const QString SERVER_START_MESSAGE = QString::fromUtf8("启动服务器：");
+	const QString SERVER_ALREADY_START_MESSAGE = QString::fromUtf8("服务器已启动\n");
+	const QString SERVER_START_ERROR_MESSAGE = QString::fromUtf8("启动服务器失败\n");
+	const QString SERVER_STOP_MESSAGE = QString::fromUtf8("停止服务器\n");
 	const QString REGISTER_SUCCESS_MESSAGE = QString::fromUtf8("注册成功");
 	const QString ADD_BOARD_SUCCESS_MESSAGE = QString::fromUtf8("添加版面成功");
 	const QString ADD_POST_SUCCESS_MESSAGE = QString::fromUtf8("发主题帖成功");
@@ -37,12 +41,14 @@ namespace cforum
     public:
 		ForumServer();
 		~ForumServer();
-        bool listen(const int port = 8118);
 		bool load(const fs::path path);
 		bool save() const;
 		bool save(const fs::path path) const;
 
     public Q_SLOTS:
+		bool start(const QString portString);
+		bool start(const int port = 8118);
+		void stop();
 		void onErrorRaised(const QString message);
         void onNewConnection();
         void onTextMessageReceived(const QString &textMessage);

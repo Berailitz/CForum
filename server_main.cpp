@@ -18,6 +18,6 @@ int main(int argc, char *argv[])
 	QObject::connect(&*errorHandler, &cforum::ErrorHandler::errorRaised, &*server, &cforum::ForumServer::onErrorRaised);
     engine.load(QUrl(QString::fromUtf8("qrc:/qml/server_main.qml")));
 	server->load(cforum::DEFAULT_DATABASE_FOLDER_PATH);
-    server->listen();
+    server->start();
     return app.exec();
 }
