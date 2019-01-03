@@ -393,7 +393,6 @@ namespace cforum
 		bool result = cforum->removePost(boardID, postID, userID);
 		if (result)
 		{
-			Board *targetBoard = cforum->getBoardByID(boardID);
 			sendToast(target, REMOVE_POST_SUCCESS_MESSAGE);
 			broadcastPostDeletion(boardID, postID);
 		}
@@ -428,7 +427,6 @@ namespace cforum
 		bool result = cforum->removeComment(boardID, postID, commentID, userID);
 		if (result)
 		{
-			Post *targetPost = cforum->getBoardByID(boardID)->getPostByID(postID);
 			sendToast(target, REMOVE_COMMENT_SUCCESS_MESSAGE);
 			broadcastCommentDeletion(boardID, postID, commentID);
 		}
