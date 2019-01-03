@@ -410,6 +410,19 @@ namespace cforum
 					boards->push_back(newBoard);
 					newBoard->loadPosts(boardPath);
 					boardStream.close();
+					for (const int userID : *newBoard->getModerators())
+					{
+						User *user = getUserByID(userID);
+						if (user && user->isModerator())
+						{
+							static_cast<Moderator*>(user)->setModerator(newBoard->getID());
+						}
+						else
+						{
+							errorHandler->raiseError(INVALID_MODERATOR_ID_MESSAGE);
+							return false;
+						}
+					}
 				}
 				else
 				{
