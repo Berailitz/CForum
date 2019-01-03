@@ -11,6 +11,7 @@
 
 namespace cforum
 {
+	const QString DEFAULT_URL = QString::fromUtf8("ws://localhost:8118/");
 	const QString WELCOME_MESSAGE = QString::fromUtf8("欢迎 ");
 	const QString REGISTER_SUCCESS_MESSAGE = QString::fromUtf8("注册成功");
 	const QString REGISTER_FAILED_MESSAGE = QString::fromUtf8("注册失败");
@@ -36,6 +37,7 @@ namespace cforum
 	const QString SERVER_CONNECTING_MESSAGE = QString::fromUtf8("连接服务器中");
 	const QString SERVER_CONNECTED_MESSAGE = QString::fromUtf8("连接服务器成功");
 	const QString SERVER_DISCONNECTED_MESSAGE = QString::fromUtf8("连接已断开: ");
+	const QString SERVER_DISCONNECT_MESSAGE = QString::fromUtf8("连接已断开");
 	const QString SERVER_ERROR_MESSAGE = QString::fromUtf8("连接出错: ");
 
     class ClientController : public QObject
@@ -84,7 +86,8 @@ namespace cforum
         void removePost(const int postID); // 删除主题帖
         void addComment(const QString content); // 发回复帖
         void removeComment(const int commentID); // 删除回复帖
-		void open(const QString &url = QString::fromUtf8("ws://localhost:8118/"));
+		void connect(const QString &url = DEFAULT_URL);
+		void disconnect();
 		void onConnected();
 		void onTextMessageReceived(const QString &textMessage);
 		void onDisconnected();
@@ -92,6 +95,7 @@ namespace cforum
 	private:
         QQmlApplicationEngine &engine;
 		QWebSocket *socket = nullptr;
+		bool autoReconnect = true;
 		BoardList* boards;
 		PostList* posts;
 		CommentList* comments;

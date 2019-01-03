@@ -11,6 +11,8 @@ Page {
         anchors.verticalCenter: parent.verticalCenter
         anchors.horizontalCenter: parent.horizontalCenter
         width: 1080
+        height: 720
+
         Text {
             text: qsTr("CForum")
             Layout.preferredWidth: 600
@@ -19,6 +21,28 @@ Page {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             font.family: "dengxian"
             font.pixelSize: 70
+        }
+
+        RowLayout {
+            Text {
+                text: qsTr("服务器地址")
+                horizontalAlignment: Text.AlignHCenter
+                Layout.fillWidth: true
+                font.family: "dengxian"
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                font.pointSize: 35
+            }
+
+            TextField {
+                id: urlTextField
+                Layout.preferredWidth: 600
+                horizontalAlignment: Text.AlignHCenter
+                Layout.fillWidth: true
+                font.family: "dengxian"
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                font.pointSize: 35
+                text: qsTr("ws://localhost:8118/")
+            }
         }
 
         TextField {
@@ -83,6 +107,36 @@ Page {
                     forumController.login(usernameTextField.text, passwordTextField.text)
                     usernameTextField.text = ""
                     passwordTextField.text = ""
+                }
+            }
+        }
+
+        RowLayout {
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+            Button {
+                Layout.preferredWidth: 400
+                font.family: "dengxian"
+                font.pointSize: 40
+                focusPolicy: Qt.NoFocus
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                text: qsTr("连接服务器")
+
+                onClicked: {
+                    forumController.connect(urlTextField.text)
+                }
+            }
+
+            Button {
+                Layout.preferredWidth: 400
+                font.family: "dengxian"
+                font.pointSize: 40
+                focusPolicy: Qt.NoFocus
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                text: qsTr("断开连接")
+
+                onClicked: {
+                    forumController.disconnect()
                 }
             }
         }

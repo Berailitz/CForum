@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 	QObject::connect(&*errorHandler, &cforum::ErrorHandler::errorRaised, &*forumController, &cforum::ClientController::onErrorRaised);
 	forumController->refreshViews();
 	engine.load(QUrl(QString::fromUtf8("qrc:/qml/client_main.qml")));
-	forumController->open(QString::fromUtf8("ws://localhost:8118/"));
+	forumController->connect();
 	returnValue = app.exec();
 	return returnValue;
 }

@@ -19,7 +19,7 @@ namespace cforum
 		posts = defaultPosts;
 		comments = defaultComments;
 		initializeConnection();
-		connect(&*socket, &QWebSocket::textMessageReceived,
+		QObject::connect(&*socket, &QWebSocket::textMessageReceived,
 			this, &ClientController::onTextMessageReceived);
 	}
 
@@ -201,11 +201,22 @@ namespace cforum
 		sendMessage(message);
 	}
 
-	void ClientController::open(const QString &url)
+	void ClientController::connect(const QString &url)
 	{
+		autoReconnect = true;
 		emit messageSent(SERVER_CONNECTING_MESSAGE);
-		socket->open(url);
+		if (socket->state() == QAbstractSocket::UnconnectedState)
+		{
+			socket->open(url);
+		}
 		return;
+	}
+
+	void ClientController::disconnect()
+	{
+		autoReconnect = false;
+		socket->close();
+		emit messageSent(SERVER_DISCONNECT_MESSAGE);
 	}
 
 	void ClientController::onConnected()
@@ -221,14 +232,17 @@ namespace cforum
 
 	void ClientController::onDisconnected()
 	{
-		emit messageSent(SERVER_DISCONNECTED_MESSAGE + socket->errorString());
-		open();
+		if (autoReconnect)
+		{
+			emit messageSent(SERVER_DISCONNECTED_MESSAGE + socket->errorString());
+			connect();
+		}
 	}
 
 	void ClientController::onError()
 	{
 		emit messageSent(SERVER_ERROR_MESSAGE + socket->errorString());
-		open();
+		connect();
 	}
 
 	bool ClientController::isAdmin() const
