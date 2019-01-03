@@ -1,4 +1,4 @@
-QT += quick websockets
+QT += quick websockets concurrent
 CONFIG += c++17
 QMAKE_CXXFLAGS += /std:c++17 /utf-8
 
