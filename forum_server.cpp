@@ -55,6 +55,11 @@ namespace cforum
 		return cforum->save(path);
 	}
 
+	void ForumServer::onErrorRaised(const QString message)
+	{
+		emit messageReceived(message + "\n");
+	}
+
     void ForumServer::onNewConnection()
     {
 		QWebSocket *socket = QWebSocketServer::nextPendingConnection();

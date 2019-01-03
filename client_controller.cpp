@@ -259,7 +259,7 @@ namespace cforum
         qDebug() << "Refresh: " << boards << " (ALL) Boards ";
 	}
 
-	void ClientController::errorRaised(const QString message)
+	void ClientController::onErrorRaised(const QString message)
 	{
 		emit messageSent(message);
 	}

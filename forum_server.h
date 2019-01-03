@@ -43,6 +43,7 @@ namespace cforum
 		bool save(const fs::path path) const;
 
     public Q_SLOTS:
+		void onErrorRaised(const QString message);
         void onNewConnection();
         void onTextMessageReceived(const QString &textMessage);
         void onDisconnection();

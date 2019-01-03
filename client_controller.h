@@ -67,7 +67,7 @@ namespace cforum
         void postOpened();
         void messageSent(QString message);
     public Q_SLOTS:
-		void errorRaised(const QString message);
+		void onErrorRaised(const QString message);
 		void initializeConnection();
         void addUser(const QString userName, const QString password); // 注册
         void login(const QString userName, const QString password);
