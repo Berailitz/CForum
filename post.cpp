@@ -66,8 +66,7 @@ namespace cforum
 			cit = static_cast<Comment*>(qit);
 			delete cit;
 		}
-		delete comments;
-		comments = nullptr;
+		comments->clear();
 		visibleCommentCounter = 0;
 	}
 
