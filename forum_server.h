@@ -24,7 +24,11 @@ namespace cforum
 	const QString REGISTER_SUCCESS_MESSAGE = QString::fromUtf8("注册成功");
 	const QString ADD_BOARD_SUCCESS_MESSAGE = QString::fromUtf8("添加版面成功");
 	const QString ADD_POST_SUCCESS_MESSAGE = QString::fromUtf8("发主题帖成功");
+	const QString REMOVE_POST_SUCCESS_MESSAGE = QString::fromUtf8("删主题帖成功");
+	const QString REMOVE_POST_ERROR_MESSAGE = QString::fromUtf8("删主题帖失败");
 	const QString ADD_COMMENT_SUCCESS_MESSAGE = QString::fromUtf8("发回复帖成功");
+	const QString REMOVE_COMMENT_SUCCESS_MESSAGE = QString::fromUtf8("删回复帖成功");
+	const QString REMOVE_COMMENT_ERROR_MESSAGE = QString::fromUtf8("删回复帖失败");
 	const fs::path DEFAULT_DATABASE_FOLDER_PATH = "data";
 
     class ForumServer : public QWebSocketServer
@@ -73,7 +77,9 @@ namespace cforum
 		void login(const QString &target, const QString name, const QString password);
 		void addBoard(const QString &target, const QString name);
 		void addPost(const QString &target, const int boardID, istream &in);
+		void removePost(const QString &target, const int boardID, const int postID, const int userID);
 		void addComment(const QString &target, const int boardID, const int postID, istream &in);
+		void removeComment(const QString &target, const int boardID, const int postID, const int commentID, const int userID);
 		ClientHashList *getAllClientHash();
     };
 }

@@ -18,7 +18,9 @@ namespace cforum
 		void logout();
 		void addBoard(const QString boardName);
 		void addPost(const int boardID, const QString title, const QString content, const int userID);
+		void removePost(const int boardID, const int postID, const int userID);
 		void addComment(const int boardID, const int postID, const QString content, const int userID);
+		void removeComment(const int boardID, const int postID, const int commentID, const int userID);
 		void getBoardList();
 		void getPostList(const int boardID);
 		void getCommentList(const int boardID, const int postID);

@@ -61,6 +61,13 @@ namespace cforum
 		messageString = QString::number(boardID) + Q_LINE_BREAK + QString::fromStdString(out.str());
 	}
 
+	void RequestMessage::removePost(const int boardID, const int postID, const int userID)
+	{
+		type = RemovePostMessageType;
+		messageString = QString::number(boardID) + Q_LINE_BREAK + QString::number(postID) + Q_LINE_BREAK;
+		messageString += QString::number(userID) + Q_LINE_BREAK;
+	}
+
 	void RequestMessage::addComment(const int boardID, const int postID, const QString content, const int userID)
 	{
 		ostringstream out;
@@ -68,6 +75,13 @@ namespace cforum
 		comment.save(out);
 		type = AddCommentMessageType;
 		messageString = QString::number(boardID) + Q_LINE_BREAK + QString::number(postID) + Q_LINE_BREAK + QString::fromStdString(out.str());
+	}
+
+	void RequestMessage::removeComment(const int boardID, const int postID, const int commentID, const int userID)
+	{
+		type = RemoveCommentMessageType;
+		messageString = QString::number(boardID) + Q_LINE_BREAK + QString::number(postID) + Q_LINE_BREAK;
+		messageString += QString::number(commentID) + Q_LINE_BREAK + QString::number(userID) + Q_LINE_BREAK;
 	}
 
 	void RequestMessage::getBoardList()

@@ -112,8 +112,7 @@ namespace cforum
 	{
 		QString messageString = request.getMessageString();
 		istringstream iss(messageString.toStdString());
-		int boardID;
-		int postID;
+		int boardID, postID, commentID, userID;
 		string boardName;
 		string userName;
 		string password;
@@ -150,16 +149,32 @@ namespace cforum
 			iss.get();
 			addPost(target, boardID, iss);
 			break;
+		case RemovePostMessageType:
+			iss >> boardID;
+			iss >> postID;
+			iss >> userID;
+			removePost(target, boardID, postID, userID);
+			break;
 		case AddCommentMessageType:
 			iss >> boardID;
 			iss >> postID;
 			iss.get();
 			addComment(target, boardID, postID, iss);
 			break;
+		case RemoveCommentMessageType:
+			iss >> boardID;
+			iss >> postID;
+			iss >> commentID;
+			iss >> userID;
+			removeComment(target, boardID, postID, commentID, userID);
+			break;
 		default:
 			break;
 		}
-		QMutexLocker contentLocker(&fileMutex);
+
+		QMutexLocker userLocker(&userMutex);
+		QMutexLocker contentLocker(&contentMutex);
+		QMutexLocker fileLocker(&fileMutex);
 		save();
 	}
 
@@ -323,6 +338,24 @@ namespace cforum
 		}
 	}
 
+	void ForumServer::removePost(const QString &target, const int boardID, const int postID, const int userID)
+	{
+		QMutexLocker userLocker(&userMutex);
+		QMutexLocker contentLocker(&contentMutex);
+
+		bool result = cforum->removePost(boardID, postID, userID);
+		if (result)
+		{
+			Board *targetBoard = cforum->getBoardByID(boardID);
+			sendToast(target, REMOVE_POST_SUCCESS_MESSAGE);
+			broadcastBoard(*targetBoard);
+		}
+		else
+		{
+			sendToast(target, REMOVE_POST_ERROR_MESSAGE);
+		}
+	}
+
 	void ForumServer::addComment(const QString &target, const int boardID, const int postID, istream & in)
 	{
 		QMutexLocker userLocker(&userMutex);
@@ -337,6 +370,24 @@ namespace cforum
 		{
 			sendToast(target, ADD_COMMENT_SUCCESS_MESSAGE);
 			broadcastComment(boardID, postID, *realComment);
+		}
+	}
+
+	void ForumServer::removeComment(const QString & target, const int boardID, const int postID, const int commentID, const int userID)
+	{
+		QMutexLocker userLocker(&userMutex);
+		QMutexLocker contentLocker(&contentMutex);
+
+		bool result = cforum->removeComment(boardID, postID, commentID, userID);
+		if (result)
+		{
+			Post *targetPost = cforum->getBoardByID(boardID)->getPostByID(postID);
+			sendToast(target, REMOVE_COMMENT_SUCCESS_MESSAGE);
+			broadcastPost(boardID, *targetPost);
+		}
+		else
+		{
+			sendToast(target, REMOVE_COMMENT_ERROR_MESSAGE);
 		}
 	}
 

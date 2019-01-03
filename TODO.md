@@ -320,6 +320,10 @@ ClientController
     - 发回复帖
         - C: `{AddCommentMessageType}\n{boardID}\n{postID}\n{{commentID}.cfdata}`
         - S: `{AddCommentMessageType}\n{boardID}\n{postID}\n{{commentID}.cfdata}`
+    - 删主题帖
+        - C: `{AddPostMessageType}\n{boardID}\n{postID}\n{userID}`
+    - 删回复帖
+        - C: `{AddCommentMessageType}\n{boardID}\n{postID}\n{commentID}\n{userID}`
 
 备注
 ====
