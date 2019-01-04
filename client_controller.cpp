@@ -246,6 +246,7 @@ namespace cforum
     void ClientController::connect(const QString &url)
     {
         autoReconnect = true;
+        emit appOpened();
         emit messageSent(SERVER_CONNECTING_MESSAGE);
         if (socket->state() == QAbstractSocket::UnconnectedState)
         {
@@ -347,9 +348,17 @@ namespace cforum
         RequestMessage message;
         message.getPostList(boardID);
         sendMessage(message);
+
         resetBoards(false);
+        resetPosts(false);
+
         board = static_cast<Board*>(boards->at(boardID - 1));
         post = defaultPost;
+        clearPosts();
+
+        setPosts();
+        setBoards();
+        emit boardOpened();
     }
 
     /**
@@ -362,9 +371,18 @@ namespace cforum
         RequestMessage message;
         message.getCommentList(board->getID(), postID);
         sendMessage(message);
+
+
+        resetBoards(false);
         resetPosts(false);
+        resetComments(false);
+
         post = static_cast<Post*>(posts->at(postID - 1));
+        clearComments();
+
+        setComments();
         setPosts();
+        setBoards();
         emit postOpened();
     }
 

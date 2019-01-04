@@ -43,12 +43,15 @@ namespace cforum
     const QString REGISTER_SUCCESS_MESSAGE = QString::fromUtf8("注册成功");
     const QString ADD_BOARD_SUCCESS_MESSAGE = QString::fromUtf8("添加版面成功");
     const QString ADD_POST_SUCCESS_MESSAGE = QString::fromUtf8("发主题帖成功");
+    const QString ADD_POST_ERROR_MESSAGE = QString::fromUtf8("发主题帖失败");
     const QString REMOVE_POST_SUCCESS_MESSAGE = QString::fromUtf8("删主题帖成功");
     const QString REMOVE_POST_ERROR_MESSAGE = QString::fromUtf8("删主题帖失败");
     const QString ADD_COMMENT_SUCCESS_MESSAGE = QString::fromUtf8("发回复帖成功");
+    const QString ADD_COMMENT_ERROR_MESSAGE = QString::fromUtf8("发回复帖失败");
     const QString REMOVE_COMMENT_SUCCESS_MESSAGE = QString::fromUtf8("删回复帖成功");
     const QString REMOVE_COMMENT_ERROR_MESSAGE = QString::fromUtf8("删回复帖失败");
     const QString QSTRING_SEPARATOR = QString::fromUtf8(", ");
+    const QString CONTENT_SEPARATOR = QString::fromUtf8(": ");
     const fs::path DEFAULT_DATABASE_FOLDER_PATH = "data";
 
     class ForumServer : public QWebSocketServer

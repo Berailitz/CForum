@@ -47,6 +47,7 @@ Dialog {
                     font.family: "dengxian"
                     placeholderText: qsTr("正文")
                     font.pointSize: 20
+                    selectByMouse: true
                     background: Rectangle {
                             border.color: "#4d90fe"
                         }

@@ -16,6 +16,7 @@ Dialog {
                     font.family: "dengxian"
                     placeholderText: qsTr("回复")
                     font.pointSize: 20
+                    selectByMouse: true
                 }
         }
         RowLayout {

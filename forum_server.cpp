@@ -95,6 +95,11 @@ namespace cforum
      */
     void ForumServer::stop()
     {
+        for (ClientDescriptor * client : *clients)
+        {
+            client->getSocket()->close();
+            client->deleteLater();
+        }
         close();
         emit messageReceived(SERVER_STOP_MESSAGE + Q_LINE_BREAK);
     }
@@ -574,16 +579,31 @@ namespace cforum
 
         Post newPost;
         in >> newPost;
-        Post *realPost = cforum->addPost(boardID,
-            newPost.getTitle(),
-            newPost.getContent(),
-            newPost.getAuthorID());
-        userLocker.unlock();
-
-        if (realPost)
+        User *user = cforum->getUserByID(newPost.getAuthorID());
+        if (user)
         {
-            sendToast(target, ADD_POST_SUCCESS_MESSAGE);
-            broadcastPost(boardID, *realPost);
+            Post *realPost = cforum->addPost(boardID,
+                user->getName() + CONTENT_SEPARATOR + newPost.getTitle(),
+                user->getName() + CONTENT_SEPARATOR + newPost.getContent(),
+                newPost.getAuthorID());
+
+            userLocker.unlock();
+
+            if (realPost)
+            {
+                sendToast(target, ADD_POST_SUCCESS_MESSAGE);
+                broadcastPost(boardID, *realPost);
+            }
+            else
+            {
+                sendToast(target, REMOVE_POST_ERROR_MESSAGE);
+            }
+        }
+        else
+        {
+            userLocker.unlock();
+
+            sendToast(target, REMOVE_POST_ERROR_MESSAGE);
         }
     }
 
@@ -633,16 +653,31 @@ namespace cforum
 
         Comment newComment;
         in >> newComment;
-        Comment *realComment = cforum->addComment(boardID,
-            postID,
-            newComment.getContent(),
-            newComment.getAuthorID());
-        userLocker.unlock();
-
-        if (realComment)
+        User *user = cforum->getUserByID(newComment.getAuthorID());
+        if (user)
         {
-            sendToast(target, ADD_COMMENT_SUCCESS_MESSAGE);
-            broadcastComment(boardID, postID, *realComment);
+            Comment *realComment = cforum->addComment(boardID,
+                postID,
+                user->getName() + CONTENT_SEPARATOR + newComment.getContent(),
+                newComment.getAuthorID());
+
+            userLocker.unlock();
+
+            if (realComment)
+            {
+                sendToast(target, ADD_COMMENT_SUCCESS_MESSAGE);
+                broadcastComment(boardID, postID, *realComment);
+            }
+            else
+            {
+                sendToast(target, ADD_COMMENT_ERROR_MESSAGE);
+            }
+        }
+        else
+        {
+            userLocker.unlock();
+
+            sendToast(target, ADD_COMMENT_ERROR_MESSAGE);
         }
     }
 

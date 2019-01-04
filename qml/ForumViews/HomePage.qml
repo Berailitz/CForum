@@ -144,5 +144,13 @@ Page {
             }
         }
     }
+
+    Connections {
+        target: forumController
+        onAppOpened: {
+            forumController.logout()
+            swipeView.setCurrentIndex(0)
+        }
+    }
 }
 

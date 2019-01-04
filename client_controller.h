@@ -81,6 +81,7 @@ namespace cforum
         void refreshViews(); // 刷新UI
 
     Q_SIGNALS:
+        void appOpened(); // 显示程序主页面
         void forumOpened();
         void boardOpened();
         void postOpened();
