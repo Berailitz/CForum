@@ -118,7 +118,7 @@ Page {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
             Button {
-                Layout.preferredWidth: 400
+                Layout.preferredWidth: 450
                 font.family: "dengxian"
                 font.pointSize: 40
                 focusPolicy: Qt.NoFocus
@@ -131,7 +131,7 @@ Page {
             }
 
             Button {
-                Layout.preferredWidth: 400
+                Layout.preferredWidth: 450
                 font.family: "dengxian"
                 font.pointSize: 40
                 focusPolicy: Qt.NoFocus

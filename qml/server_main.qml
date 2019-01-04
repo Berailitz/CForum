@@ -21,13 +21,14 @@ ApplicationWindow {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
             RowLayout {
+                width: 1080
+
                 Text {
                     text: qsTr("请输入服务器要监听的端口号")
                     font.pointSize: 20
                     font.family: "dengxian"
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                     horizontalAlignment: Text.AlignLeft
-                    Layout.preferredWidth: 450
                 }
 
                 TextField {
@@ -36,10 +37,10 @@ ApplicationWindow {
                     font.family: "dengxian"
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                     horizontalAlignment: Text.AlignLeft
-                    Layout.preferredWidth: 400
                     inputMethodHints: Qt.ImhDigitsOnly
                     selectByMouse: true
                     text: qsTr("8118")
+                    Layout.fillWidth: true
                 }
 
                 Button {

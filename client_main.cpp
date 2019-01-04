@@ -30,6 +30,9 @@ int main(int argc, char *argv[])
     // 禁用OpenGL以支持在没有OpenGL的电脑上运行
     QCoreApplication::setAttribute(Qt::AA_UseOpenGLES);
 
+    // 禁用DPI缩放以避免UI错位
+    QCoreApplication::setAttribute(Qt::AA_DisableHighDpiScaling);
+
     // 建立控制器与view层的连接
     engine.rootContext()->setContextProperty("forumController",
         QVariant::fromValue(&*forumController));
