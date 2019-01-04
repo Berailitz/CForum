@@ -38,10 +38,13 @@ ApplicationWindow {
                     horizontalAlignment: Text.AlignLeft
                     Layout.preferredWidth: 400
                     inputMethodHints: Qt.ImhDigitsOnly
+                    selectByMouse: true
                     text: qsTr("8118")
                 }
 
                 Button {
+                    font.pointSize: 20
+                    font.family: "dengxian"
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                     Layout.preferredWidth: 100
                     text: qsTr("启动")
@@ -52,6 +55,8 @@ ApplicationWindow {
                 }
 
                 Button {
+                    font.pointSize: 20
+                    font.family: "dengxian"
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                     Layout.preferredWidth: 100
                     text: qsTr("停止")
@@ -100,6 +105,7 @@ ApplicationWindow {
                 anchors.fill: parent
                 font.pointSize: 20
                 font.family: "dengxian"
+                selectByMouse: true
                 placeholderText: qsTr("IP:Port")
             }
         }
@@ -132,6 +138,8 @@ ApplicationWindow {
         }
 
         Button {
+            font.pointSize: 20
+            font.family: "dengxian"
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             text: qsTr("发送")
 

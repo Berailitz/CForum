@@ -1,3 +1,14 @@
+/**
+ * @file client_controller.h
+ * @author 熊光正 (xgz@bupt.edu.cn)
+ * @brief 实现MVC架构中，客户端的控制器，接口与服务端的一致。
+ * @version 3.3
+ * @date 2019-01-04
+ *
+ * @copyright Copyright (c) 2019
+ *
+ */
+
 #ifndef CFORUM_CONTROLLER_H
 #define CFORUM_CONTROLLER_H
 
@@ -51,69 +62,95 @@ namespace cforum
             Q_PROPERTY(bool isGuest READ isGuest NOTIFY boardOpened)
             Q_PROPERTY(bool isModerator READ isModerator NOTIFY boardOpened)
             Q_PROPERTY(int userID READ getUserID NOTIFY forumOpened)
+
     public:
         ClientController(QQmlApplicationEngine &engine);
         ~ClientController();
+
         QString getGreeting() const;
         QString getBoardTitle() const;
         QString getPostTitle() const;
         QString getPostContent() const;
+
         int getUserID() const;
+
         bool isAdmin() const;
         bool isGuest() const;
         bool isModerator() const;
+
         void refreshViews(); // 刷新UI
+
     Q_SIGNALS:
         void forumOpened();
         void boardOpened();
         void postOpened();
         void messageSent(QString message);
+
     public Q_SLOTS:
-        void onErrorRaised(const QString message);
         void initializeConnection();
+
         void addUser(const QString userName, const QString password); // 注册
         void login(const QString userName, const QString password);
         void guestLogin();
         void logout();
-        void setModerator(const QString userName); // 将用户设为当前版面的版主之一
-        void removeModerator(const QString userName); // 将用户从当前版面的版主列表中移除
+
+        // 将用户设为当前版面的版主之一
+        void setModerator(const QString userName);
+        // 将用户从当前版面的版主列表中移除
+        void removeModerator(const QString userName);
+
         void viewForum(); // 控制UI转向论坛界面
+
         void addBoard(const QString boardName);
         void viewBoard(const int boardID = -1); // 控制UI转向版面界面
+
         bool canRemovePost(const int postID) const;
         void addPost(const QString title, const QString content); // 发主题帖
         void viewPost(const int postID); // 控制UI转向主题帖界面
         void removePost(const int postID); // 删除主题帖
+
         void addComment(const QString content); // 发回复帖
         void removeComment(const int commentID); // 删除回复帖
+
         void connect(const QString &url = DEFAULT_URL);
         void disconnect();
+
         void onConnected();
         void onTextMessageReceived(const QString &textMessage);
         void onDisconnected();
         void onError();
+
+        void onErrorRaised(const QString message);
+
     private:
         QQmlApplicationEngine &engine;
         QWebSocket *socket = nullptr;
         bool autoReconnect = true;
+
         BoardList* boards;
         PostList* posts;
         CommentList* comments;
         User *user;
         Board *board;
         Post *post;
-        void openForum();
-        void openBoard(const int boardID);
-        void openPost(const int postID);
-        User *defaultUser;
+
         Board *defaultBoard;
         Post *defaultPost;
         BoardList* defaultBoards = nullptr;
         PostList* defaultPosts = nullptr;
         CommentList* defaultComments = nullptr;
+        User *defaultUser;
+
+        void openForum();
+        void openBoard(const int boardID);
+        void openPost(const int postID);
+
         void loadUser(istream &userStream);
+
         void execute(ResponseMessage &message);
+
         void sendMessage(RequestMessage &message);
+
         void clearBoards();
         void clearPosts();
         void clearComments();

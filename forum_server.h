@@ -1,3 +1,14 @@
+/**
+ * @file forum_server.h
+ * @author 熊光正 (xgz@bupt.edu.cn)
+ * @brief 实现MVC架构中，服务端的控制器，采用有序资源使用算法避免死锁。
+ * @version 3.3
+ * @date 2019-01-04
+ *
+ * @copyright Copyright (c) 2019
+ *
+ */
+
 #ifndef CFORUM_FORUM_SERVER_H
 #define CFORUM_FORUM_SERVER_H
 
@@ -22,7 +33,8 @@ namespace cforum
     using ClientList = QVector<ClientDescriptor *>;
     using ClientHashList = list<QString>;
 
-    const QString SERVER_START_MESSAGE = QString::fromUtf8("启动服务器，监听的地址如下") + Q_LINE_BREAK;
+    const QString SERVER_START_MESSAGE = QString::fromUtf8("启动服务器，监听的地址如下") +
+        Q_LINE_BREAK;
     const QString SERVER_ALREADY_START_MESSAGE = QString::fromUtf8("服务器已启动");
     const QString SERVER_START_ERROR_MESSAGE = QString::fromUtf8("启动服务器失败");
     const QString SERVER_STOP_MESSAGE = QString::fromUtf8("停止服务器");
@@ -45,6 +57,7 @@ namespace cforum
     public:
         ForumServer();
         ~ForumServer();
+
         bool load(const fs::path path);
         bool save() const;
         bool save(const fs::path path) const;
@@ -53,6 +66,7 @@ namespace cforum
         bool start(const QString portString);
         bool start(const int port = 8118);
         void stop();
+
         void onErrorRaised(const QString message);
         void onNewConnection();
         void onTextMessageReceived(const QString &textMessage);
@@ -73,27 +87,48 @@ namespace cforum
         CForum *cforum;
         ClientList *clients;
         fs::path lastPath = DEFAULT_DATABASE_FOLDER_PATH;
+
+        ClientHashList *getAllClientHash();
+
         void execute(const QString &target, const RequestMessage &request);
+
         void sendBoard(const QString &target, const Board &board);
         void sendBoardList(const QString &target);
         void broadcastBoard(const Board &board);
+
         void sendPost(const QString &target, const int boardID, const Post &post);
         void sendPostList(const QString &target, const int boardID);
         void broadcastPost(const int boardID, const Post &post);
         void broadcastPostDeletion(const int boardID, const int postID);
-        void sendComment(const QString &target, const int boardID, const int postID, const Comment &comment);
+
+        void sendComment(const QString &target,
+            const int boardID,
+            const int postID,
+            const Comment &comment);
         void sendCommentList(const QString &target, const int boardID, const int postID);
         void broadcastComment(const int boardID, const int postID, const Comment &comment);
         void broadcastCommentDeletion(const int boardID, const int postID, const int commentID);
+
         void sendToast(const QString &target, const QString &text);
         void addNormalUser(const QString &target, const QString name, const QString password);
         void login(const QString &target, const QString name, const QString password);
+
         void addBoard(const QString &target, const QString name);
         void addPost(const QString &target, const int boardID, istream &in);
-        void removePost(const QString &target, const int boardID, const int postID, const int userID);
-        void addComment(const QString &target, const int boardID, const int postID, istream &in);
-        void removeComment(const QString &target, const int boardID, const int postID, const int commentID, const int userID);
-        ClientHashList *getAllClientHash();
+
+        void removePost(const QString &target,
+            const int boardID,
+            const int postID,
+            const int userID);
+        void addComment(const QString &target,
+            const int boardID,
+            const int postID,
+            istream &in);
+        void removeComment(const QString &target,
+            const int boardID,
+            const int postID,
+            const int commentID,
+            const int userID);
     };
 }
 

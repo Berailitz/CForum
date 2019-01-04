@@ -3,7 +3,8 @@
 
 namespace cforum
 {
-    Comment::Comment(const int id, QString content, const int authorID) : QObject(), id(id), content(content), authorID(authorID), isRemoved(false)
+    Comment::Comment(const int id, QString content, const int authorID)
+        : QObject(), id(id), content(content), authorID(authorID), isRemoved(false)
     {
         time = QDateTime::currentDateTime();
     }
@@ -37,6 +38,10 @@ namespace cforum
         return authorID;
     }
 
+    /**
+     * @brief 清除回复帖的数据。
+     *
+     */
     void Comment::removeContent()
     {
         content = DELETED_MESSAGE;
@@ -53,9 +58,14 @@ namespace cforum
         isRemoved = oldComment->isRemoved;
     }
 
+    /**
+     * @brief 获取发帖时间的字符串表示。
+     *
+     * @return QString
+     */
     QString Comment::getTimeString() const
     {
-        return time.toString(FRONT_END_DATETIME_FORMAT);
+        return time.toString(FRONT_DATETIME_FORMAT);
     }
 
     bool Comment::canRemove() const
@@ -63,7 +73,7 @@ namespace cforum
         return !isRemoved;
     }
 
-    void Comment::load(istream & in)
+    void Comment::load(istream &in)
     {
         string rawString;
         in >> id;
@@ -71,7 +81,8 @@ namespace cforum
         in >> isRemoved;
         in.get(); // 处理行末换行符
         getline(in, rawString);
-        time = QDateTime::fromString(QString::fromStdString(rawString), BACK_END_DATETIME_FORMAT);
+        time = QDateTime::fromString(QString::fromStdString(rawString),
+            BACK_DATETIME_FORMAT);
         content = QString::fromStdString(string((istreambuf_iterator<char>(in)), {}));
     }
 
@@ -80,7 +91,7 @@ namespace cforum
         out << id << endl;
         out << authorID << endl;
         out << isRemoved << endl;
-        out << time.toString(BACK_END_DATETIME_FORMAT).toStdString() << endl;
+        out << time.toString(BACK_DATETIME_FORMAT).toStdString() << endl;
         out << content.toStdString();
     }
 

@@ -7,7 +7,8 @@ namespace cforum
         type = ModeratorType;
     }
 
-    Moderator::Moderator(const NormalUser &oldNormalUser) : NormalUser(oldNormalUser)
+    Moderator::Moderator(const NormalUser &oldNormalUser)
+        : NormalUser(oldNormalUser)
     {
     }
 
@@ -15,11 +16,23 @@ namespace cforum
     {
     }
 
+    /**
+     * @brief 将对象设置为版主，在版主的版面列表中增加版面。
+     *
+     * @param boardID
+     */
     void Moderator::setModerator(const int boardID)
     {
         boards->insert(boardID);
     }
 
+    /**
+     * @brief 从版主的版面列表中移除版面，版面不存在则返回假。
+     *
+     * @param boardID
+     * @return true
+     * @return false
+     */
     bool Moderator::removeModerator(const int boardID)
     {
         BoardSet::iterator bit = boards->find(boardID);
@@ -56,6 +69,11 @@ namespace cforum
         return INFO_MESSAGE_MODERATOR + getBasicInfo();
     }
 
+    /**
+     * @brief 降级为普通用户，当版面列表为空时执行。
+     *
+     * @return NormalUser*
+     */
     NormalUser * Moderator::toNormalUser() const
     {
         return new NormalUser(static_cast<const User*>(this));

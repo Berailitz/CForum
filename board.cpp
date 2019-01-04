@@ -7,7 +7,8 @@ namespace cforum
     {
     }
 
-    Board::Board(const int id, const QString name) : QObject(), id(id), name(name), posts(new PostList)
+    Board::Board(const int id, const QString name)
+        : QObject(), id(id), name(name), posts(new PostList)
     {
     }
 
@@ -36,6 +37,12 @@ namespace cforum
         return posts;
     }
 
+    /**
+     * @brief 检查对应主题帖是否存在，存在则返回指向其的指针，否则返回空指针。
+     *
+     * @param postID
+     * @return Post*
+     */
     Post * Board::getPostByID(const int postID) const
     {
         if (postID > 0 && postID <= posts->size())
@@ -57,6 +64,14 @@ namespace cforum
         return true;
     }
 
+    /**
+     * @brief 检查id是否合法，对应的主题帖能否被该用户删除。
+     *
+     * @param postID
+     * @param userID
+     * @return true
+     * @return false
+     */
     bool Board::canRemovePost(const int postID, const int userID) const
     {
         Post *post = getPostByID(postID);
@@ -70,6 +85,13 @@ namespace cforum
         }
     }
 
+    /**
+     * @brief 若postID合法则直接删除该主题帖，而不检查其能否被删除。
+     *
+     * @param postID
+     * @return true
+     * @return false
+     */
     bool Board::remove(const int postID)
     {
         Post *post = getPostByID(postID);
@@ -96,6 +118,13 @@ namespace cforum
         return true;
     }
 
+    /**
+     * @brief 从版面的版主列表中移除某一用户。
+     *
+     * @param userID
+     * @return true
+     * @return false
+     */
     bool Board::removeModerator(const int userID)
     {
         ModeratorSet::iterator mit = moderators->find(userID);
@@ -142,6 +171,13 @@ namespace cforum
         }
     }
 
+    /**
+     * @brief 从路径中加载主题帖，如遇异常，报错并返回假。
+     *
+     * @param boardPath
+     * @return true
+     * @return false
+     */
     bool Board::loadPosts(const fs::path boardPath)
     {
         int postsCounter = count_files(boardPath) - 1; // 除去post.cfdata
@@ -165,6 +201,13 @@ namespace cforum
         return true;
     }
 
+    /**
+     * @brief 向路径中保存主题帖，如遇异常，报错并返回假。
+     *
+     * @param boardPath
+     * @return true
+     * @return false
+     */
     bool Board::savePosts(const fs::path boardPath) const
     {
         fs::create_directories(boardPath);
@@ -188,6 +231,11 @@ namespace cforum
         return true;
     }
 
+    /**
+     * @brief 不拷贝地返回指向堆区版主列表的指针。
+     *
+     * @return ModeratorSet*
+     */
     ModeratorSet* Board::getModerators() const
     {
         return moderators;

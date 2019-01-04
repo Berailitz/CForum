@@ -3,7 +3,8 @@
 
 namespace cforum
 {
-    Post::Post(const int id, QString content, const int authorID, QString title) : Comment(id, content, authorID), title(title), comments(new CommentList)
+    Post::Post(const int id, QString content, const int authorID, QString title)
+        : Comment(id, content, authorID), title(title), comments(new CommentList)
     {
     }
 
@@ -33,6 +34,13 @@ namespace cforum
         return title;
     }
 
+    /**
+     * @brief 检查能否删除回复。
+     *
+     * @param isModerator
+     * @return true
+     * @return false
+     */
     bool Post::canRemove(const bool isModerator) const
     {
         return Comment::canRemove() && (isModerator || visibleCommentCounter == 0);
@@ -43,6 +51,13 @@ namespace cforum
         return comments;
     }
 
+    /**
+     * @brief 不检查内容，发回复贴。
+     *
+     * @param content
+     * @param userID
+     * @return Comment*
+     */
     Comment *Post::post(const QString content, const int userID)
     {
         Comment * newComment = new Comment(comments->size() + 1, content, userID);
@@ -52,6 +67,10 @@ namespace cforum
         return newComment;
     }
 
+    /**
+     * @brief 清楚主题帖和对应回复帖的数据。
+     *
+     */
     void Post::removeContent()
     {
         Comment::removeContent();
@@ -65,6 +84,13 @@ namespace cforum
         visibleCommentCounter = 0;
     }
 
+    /**
+     * @brief 不检查id，删除回复贴。
+     *
+     * @param commentID
+     * @return true
+     * @return false
+     */
     bool Post::remove(const int commentID)
     {
         CommentList::iterator it = comments->begin();
@@ -75,6 +101,12 @@ namespace cforum
         return true;
     }
 
+    /**
+     * @brief 检查id，不存在则返回空指针。
+     *
+     * @param commentID
+     * @return Comment*
+     */
     Comment * Post::getCommentByID(const int commentID)
     {
         if (commentID > 0 && commentID <= comments->size())
@@ -89,6 +121,11 @@ namespace cforum
         }
     }
 
+    /**
+     * @brief 从输入流读取主题帖数据。
+     *
+     * @param in
+     */
     void Post::load(istream &in)
     {
         string rawString;
@@ -99,23 +136,36 @@ namespace cforum
         in >> authorID;
         in.get(); // 处理行末换行符
         getline(in, rawString);
-        time = QDateTime::fromString(QString::fromStdString(rawString), BACK_END_DATETIME_FORMAT);
+        time = QDateTime::fromString(QString::fromStdString(rawString),
+            BACK_DATETIME_FORMAT);
         getline(in, rawString);
         title = QString::fromStdString(rawString);
         content = QString::fromStdString(string(istreambuf_iterator<char>(in), {}));
     }
 
+    /**
+     * @brief 向输出流写主题帖数据。
+     *
+     * @param out
+     */
     void Post::save(ostream & out) const
     {
         out << id << endl;
         out << comments->size() << endl;
         out << isRemoved << endl;
         out << authorID << endl;
-        out << time.toString(BACK_END_DATETIME_FORMAT).toStdString() << endl;
+        out << time.toString(BACK_DATETIME_FORMAT).toStdString() << endl;
         out << title.toStdString() << endl;
         out << content.toStdString();
     }
 
+    /**
+     * @brief 从文件夹加载回复帖。
+     *
+     * @param postPath
+     * @return true
+     * @return false
+     */
     bool Post::loadComments(const fs::path postPath)
     {
         visibleCommentCounter = 0;
@@ -142,6 +192,13 @@ namespace cforum
         return true;
     }
 
+    /**
+     * @brief 向文件夹写回复帖数据。
+     *
+     * @param postPath
+     * @return true
+     * @return false
+     */
     bool Post::saveComments(const fs::path postPath) const
     {
         fs::create_directories(postPath);

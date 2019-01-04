@@ -11,6 +11,7 @@ Dialog {
         font.family: "dengxian"
         placeholderText: qsTr("版面名")
         font.pointSize: 20
+        selectByMouse: true
     }
 
     onAccepted: {

@@ -1,3 +1,14 @@
+/**
+ * @file guest.h
+ * @author 熊光正 (xgz@bupt.edu.cn)
+ * @brief 定义游客类，用于表示未登录用户。
+ * @version 3.3
+ * @date 2019-01-04
+ *
+ * @copyright Copyright (c) 2019
+ *
+ */
+
 #ifndef CFORUM_GUEST_H
 #define CFORUM_GUEST_H
 
@@ -12,8 +23,10 @@ namespace cforum
     class Guest : public User
     {
         Q_OBJECT
+
     public:
         Guest();
+
         virtual bool isGuest() const;
         QString getInfo() const;
     };

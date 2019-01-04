@@ -11,7 +11,7 @@ namespace cforum
         defaultPosts(new PostList()),
         defaultComments(new CommentList())
     {
-        // 设置缺省值，以供UI层使用
+        // 设置缺省值，以供view层使用
         user = defaultUser;
         board = defaultBoard;
         post = defaultPost;
@@ -62,17 +62,30 @@ namespace cforum
         return WELCOME_MESSAGE + user->getInfo() + QString::fromUtf8("。");
     }
 
+    /**
+     * @brief 获取当前版面的（广义）标题，标题包含作者信息。
+     *
+     * @return QString
+     */
     QString ClientController::getBoardTitle() const
     {
-        QString boardTitle = board->getName() + (isModerator() ? MODERATOR_NOTE_MESSAGE : "");
+        QString boardTitle = board->getName();
         ModeratorSet* moderators = board->getModerators();
+
+        if (isModerator())
+        {
+            boardTitle += MODERATOR_NOTE_MESSAGE;
+        }
+
         if (moderators->size() == 0)
         {
             boardTitle += NO_MODERATOR_MESSGAE;
         }
         else
         {
-            boardTitle += (MODERATOR_COUNT_PREFIX_MESSAGE + QString::number(moderators->size()) + MODERATOR_COUNT_SUBFIX_MESSAGE);
+            boardTitle += MODERATOR_COUNT_PREFIX_MESSAGE;
+            boardTitle += QString::number(moderators->size());
+            boardTitle += MODERATOR_COUNT_SUBFIX_MESSAGE;
         }
         return boardTitle;
     }
@@ -92,6 +105,10 @@ namespace cforum
         return user->getID();
     }
 
+    /**
+     * @brief 建立与服务器的连接，并连接信号和槽。
+     *
+     */
     void ClientController::initializeConnection()
     {
         if (socket)
@@ -99,8 +116,14 @@ namespace cforum
             delete socket;
         }
         socket = new QWebSocket();
-        QObject::connect(&*socket, &QWebSocket::connected, this, &ClientController::onConnected);
-        QObject::connect(&*socket, &QWebSocket::disconnected, this, &ClientController::onDisconnected);
+        QObject::connect(&*socket,
+            &QWebSocket::connected,
+            this,
+            &ClientController::onConnected);
+        QObject::connect(&*socket,
+            &QWebSocket::disconnected,
+            this,
+            &ClientController::onDisconnected);
     }
 
     void ClientController::addUser(const QString newUserName, const QString newPassword)
@@ -131,14 +154,28 @@ namespace cforum
         sendMessage(message);
     }
 
+    /**
+     * @brief 禁止设置版主，为保持接口不变，保留该函数。
+     *
+     * @param userName
+     */
     void ClientController::setModerator(const QString userName)
     {
     }
 
+    /**
+     * @brief 禁止撤销版主，为保持接口不变，保留该函数。
+     *
+     * @param userName
+     */
     void ClientController::removeModerator(const QString userName)
     {
     }
 
+    /**
+     * @brief 供View层调用，转到论坛首页。
+     *
+     */
     void ClientController::viewForum()
     {
         openForum();
@@ -175,6 +212,11 @@ namespace cforum
         sendMessage(message);
     }
 
+    /**
+     * @brief 供View层调用，转到帖子页。
+     *
+     * @param postID
+     */
     void ClientController::viewPost(const int postID)
     {
         openPost(postID);
@@ -212,6 +254,10 @@ namespace cforum
         return;
     }
 
+    /**
+     * @brief 停止自动重连，并断开与服务端的连接。
+     *
+     */
     void ClientController::disconnect()
     {
         autoReconnect = false;
@@ -260,9 +306,12 @@ namespace cforum
         return board->isModerator(user->getID());
     }
 
+    /**
+     * @brief 刷新UI。
+     *
+     */
     void ClientController::refreshViews()
     {
-        // 刷新UI
         QQmlContext *ctxt = engine.rootContext();
         ctxt->setContextProperty("forumController", QVariant::fromValue(&*this));
         ctxt->setContextProperty("boardListModel", QVariant::fromValue(*boards));
@@ -276,6 +325,10 @@ namespace cforum
         emit messageSent(message);
     }
 
+    /**
+     * @brief 转至论坛首页，供控制器controller层调用。
+     *
+     */
     void ClientController::openForum()
     {
         RequestMessage message;
@@ -284,6 +337,11 @@ namespace cforum
         board = defaultBoard;
     }
 
+    /**
+     * @brief 转至版面页，供控制器controller层调用。
+     *
+     * @param boardID
+     */
     void ClientController::openBoard(const int boardID)
     {
         RequestMessage message;
@@ -294,6 +352,11 @@ namespace cforum
         post = defaultPost;
     }
 
+    /**
+     * @brief 转至主题帖页，供控制器controller层调用。
+     *
+     * @param postID
+     */
     void ClientController::openPost(const int postID)
     {
         RequestMessage message;
@@ -314,6 +377,11 @@ namespace cforum
         user = cforum::loadUser(userStream);
     }
 
+    /**
+     * @brief 执行服务器发来的应答消息。
+     *
+     * @param message
+     */
     void ClientController::execute(ResponseMessage & message)
     {
         QString messageString = message.getMessageString();
@@ -432,11 +500,20 @@ namespace cforum
         }
     }
 
+    /**
+     * @brief 向服务器发送消息的唯一方法。
+     *
+     * @param message
+     */
     void ClientController::sendMessage(RequestMessage & message)
     {
         socket->sendTextMessage(message.dump());
     }
 
+    /**
+     * @brief 初始化版面列表。
+     *
+     */
     void ClientController::clearBoards()
     {
         board = defaultBoard;
@@ -447,6 +524,10 @@ namespace cforum
         boards->clear();
     }
 
+    /**
+     * @brief 初始化主题帖列表。
+     *
+     */
     void ClientController::clearPosts()
     {
         post = defaultPost;
@@ -457,6 +538,10 @@ namespace cforum
         posts->clear();
     }
 
+    /**
+     * @brief 初始化回复帖列表。
+     *
+     */
     void ClientController::clearComments()
     {
         for (QObject* &qit : *comments)
@@ -466,45 +551,78 @@ namespace cforum
         comments->clear();
     }
 
+    /**
+     * @brief 断开版面列表与view层的连接，使其可以被控制器层访问。
+     *
+     * @param doClear
+     */
     void ClientController::resetBoards(bool doClear)
     {
-        engine.rootContext()->setContextProperty("boardListModel", QVariant::fromValue(*defaultBoards));
+        engine.rootContext()->setContextProperty("boardListModel",
+            QVariant::fromValue(*defaultBoards));
         if (doClear)
         {
             clearBoards();
         }
     }
 
+    /**
+     * @brief 断开主题帖列表与view层的连接，使其可以被控制器层访问。
+     *
+     * @param doClear
+     */
     void ClientController::resetPosts(bool doClear)
     {
-        engine.rootContext()->setContextProperty("postListModel", QVariant::fromValue(*defaultPosts));
+        engine.rootContext()->setContextProperty("postListModel",
+            QVariant::fromValue(*defaultPosts));
         if (doClear)
         {
             clearPosts();
         }
     }
 
+    /**
+     * @brief 断开回复帖列表与view层的连接，使其可以被控制器层访问。
+     *
+     * @param doClear
+     */
     void ClientController::resetComments(bool doClear)
     {
-        engine.rootContext()->setContextProperty("commentListModel", QVariant::fromValue(*defaultComments));
+        engine.rootContext()->setContextProperty("commentListModel",
+            QVariant::fromValue(*defaultComments));
         if (doClear)
         {
             clearComments();
         }
     }
 
+    /**
+     * @brief 接通版面帖列表与view层的连接，使view层更新列表的信息。
+     *
+     */
     void ClientController::setBoards()
     {
-        engine.rootContext()->setContextProperty("boardListModel", QVariant::fromValue(*boards));
+        engine.rootContext()->setContextProperty("boardListModel",
+            QVariant::fromValue(*boards));
     }
 
+    /**
+     * @brief 接通主题帖列表与view层的连接，使view层更新列表的信息。
+     *
+     */
     void ClientController::setPosts()
     {
-        engine.rootContext()->setContextProperty("postListModel", QVariant::fromValue(*posts));
+        engine.rootContext()->setContextProperty("postListModel",
+            QVariant::fromValue(*posts));
     }
 
+    /**
+     * @brief 接通回复帖列表与view层的连接，使view层更新列表的信息。
+     *
+     */
     void ClientController::setComments()
     {
-        engine.rootContext()->setContextProperty("commentListModel", QVariant::fromValue(*comments));
+        engine.rootContext()->setContextProperty("commentListModel",
+            QVariant::fromValue(*comments));
     }
 }

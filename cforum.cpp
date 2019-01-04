@@ -55,9 +55,18 @@ namespace cforum
         }
     }
 
+    /**
+     * @brief 检查注册信息是否合法，并注册为普通用户。
+     *
+     * @param userName
+     * @param password
+     * @return NormalUser*
+     */
     NormalUser *CForum::addNormalUser(const QString userName, const QString password)
     {
-        if (matchRegular(userName, standardRegular) && matchRegular(password, standardRegular) && !getUserByName(userName))
+        if (matchRegular(userName, standardRegular) &&
+            matchRegular(password, standardRegular) &&
+            !getUserByName(userName))
         {
             User *user = getUserByName(userName);
             if (user)
@@ -66,7 +75,9 @@ namespace cforum
             }
             else
             {
-                NormalUser *user = new NormalUser(static_cast<int>(users->size()) + 1, userName, password);
+                NormalUser *user = new NormalUser(
+                    static_cast<int>(users->size()) + 1,
+                    userName, password);
                 // 用户ID为正数
                 users->push_back(user);
                 return user;
@@ -118,6 +129,12 @@ namespace cforum
         }
     }
 
+    /**
+     * @brief 检查版面信息是否合法，并新建一个版面。
+     *
+     * @param boardName
+     * @return Board*
+     */
     Board * CForum::addBoard(const QString boardName)
     {
         if (matchRegular(boardName, standardRegular))
@@ -143,6 +160,14 @@ namespace cforum
         return getUserByID(userID)->isAdmin();
     }
 
+    /**
+     * @brief 检查用户、版面是否合法，并将用户设为版主，更新用户和版面的信息。
+     *
+     * @param boardID
+     * @param userID
+     * @return true
+     * @return false
+     */
     bool CForum::setModerator(const int boardID, const int userID)
     {
         Board *board = getBoardByID(boardID);
@@ -160,7 +185,7 @@ namespace cforum
             {
                 // user is normal user，升级为版主
                 board->setModerator(user->getID());
-                for (UserList::iterator qit = users->begin(); qit != users->end(); qit++)
+                for (auto qit = users->begin(); qit != users->end(); qit++)
                 {
                     NormalUser *oldNormalUser = static_cast<NormalUser*>(*qit);
                     if (oldNormalUser->getID() == userID)
@@ -185,6 +210,14 @@ namespace cforum
         }
     }
 
+    /**
+     * @brief 检查用户、版面是否合法，并将用户撤销版主，更新用户和版面的信息。
+     *
+     * @param boardID
+     * @param userID
+     * @return true
+     * @return false
+     */
     bool CForum::removeModerator(const int boardID, const int userID)
     {
         Board *board = getBoardByID(boardID);
@@ -224,13 +257,29 @@ namespace cforum
         }
     }
 
-    Post * CForum::addPost(const int boardID, const QString title, const QString content, const int userID)
+    /**
+     * @brief 检查主题帖信息是否合法，并发一个主题帖。
+     *
+     * @param boardID
+     * @param title
+     * @param content
+     * @param userID
+     * @return Post*
+     */
+    Post *CForum::addPost(const int boardID,
+        const QString title,
+        const QString content,
+        const int userID)
     {
         Board *board = getBoardByID(boardID);
         User *user = getUserByID(userID);
-        if (board && user && !user->isAdmin() && matchRegular(title, inlineRegular))
+        if (board && user && !user->isAdmin() &&
+            matchRegular(title, inlineRegular))
         {
-            Post *post = new Post(board->getPosts()->size() + 1, content, userID, title);
+            Post *post = new Post(board->getPosts()->size() + 1,
+                content,
+                userID,
+                title);
             board->post(post);
             return post;
         }
@@ -241,7 +290,18 @@ namespace cforum
         }
     }
 
-    bool CForum::canRemovePost(const int boardID, const int postID, const int userID) const
+    /**
+     * @brief 判断用户能否删除该主题帖。
+     *
+     * @param boardID
+     * @param postID
+     * @param userID
+     * @return true
+     * @return false
+     */
+    bool CForum::canRemovePost(const int boardID,
+        const int postID,
+        const int userID) const
     {
         Board *board = getBoardByID(boardID);
         User *user = getUserByID(userID);
@@ -255,7 +315,18 @@ namespace cforum
         }
     }
 
-    bool CForum::removePost(const int boardID, const int postID, const int userID)
+    /**
+     * @brief 检查并删除主题帖。
+     *
+     * @param boardID
+     * @param postID
+     * @param userID
+     * @return true
+     * @return false
+     */
+    bool CForum::removePost(const int boardID,
+        const int postID,
+        const int userID)
     {
         if (canRemovePost(boardID, postID, userID))
         {
@@ -267,7 +338,19 @@ namespace cforum
         }
     }
 
-    Comment * CForum::addComment(const int boardID, const int postID, const QString content, const int userID)
+    /**
+     * @brief 检查回复帖信息是否合法，并发一个回复帖。
+     *
+     * @param boardID
+     * @param postID
+     * @param content
+     * @param userID
+     * @return Comment*
+     */
+    Comment *CForum::addComment(const int boardID,
+        const int postID,
+        const QString content,
+        const int userID)
     {
         Board *board = getBoardByID(boardID);
         User *user = getUserByID(userID);
@@ -289,7 +372,20 @@ namespace cforum
         }
     }
 
-    bool CForum::removeComment(const int boardID, const int postID, const int commentID, const int userID)
+    /**
+     * @brief 检查用户、帖子是否合法，并删除该回复帖。
+     *
+     * @param boardID
+     * @param postID
+     * @param commentID
+     * @param userID
+     * @return true
+     * @return false
+     */
+    bool CForum::removeComment(const int boardID,
+        const int postID,
+        const int commentID,
+        const int userID)
     {
         Board *board = getBoardByID(boardID);
         User *user = getUserByID(userID);
@@ -299,7 +395,10 @@ namespace cforum
             if (post)
             {
                 Comment *comment = post->getCommentByID(commentID);
-                if (comment && comment->canRemove() && (user->isAdmin() || user->isModerator(board->getID()) || post->getAuthorID() == userID))
+                if (comment && comment->canRemove() &&
+                    (user->isAdmin() ||
+                        user->isModerator(board->getID()) ||
+                        post->getAuthorID() == userID))
                 {
                     post->remove(commentID);
                     return true;
@@ -348,6 +447,13 @@ namespace cforum
         }
     }
 
+    /**
+     * @brief 检查并从数据库文件夹中读取数据，若有异常，发出异常信号，并返回假。
+     *
+     * @param path
+     * @return true
+     * @return false
+     */
     bool CForum::load(const fs::path path)
     {
         const fs::path userPath = path / "user";
@@ -447,6 +553,13 @@ namespace cforum
         }
     }
 
+    /**
+     * @brief 将数据写入数据库文件夹，若有异常，发出异常信号，并返回假。
+     *
+     * @param path
+     * @return true
+     * @return false
+     */
     bool CForum::save(const fs::path path) const
     {
         ofstream userStream;
@@ -492,6 +605,12 @@ namespace cforum
         return true;
     }
 
+    /**
+     * @brief 检查并内存中的数据，若有异常，发出异常信号，并返回假。
+     *
+     * @return true
+     * @return false
+     */
     bool CForum::checkData()
     {
         for (QObject *&qit : *boards)
@@ -534,6 +653,12 @@ namespace cforum
         return true;
     }
 
+    /**
+     * @brief 从输入流中读取用户的数据，在堆区创建用户并返回之。调用者保证输入流合法。
+     *
+     * @param userStream
+     * @return User*
+     */
     User * loadUser(istream & userStream)
     {
         User *user;

@@ -2,7 +2,10 @@
 
 namespace cforum
 {
-    User::User(const int id, const QString userName, const QString password, UserType type) : QObject(), id(id), userName(userName), password(password), type(type)
+    User::User(const int id,
+        const QString userName,
+        const QString password, UserType type)
+        : QObject(), id(id), userName(userName), password(password), type(type)
     {
     }
 
@@ -69,20 +72,32 @@ namespace cforum
         lastLogoutTime = QDateTime::currentDateTime();
     }
 
+    /**
+     * @brief 从输入流读取用户信息。
+     *
+     * @param stream
+     */
     void User::load(istream &stream)
     {
         string tempString;
         stream >> id;
         stream.get(); // 处理行末换行符
+
         getline(stream, tempString);
-        lastLoginTime = QDateTime::fromString(QString::fromStdString(tempString), DATETIME_FORMAT);
+        lastLoginTime = QDateTime::fromString(QString::fromStdString(tempString),
+            BACK_DATETIME_FORMAT);
+
         getline(stream, tempString);
-        lastLogoutTime = QDateTime::fromString(QString::fromStdString(tempString), DATETIME_FORMAT);
+        lastLogoutTime = QDateTime::fromString(QString::fromStdString(tempString),
+            BACK_DATETIME_FORMAT);
+
         getline(stream, tempString);
         userName = QString::fromStdString(tempString);
+
         getline(stream, tempString);
         password = QString::fromStdString(tempString);
     }
+
     void User::initialize(const User * oldUser)
     {
         id = oldUser->id;
@@ -91,20 +106,33 @@ namespace cforum
         password = oldUser->password;
     }
 
+    /**
+     * @brief 获取用户基本信息字符串，含id等数据。
+     *
+     * @return QString
+     */
     QString User::getBasicInfo() const
     {
-        QString text = userName + QString::fromUtf8(" 用户信息：ID: ") + QString::number(id) + QString::fromUtf8("，");
-        text += (LAST_LOGIN_MESSAGE + lastLoginTime.toString(FRONT_END_DATETIME_FORMAT));
-        text += ("，" + LAST_LOGOUT_MESSAGE + lastLogoutTime.toString(FRONT_END_DATETIME_FORMAT));
+        QString text = userName + QString::fromUtf8(" 用户信息：ID: ");
+        text += (QString::number(id) + QString::fromUtf8("，"));
+        text += LAST_LOGIN_MESSAGE;
+        text += lastLoginTime.toString(FRONT_DATETIME_FORMAT);
+        text += ("，" + LAST_LOGOUT_MESSAGE);
+        text += lastLogoutTime.toString(FRONT_DATETIME_FORMAT);
         return text;
     }
 
+    /**
+     * @brief 向输出流写用户数据。
+     *
+     * @param stream
+     */
     void User::dump(ostream &stream) const
     {
         stream << type << endl;
         stream << id << endl;
-        stream << lastLoginTime.toString(DATETIME_FORMAT).toStdString() << endl;
-        stream << lastLogoutTime.toString(DATETIME_FORMAT).toStdString() << endl;
+        stream << lastLoginTime.toString(BACK_DATETIME_FORMAT).toStdString() << endl;
+        stream << lastLogoutTime.toString(BACK_DATETIME_FORMAT).toStdString() << endl;
         stream << userName.toStdString() << endl;
         stream << password.toStdString() << endl;
     }

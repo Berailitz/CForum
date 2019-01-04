@@ -39,8 +39,15 @@ namespace cforum
         return lhs.hash() == hashSocket(rhs);
     }
 
-    QString hashSocket(const QWebSocket & socket)
+    /**
+     * @brief 获取连接的唯一字符串表示。
+     *
+     * @param socket
+     * @return QString
+     */
+    QString hashSocket(const QWebSocket &socket)
     {
-        return socket.peerAddress().toString() + QString::fromUtf8(":") + QString::number(socket.peerPort());
+        return socket.peerAddress().toString() +
+            QString::fromUtf8(":") + QString::number(socket.peerPort());
     }
 }

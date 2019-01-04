@@ -41,6 +41,7 @@ Page {
                 font.family: "dengxian"
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 font.pointSize: 35
+                selectByMouse: true
                 text: qsTr("ws://localhost:8118/")
             }
         }
@@ -52,6 +53,7 @@ Page {
             font.family: "dengxian"
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             font.pointSize: 45
+            selectByMouse: true
             placeholderText: qsTr("用户名")
         }
 
@@ -64,6 +66,7 @@ Page {
             placeholderText: qsTr("密码")
             font.pointSize: 45
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            selectByMouse: true
             echoMode: TextInput.Password
         }
 

@@ -24,6 +24,7 @@ Dialog {
                 font.family: "dengxian"
                 placeholderText: qsTr("标题")
                 font.pointSize: 20
+                selectByMouse: true
             }
         }
 

@@ -1,3 +1,14 @@
+/**
+ * @file admin.h
+ * @author 熊光正 (xgz@bupt.edu.cn)
+ * @brief 实现管理员类。
+ * @version 3.3
+ * @date 2019-01-04
+ *
+ * @copyright Copyright (c) 2019
+ *
+ */
+
 #ifndef CFORUM_ADMIN_H
 #define CFORUM_ADMIN_H
 
@@ -13,6 +24,7 @@ namespace cforum
     public:
         Admin();
         Admin(ifstream &stream);
+
         bool isAdmin() const;
         virtual QString getInfo() const;
     };

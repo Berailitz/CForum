@@ -112,6 +112,7 @@ Page {
                     font.family: "dengxian"
                     placeholderText: qsTr("用户名")
                     font.pointSize: 20
+                    selectByMouse: true
                 }
             }
 
