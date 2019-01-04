@@ -5,17 +5,17 @@
 
 namespace cforum
 {
-	const QString INFO_MESSAGE_ADMIN = QString::fromUtf8("管理员 ");
+    const QString INFO_MESSAGE_ADMIN = QString::fromUtf8("管理员 ");
 
-	class Admin : public User
-	{
+    class Admin : public User
+    {
         Q_OBJECT
-	public:
-		Admin();
-		Admin(ifstream &stream);
-		bool isAdmin() const;
-		virtual QString getInfo() const;
-	};
+    public:
+        Admin();
+        Admin(ifstream &stream);
+        bool isAdmin() const;
+        virtual QString getInfo() const;
+    };
 }
 
 #endif // !CFORUM_ADMIN_H

@@ -5,12 +5,12 @@
 
 namespace cforum
 {
-	class ResponseMessage : public Message
-	{
-	public:
-		ResponseMessage();
-		ResponseMessage(const QString &qstring);
-	};
+    class ResponseMessage : public Message
+    {
+    public:
+        ResponseMessage();
+        ResponseMessage(const QString &qstring);
+    };
 }
 
 #endif // CFORUM_RESPONSE_MESSAGE_H

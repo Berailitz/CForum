@@ -6,15 +6,15 @@
 
 namespace cforum
 {
-	class ErrorHandler : public QObject
-	{
-		Q_OBJECT
-	public:
-		ErrorHandler();
-		void raiseError(const QString message);
-	Q_SIGNALS:
-		void errorRaised(const QString message);
-	};
+    class ErrorHandler : public QObject
+    {
+        Q_OBJECT
+    public:
+        ErrorHandler();
+        void raiseError(const QString message);
+    Q_SIGNALS:
+        void errorRaised(const QString message);
+    };
 }
 
 extern cforum::ErrorHandler *errorHandler;

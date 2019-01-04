@@ -2,38 +2,38 @@
 
 namespace cforum
 {
-	ClientState::ClientState() : QObject()
-	{
-	}
+    ClientState::ClientState() : QObject()
+    {
+    }
 
-	ClientState::ClientState(const ClientState &oldClientState) : QObject()
-	{
-		initialize(&oldClientState);
-	}
+    ClientState::ClientState(const ClientState &oldClientState) : QObject()
+    {
+        initialize(&oldClientState);
+    }
 
-	ClientState::ClientState(const ClientState *oldClientState) : QObject()
-	{
-		initialize(oldClientState);
-	}
+    ClientState::ClientState(const ClientState *oldClientState) : QObject()
+    {
+        initialize(oldClientState);
+    }
 
-	ClientState::~ClientState()
-	{
-	}
+    ClientState::~ClientState()
+    {
+    }
 
-	void ClientState::initialize(const ClientState * oldClientState)
-	{
-		if (oldClientState != this)
-		{
-			userID = oldClientState->userID;
-			boardID = oldClientState->boardID;
-			postID = oldClientState->postID;
-			commentID = oldClientState->commentID;
-		}
-	}
+    void ClientState::initialize(const ClientState * oldClientState)
+    {
+        if (oldClientState != this)
+        {
+            userID = oldClientState->userID;
+            boardID = oldClientState->boardID;
+            postID = oldClientState->postID;
+            commentID = oldClientState->commentID;
+        }
+    }
 
-	ClientState ClientState::operator=(const ClientState & oldClientState)
-	{
-		initialize(&oldClientState);
-		return *this;
-	}
+    ClientState ClientState::operator=(const ClientState & oldClientState)
+    {
+        initialize(&oldClientState);
+        return *this;
+    }
 }

@@ -2,14 +2,14 @@
 
 namespace cforum
 {
-	ErrorHandler::ErrorHandler() : QObject()
-	{
-	}
+    ErrorHandler::ErrorHandler() : QObject()
+    {
+    }
 
-	void ErrorHandler::raiseError(const QString message)
-	{
-		emit errorRaised(message);
-	}
+    void ErrorHandler::raiseError(const QString message)
+    {
+        emit errorRaised(message);
+    }
 }
 
 cforum::ErrorHandler *errorHandler = new cforum::ErrorHandler();

@@ -2,12 +2,12 @@
 
 namespace cforum
 {
-	ResponseMessage::ResponseMessage() : Message()
-	{
+    ResponseMessage::ResponseMessage() : Message()
+    {
 
-	}
+    }
 
-	ResponseMessage::ResponseMessage(const QString &qstring) : Message(qstring)
-	{
-	}
+    ResponseMessage::ResponseMessage(const QString &qstring) : Message(qstring)
+    {
+    }
 }

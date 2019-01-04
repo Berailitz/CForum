@@ -2,22 +2,22 @@
 
 namespace cforum
 {
-	Admin::Admin() : User()
-	{
-		type = AdminType;
-	}
+    Admin::Admin() : User()
+    {
+        type = AdminType;
+    }
 
-	Admin::Admin(ifstream &stream) : User(stream, AdminType)
-	{
-	}
+    Admin::Admin(ifstream &stream) : User(stream, AdminType)
+    {
+    }
 
-	bool Admin::isAdmin() const
-	{
-		return true;
-	}
+    bool Admin::isAdmin() const
+    {
+        return true;
+    }
 
-	QString Admin::getInfo() const
-	{
-		return INFO_MESSAGE_ADMIN + getBasicInfo();
-	}
+    QString Admin::getInfo() const
+    {
+        return INFO_MESSAGE_ADMIN + getBasicInfo();
+    }
 }

@@ -3,44 +3,44 @@
 namespace cforum
 {
     ClientDescriptor::ClientDescriptor(QWebSocket *socket) :
-		ClientState(),
-		socket(socket)
+        ClientState(),
+        socket(socket)
     {
-		hashString = hashSocket(*socket);
+        hashString = hashSocket(*socket);
     }
 
-	ClientDescriptor::~ClientDescriptor()
-	{
-		socket->deleteLater();
-	}
+    ClientDescriptor::~ClientDescriptor()
+    {
+        socket->deleteLater();
+    }
 
-	QString ClientDescriptor::hash() const
-	{
-		return hashString;
-	}
+    QString ClientDescriptor::hash() const
+    {
+        return hashString;
+    }
 
-	void ClientDescriptor::send(const QString &textMessage)
-	{
-		socket->sendTextMessage(textMessage);
-	}
+    void ClientDescriptor::send(const QString &textMessage)
+    {
+        socket->sendTextMessage(textMessage);
+    }
 
-	QWebSocket * ClientDescriptor::getSocket() const
-	{
-		return socket;
-	}
+    QWebSocket * ClientDescriptor::getSocket() const
+    {
+        return socket;
+    }
 
-	bool operator==(const ClientDescriptor & lhs, const ClientDescriptor & rhs)
-	{
-		return lhs.hash() == rhs.hash();
-	}
+    bool operator==(const ClientDescriptor & lhs, const ClientDescriptor & rhs)
+    {
+        return lhs.hash() == rhs.hash();
+    }
 
-	bool operator==(const ClientDescriptor & lhs, const QWebSocket & rhs)
-	{
-		return lhs.hash() == hashSocket(rhs);
-	}
+    bool operator==(const ClientDescriptor & lhs, const QWebSocket & rhs)
+    {
+        return lhs.hash() == hashSocket(rhs);
+    }
 
-	QString hashSocket(const QWebSocket & socket)
-	{
-		return socket.peerAddress().toString() + QString::fromUtf8(":") + QString::number(socket.peerPort());
-	}
+    QString hashSocket(const QWebSocket & socket)
+    {
+        return socket.peerAddress().toString() + QString::fromUtf8(":") + QString::number(socket.peerPort());
+    }
 }

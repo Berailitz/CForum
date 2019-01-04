@@ -10,15 +10,15 @@ namespace fs = std::experimental::filesystem;
 
 namespace cforum
 {
-	const QString FRONT_END_DATETIME_FORMAT = QString::fromUtf8("M月d日 HH:mm:ss");
+    const QString FRONT_END_DATETIME_FORMAT = QString::fromUtf8("M月d日 HH:mm:ss");
 
-	const string STD_LINE_BREAK = "\n";
-	const QString Q_LINE_BREAK = QString::fromStdString(STD_LINE_BREAK);
+    const string STD_LINE_BREAK = "\n";
+    const QString Q_LINE_BREAK = QString::fromStdString(STD_LINE_BREAK);
 
-	class ClientController;
+    class ClientController;
 
-	bool matchRegular(const QString text, const QString regularExpression);
-	int count_files(const fs::path path);
+    bool matchRegular(const QString text, const QString regularExpression);
+    int count_files(const fs::path path);
 }
 
 #endif // CFORUM_CFCOMMON_H

@@ -2,43 +2,43 @@
 
 namespace cforum
 {
-	Message::Message() : QObject()
-	{
+    Message::Message() : QObject()
+    {
 
-	}
+    }
 
-	Message::Message(const QString &qstring) : QObject()
-	{
-		load(qstring);
-	}
+    Message::Message(const QString &qstring) : QObject()
+    {
+        load(qstring);
+    }
 
-	void Message::load(const QString & qstring)
-	{
-		stringstream iss(qstring.toStdString());
-		int typeInt;
-		iss >> typeInt;
-		iss.get();
-		type = static_cast<MessageType>(typeInt);
-		messageString = QString::fromStdString(string((istreambuf_iterator<char>(iss)), {}));
-	}
+    void Message::load(const QString & qstring)
+    {
+        stringstream iss(qstring.toStdString());
+        int typeInt;
+        iss >> typeInt;
+        iss.get();
+        type = static_cast<MessageType>(typeInt);
+        messageString = QString::fromStdString(string((istreambuf_iterator<char>(iss)), {}));
+    }
 
-	QString Message::dump() const
-	{
-		return QString::number(type) + Q_LINE_BREAK + messageString;
-	}
+    QString Message::dump() const
+    {
+        return QString::number(type) + Q_LINE_BREAK + messageString;
+    }
 
-	MessageType Message::getType() const
-	{
-		return type;
-	}
-	
-	QString Message::getMessageString() const
-	{
-		return messageString;
-	}
+    MessageType Message::getType() const
+    {
+        return type;
+    }
 
-	void Message::setMessageString(const QString & newMessageString)
-	{
-		messageString = newMessageString;
-	}
+    QString Message::getMessageString() const
+    {
+        return messageString;
+    }
+
+    void Message::setMessageString(const QString & newMessageString)
+    {
+        messageString = newMessageString;
+    }
 }
