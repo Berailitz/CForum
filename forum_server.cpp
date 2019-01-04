@@ -276,6 +276,20 @@ namespace cforum
             iss >> userID;
             removeComment(target, boardID, postID, commentID, userID);
             break;
+        case AddModeratorRequestMessageType:
+            iss >> boardID;
+            iss.get();
+            getline(iss, userName);
+            iss >> userID;
+            addModerator(target, boardID, QString::fromStdString(userName), userID);
+            break;
+        case RemoveModeratorRequestMessageType:
+            iss >> boardID;
+            iss.get();
+            getline(iss, userName);
+            iss >> userID;
+            removeModerator(target, boardID, QString::fromStdString(userName), userID);
+            break;
         default:
             break;
         }
@@ -514,6 +528,10 @@ namespace cforum
         {
             sendToast(target, REGISTER_SUCCESS_MESSAGE);
         }
+        else
+        {
+            sendToast(target, REGISTER_ERROR_MESSAGE);
+        }
     }
 
     /**
@@ -532,6 +550,7 @@ namespace cforum
             ostringstream oss;
             oss << UpdateUserResponseMessageType << STD_LINE_BREAK << Guest();
             emit messageToSend(target, QString::fromStdString(oss.str()));
+            sendToast(target, LOGIN_SUCCESS_MESSAGE);
         }
         else
         {
@@ -543,6 +562,11 @@ namespace cforum
                 ostringstream oss;
                 oss << UpdateUserResponseMessageType << STD_LINE_BREAK << *user;
                 emit messageToSend(target, QString::fromStdString(oss.str()));
+                sendToast(target, LOGIN_SUCCESS_MESSAGE);
+            }
+            else
+            {
+                sendToast(target, LOGIN_ERROR_MESSAGE);
             }
         }
     }
@@ -708,6 +732,66 @@ namespace cforum
         else
         {
             sendToast(target, REMOVE_COMMENT_ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * @brief 设置版主
+     *
+     * @param boardID
+     * @param userName
+     * @param userID
+     */
+    void ForumServer::addModerator(const QString & target,
+        const int boardID,
+        const QString userName,
+        const int userID)
+    {
+        QMutexLocker userLocker(&userMutex);
+        QMutexLocker contentLocker(&contentMutex);
+
+        User *user = cforum->getUserByID(userID);
+        User *targetUser = cforum->getUserByName(userName);
+        if (user &&
+            user->isAdmin() &&
+            targetUser &&
+            cforum->setModerator(boardID, targetUser->getID()))
+        {
+            sendToast(target, SET_MODERATOR_SUCCESS_MESSAGE);
+        }
+        else
+        {
+            sendToast(target, SET_MODERATOR_ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * @brief 撤销版主
+     *
+     * @param boardID
+     * @param userName
+     * @param userID
+     */
+    void ForumServer::removeModerator(const QString & target,
+        const int boardID,
+        const QString userName,
+        const int userID)
+    {
+        QMutexLocker userLocker(&userMutex);
+        QMutexLocker contentLocker(&contentMutex);
+
+        User *user = cforum->getUserByID(userID);
+        User *targetUser = cforum->getUserByName(userName);
+        if (user &&
+            user->isAdmin() &&
+            targetUser &&
+            cforum->removeModerator(boardID, targetUser->getID()))
+        {
+            sendToast(target, REMOVE_MODERATOR_SUCCESS_MESSAGE);
+        }
+        else
+        {
+            sendToast(target, REMOVE_MODERATOR_ERROR_MESSAGE);
         }
     }
 

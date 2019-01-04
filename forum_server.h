@@ -41,6 +41,9 @@ namespace cforum
     const QString SERVER_CONNECTED_MESSAGE = QString::fromUtf8("连接成功");
     const QString SERVER_DISCONNECTED_MESSAGE = QString::fromUtf8("断开连接");
     const QString REGISTER_SUCCESS_MESSAGE = QString::fromUtf8("注册成功");
+    const QString REGISTER_ERROR_MESSAGE = QString::fromUtf8("注册失败");
+    const QString LOGIN_SUCCESS_MESSAGE = QString::fromUtf8("登录成功");
+    const QString LOGIN_ERROR_MESSAGE = QString::fromUtf8("登录失败");
     const QString ADD_BOARD_SUCCESS_MESSAGE = QString::fromUtf8("添加版面成功");
     const QString ADD_POST_SUCCESS_MESSAGE = QString::fromUtf8("发主题帖成功");
     const QString ADD_POST_ERROR_MESSAGE = QString::fromUtf8("发主题帖失败");
@@ -50,6 +53,10 @@ namespace cforum
     const QString ADD_COMMENT_ERROR_MESSAGE = QString::fromUtf8("发回复帖失败");
     const QString REMOVE_COMMENT_SUCCESS_MESSAGE = QString::fromUtf8("删回复帖成功");
     const QString REMOVE_COMMENT_ERROR_MESSAGE = QString::fromUtf8("删回复帖失败");
+    const QString SET_MODERATOR_SUCCESS_MESSAGE = QString::fromUtf8("设置版主成功");
+    const QString SET_MODERATOR_ERROR_MESSAGE = QString::fromUtf8("设置版主失败");
+    const QString REMOVE_MODERATOR_SUCCESS_MESSAGE = QString::fromUtf8("撤销版主成功");
+    const QString REMOVE_MODERATOR_ERROR_MESSAGE = QString::fromUtf8("撤销版主失败");
     const QString QSTRING_SEPARATOR = QString::fromUtf8(", ");
     const QString CONTENT_SEPARATOR = QString::fromUtf8(": ");
     const fs::path DEFAULT_DATABASE_FOLDER_PATH = "data";
@@ -131,6 +138,15 @@ namespace cforum
             const int boardID,
             const int postID,
             const int commentID,
+            const int userID);
+
+        void addModerator(const QString & target,
+            const int boardID,
+            const QString userName,
+            const int userID);
+        void removeModerator(const QString & target,
+            const int boardID,
+            const QString userName,
             const int userID);
     };
 }

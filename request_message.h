@@ -50,6 +50,13 @@ namespace cforum
         void getBoardList();
         void getPostList(const int boardID);
         void getCommentList(const int boardID, const int postID);
+
+        void setModerator(const int boardID,
+            const QString userName,
+            const int userID);
+        void removeModerator(const int boardID,
+            const QString userName,
+            const int userID);
     };
 }
 

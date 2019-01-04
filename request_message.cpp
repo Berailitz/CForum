@@ -150,4 +150,38 @@ namespace cforum
         messageString = QString::number(boardID) + Q_LINE_BREAK;
         messageString += (QString::number(postID) + Q_LINE_BREAK);
     }
+
+    /**
+     * @brief 设置版主
+     *
+     * @param boardID
+     * @param userName
+     * @param userID
+     */
+    void RequestMessage::setModerator(const int boardID,
+        const QString userName,
+        const int userID)
+    {
+        type = AddModeratorRequestMessageType;
+        messageString = QString::number(boardID) + Q_LINE_BREAK;
+        messageString += (userName + Q_LINE_BREAK);
+        messageString += (QString::number(userID) + Q_LINE_BREAK);
+    }
+
+    /**
+     * @brief 撤销版主
+     *
+     * @param boardID
+     * @param userName
+     * @param userID
+     */
+    void RequestMessage::removeModerator(const int boardID,
+        const QString userName,
+        const int userID)
+    {
+        type = RemoveModeratorRequestMessageType;
+        messageString = QString::number(boardID) + Q_LINE_BREAK;
+        messageString += (userName + Q_LINE_BREAK);
+        messageString += (QString::number(userID) + Q_LINE_BREAK);
+    }
 }

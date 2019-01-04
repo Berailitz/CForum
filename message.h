@@ -40,6 +40,10 @@ namespace cforum
         LoginRequestMessageType,
         // 请求报文，注销
         LogoutRequestMessageType,
+        // 请求报文，设置版主
+        AddModeratorRequestMessageType,
+        // 请求报文，撤销版主
+        RemoveModeratorRequestMessageType,
         // 响应报文，更新用户信息，仅由服务端发往客户端
         UpdateUserResponseMessageType,
         // 响应报文，显示提示信息

@@ -155,21 +155,27 @@ namespace cforum
     }
 
     /**
-     * @brief 禁止设置版主，为保持接口不变，保留该函数。
+     * @brief 设置版主。
      *
      * @param userName
      */
     void ClientController::setModerator(const QString userName)
     {
+        RequestMessage message;
+        message.setModerator(board->getID(), userName, user->getID());
+        sendMessage(message);
     }
 
     /**
-     * @brief 禁止撤销版主，为保持接口不变，保留该函数。
+     * @brief 撤销版主。
      *
      * @param userName
      */
     void ClientController::removeModerator(const QString userName)
     {
+        RequestMessage message;
+        message.removeModerator(board->getID(), userName, user->getID());
+        sendMessage(message);
     }
 
     /**

@@ -326,6 +326,10 @@ ClientController
     - 删回复帖
         - C: `{AddCommentMessageType}\n{boardID}\n{postID}\n{commentID}\n{userID}`
         - S: `{AddCommentMessageType}\n{boardID}\n{postID}\n{commentID}\n{userID}`
+    - 设置版主
+        - C: `{AddModeratorRequestMessageType}\n{boardID}\n{userName}\n{userID}\n`
+    - 撤销版主
+        - C: `{RemoveModeratorRequestMessageType}\n{boardID}\n{userName}\n{userID}\n`
 
 备注
 ====
