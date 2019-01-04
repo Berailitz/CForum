@@ -287,14 +287,14 @@ namespace cforum
     {
         if (autoReconnect)
         {
-            emit messageSent(SERVER_DISCONNECTED_MESSAGE + socket->errorString());
+            emit messageSent(SERVER_DISCONNECTED_MESSAGE);
             connect();
         }
     }
 
     void ClientController::onError()
     {
-        emit messageSent(SERVER_ERROR_MESSAGE + socket->errorString());
+        emit messageSent(SERVER_ERROR_MESSAGE);
         connect();
     }
 

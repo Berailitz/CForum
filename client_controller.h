@@ -47,9 +47,9 @@ namespace cforum
     const QString SAVING_DATABASE_MESSAGE = QString::fromUtf8("保存中");
     const QString SERVER_CONNECTING_MESSAGE = QString::fromUtf8("连接服务器中");
     const QString SERVER_CONNECTED_MESSAGE = QString::fromUtf8("连接服务器成功");
-    const QString SERVER_DISCONNECTED_MESSAGE = QString::fromUtf8("连接已断开: ");
+    const QString SERVER_DISCONNECTED_MESSAGE = QString::fromUtf8("连接已断开");
     const QString SERVER_DISCONNECT_MESSAGE = QString::fromUtf8("连接已断开");
-    const QString SERVER_ERROR_MESSAGE = QString::fromUtf8("连接出错: ");
+    const QString SERVER_ERROR_MESSAGE = QString::fromUtf8("连接出错");
 
     class ClientController : public QObject
     {
