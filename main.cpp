@@ -14,6 +14,7 @@ int main(int argc, char *argv[])
 	bool doLoad;
     QGuiApplication app(argc, argv);
     QCoreApplication::setAttribute(Qt::AA_UseOpenGLES);
+    QCoreApplication::setAttribute(Qt::AA_DisableHighDpiScaling);
     QQmlApplicationEngine engine;
     cforum::Controller forumController(engine);
 	doLoad = forumController.load("data");
