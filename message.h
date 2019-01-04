@@ -31,9 +31,6 @@ namespace cforum
 		RemoveCommentMessageType, // 双向，删回复帖
 	};
 
-	const string STD_LINE_BREAK = "\n";
-	const QString Q_LINE_BREAK = QString::fromStdString(STD_LINE_BREAK);
-
 	class Message : public QObject
 	{
 		Q_OBJECT

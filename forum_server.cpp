@@ -35,19 +35,27 @@ namespace cforum
 	{
 		if (isListening())
 		{
-			emit messageReceived(SERVER_ALREADY_START_MESSAGE);
+			emit messageReceived(SERVER_ALREADY_START_MESSAGE + Q_LINE_BREAK);
 			return true;
 		}
 		else
 		{
 			if (QWebSocketServer::listen(QHostAddress::Any, port))
 			{
-				emit messageReceived(SERVER_START_MESSAGE + serverUrl().toDisplayString() + "\n");
+				QString message = SERVER_START_MESSAGE;
+				QList<QHostAddress> addressList = QNetworkInterface::allAddresses();
+				for (QList<QHostAddress>::iterator it = addressList.begin(); it != addressList.end(); it++)
+				{
+					{
+						message += (it->toString() + Q_LINE_BREAK);
+					}
+				}
+				emit messageReceived(message);
 				return true;
 			}
 			else
 			{
-				emit messageReceived(SERVER_START_ERROR_MESSAGE);
+				emit messageReceived(SERVER_START_ERROR_MESSAGE + Q_LINE_BREAK);
 				return false;
 			}
 		}
@@ -56,7 +64,7 @@ namespace cforum
 	void ForumServer::stop()
 	{
 		close();
-		emit messageReceived(SERVER_STOP_MESSAGE);
+		emit messageReceived(SERVER_STOP_MESSAGE + Q_LINE_BREAK);
 	}
 
 	bool ForumServer::load(const fs::path path)
@@ -77,14 +85,14 @@ namespace cforum
 
 	void ForumServer::onErrorRaised(const QString message)
 	{
-		emit messageReceived(message + "\n");
+		emit messageReceived(message + Q_LINE_BREAK);
 	}
 
     void ForumServer::onNewConnection()
     {
 		QWebSocket *socket = QWebSocketServer::nextPendingConnection();
 		ClientDescriptor *newClient = new ClientDescriptor(socket);
-        emit messageReceived(newClient->hash() + " connected.\n");
+        emit messageReceived(newClient->hash() + SERVER_CONNECTED_MESSAGE + Q_LINE_BREAK);
 
         connect(socket, &QWebSocket::textMessageReceived,
                 this, &ForumServer::onTextMessageReceived);
@@ -97,7 +105,7 @@ namespace cforum
     {
         QWebSocket *socket = qobject_cast<QWebSocket *>(sender());
 		RequestMessage message(textMessage);
-		emit messageReceived(hashSocket(*socket) + QString::fromUtf8(" > ") + textMessage + "\n");
+		emit messageReceived(hashSocket(*socket) + QString::fromUtf8(" > ") + textMessage + Q_LINE_BREAK);
 		QtConcurrent::run(this, &ForumServer::execute, hashSocket(*socket), message);
 		//execute(*socket, message);
     }
@@ -113,13 +121,13 @@ namespace cforum
 				break;
 			}
 		}
-        emit messageReceived(hashSocket(*socket) + " disconnected.\n");
+        emit messageReceived(hashSocket(*socket) + SERVER_DISCONNECTED_MESSAGE + Q_LINE_BREAK);
     }
 
 	void ForumServer::sendMessage(QWebSocket & socket, const QString & textMessage)
 	{
 		socket.sendTextMessage(textMessage);
-		emit messageReceived(hashSocket(socket) + " < " + textMessage + "\n");
+		emit messageReceived(hashSocket(socket) + " < " + textMessage + Q_LINE_BREAK);
 	}
 
 	void ForumServer::onMessageToSend(const QString & target, const QString & textMessage)
