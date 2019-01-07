@@ -81,6 +81,7 @@ namespace cforum
         void onNewConnection();
         void onTextMessageReceived(const QString &textMessage);
         void onDisconnection();
+        void sendMessage(const QString &target, const QString &textMessage);
         void sendMessage(QWebSocket &socket, const QString &textMessage);
         void onMessageToSend(const QString &target, const QString &textMessage);
 

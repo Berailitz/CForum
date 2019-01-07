@@ -176,6 +176,17 @@ namespace cforum
     }
 
     /**
+     * @brief 用于从服务端界面发送消息。
+     *
+     * @param socket
+     * @param textMessage
+     */
+    void ForumServer::sendMessage(const QString & target, const QString & textMessage)
+    {
+        emit messageToSend(target, textMessage);
+    }
+
+    /**
      * @brief 从sockst发送消息的唯一方法。
      *
      * @param socket
